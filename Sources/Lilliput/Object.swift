@@ -6,6 +6,7 @@
 import Coercion
 import Foundation
 
+
 public class Object {
     let definition: Definition
     let engine: Engine
@@ -24,6 +25,8 @@ public class Object {
     
     var names: [String] { definition.names }
 
+    var isPlayer: Bool { definition.id == "player" }
+    
     var completeContents: [Object] {
         var objects: [Object] = []
         for object in contents {
@@ -75,24 +78,93 @@ public class Object {
         }
     }
     
-    func getDescription(for context: String) -> String {
-        if let string = definition.strings[context] {
-            return string
+    func getContextDescriptions(for context: DescriptionContext) -> [String] {
+        []
+    }
+    
+    func getDescriptionWarnIfMissing(for context: DescriptionContext) -> String {
+        if let description = getDescription(for: context) {
+            return description
         }
-        
+
         engine.warning("Missing \(context) string for \(self)")
         return id
     }
     
-    func showContents(context: String, prefix: String) {
+    func getDefinite() -> String {
+        return getDescriptionWarnIfMissing(for: .definite)
+    }
+    
+    func getIndefinite() -> String {
+        return getDescriptionWarnIfMissing(for: .indefinite)
+    }
+    
+    func getContentPrefix(for context: DescriptionContext = .none) -> String {
+        if context != .none, let prefix = getDescription(for: "contentPrefix-\(context)") {
+            return prefix
+        }
         
+        return getDescription(for: .contentPrefix) ?? "It contains"
+    }
+    
+    func getDescription(for context: String) -> String? {
+        return definition.strings[context]
+    }
+    
+    func getDescription(for context: DescriptionContext) -> String? {
+        return definition.strings[context.rawValue]
+    }
+    
+    func showContents(context: DescriptionContext, prefix: String, showIfEmpty: Bool = false) {
+        var objects: [Object] = []
+        var recursive: [Object] = []
+        
+        let playerLocation = engine.player.location
+        
+        for object in contents {
+            if !object.hasFlag("hidden") && !object.isPlayer && object != playerLocation {
+                let descriptions = object.getContextDescriptions(for: context)
+                if descriptions.count == 0 && !object.hasFlag("skipBrief") {
+                    objects.append(object)
+                } else {
+                    for description in descriptions {
+                        engine.output(description)
+                    }
+                }
+                
+                let mode = object.getString(withKey: "showContext")
+                if (mode == "always") || object.hasFlag(mode) {
+                    recursive.append(object)
+                }
+            }
+        }
+        
+        if objects.count == 0 {
+            if showIfEmpty {
+                let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
+                engine.output(description)
+            }
+            
+        } else {
+            var briefs: [String] = []
+            for object in objects {
+                briefs.append(object.getIndefinite())
+            }
+            let objectDescriptions = briefs.joined(separator: ", ")
+            engine.output("\(prefix) \(objectDescriptions)")
+        }
+        
+        for object in recursive {
+            let prefix = object.getContentPrefix(for: context)
+            object.showContents(context: context, prefix: prefix, showIfEmpty: showIfEmpty || object.hasFlag("showEmpty"))
+        }
     }
     
     func showExits() {
         
     }
     
-    func showDescription(context: String, prefix: String) {
+    func showDescription(context: DescriptionContext, prefix: String) {
         
     }
     
@@ -102,7 +174,7 @@ public class Object {
     
     func showLocation() {
         var locations: [Object] = []
-        var context = "location"
+        var context = DescriptionContext.location
         var prefix = ""
         var next = self.location
         while let location = next {
@@ -110,13 +182,13 @@ public class Object {
             location.showDescription(context: context, prefix: prefix)
             next = location.location
             if next != nil {
-                context = "container"
-                prefix = location.getDescription(for: "outside")
+                context = .container
+                prefix = location.getDescription(for: .outside) ?? ""
             }
         }
 
         for location in locations {
-            location.showContents(context: "location", prefix: "You can see")
+            location.showContents(context: .location, prefix: "You can see")
             location.showExits()
         }
     }
@@ -127,6 +199,10 @@ public class Object {
     
     func setProperty(withKey key: String, to value: Any) {
         overrides[key] = value
+    }
+    
+    func getString(withKey key: String) -> String {
+        (getProperty(withKey: key) as? String) ?? ""
     }
     
     func setFlag(_ key: String) {
