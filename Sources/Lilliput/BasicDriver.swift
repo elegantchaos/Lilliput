@@ -27,6 +27,6 @@ public struct BasicDriver: Driver {
     }
     
     public func output(_ string: String) {
-        print(string)
+        print("\n\(string)")
     }
 }

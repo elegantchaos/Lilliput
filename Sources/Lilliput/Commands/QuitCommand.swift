@@ -1,18 +1,16 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Developer on 28/02/2021.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 28/02/21.
+//  All code (c) 2021 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 
-struct QuitCommand: Command {
-    func matches(_ context: Context) -> Bool {
-        return context.input.command == "quit"
+class QuitCommand: Command {
+    override init(keywords: [String] = []) {
+        super.init(keywords: ["quit", "q"])
     }
     
-    func perform(in context: Context) {
+    override func perform(in context: Context) {
         context.engine.running = false
     }
 }

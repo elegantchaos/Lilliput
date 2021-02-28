@@ -7,16 +7,20 @@ import Foundation
 
 struct Context {
     let input: Input
-    let target: CommandOwner
+    let targetOwner: CommandOwner
     let engine: Engine
     let player: Object
     let location: Object
     
     init(input: Input, target: CommandOwner, engine: Engine) {
         self.input = input
-        self.target = target
+        self.targetOwner = target
         self.engine = engine
         self.player = engine.player
         self.location = player.location!
+    }
+    
+    var target: Object {
+        targetOwner as! Object
     }
 }

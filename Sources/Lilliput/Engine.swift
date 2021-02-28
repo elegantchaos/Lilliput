@@ -71,7 +71,7 @@ public class Engine {
         var candidates: [CommandOwner] = []
         
         if let location = player.location {
-            candidates.append(contentsOf: Array(location.contents))
+            candidates.append(contentsOf: Array(location.completeContents))
             candidates.append(location)
         }
         candidates.append(self)
@@ -88,9 +88,12 @@ public class Engine {
             for command in object.commands {
                 if command.matches(context) {
                     command.perform(in: context)
+                    return
                 }
             }
         }
+        
+        output("I don't know how to \(input.raw)!")
     }
     
     func handleEvents() {
@@ -98,6 +101,7 @@ public class Engine {
             events.append(Event(id: "idle", target: player))
         }
         
+        print("\nEvents:")
         for event in events {
             print(event)
         }
@@ -126,4 +130,6 @@ extension Engine: CommandOwner {
     var commands: [Command] {
         return [QuitCommand()]
     }
+    
+    var names: [String] { [] }
 }

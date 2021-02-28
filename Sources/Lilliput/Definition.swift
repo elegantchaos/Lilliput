@@ -9,15 +9,14 @@ public struct Definition {
     let id: String
     let strings: [String:String]
     let properties: [String:Any]
+    let names: [String]
     
     init(id: String, properties: [String:Any]) {
         self.id = id
         self.properties = properties
-        if let strings = properties["strings"] as? [String:String] {
-            self.strings = strings
-        } else {
-            self.strings = [:]
-        }
+        
+        self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
+        self.names = (properties["names"] as? [String]) ?? []
     }
 }
 

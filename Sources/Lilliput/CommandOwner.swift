@@ -9,4 +9,5 @@ import Foundation
 
 protocol CommandOwner {
     var commands: [Command] { get }
+    var names: [String] { get }
 }
