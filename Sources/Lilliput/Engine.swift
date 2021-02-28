@@ -3,6 +3,7 @@
 //  All code (c) 2021 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Files
 import Foundation
 
 public struct Engine {
@@ -12,8 +13,11 @@ public struct Engine {
         self.driver = driver
     }
     
-    public func load(name: String) {
-        
+    public func load(url: URL) {
+        let folder = FileManager.default.locations.folder(for: url)
+        try? folder.forEach { file in
+            print(file)
+        }
     }
     
     public func run() {

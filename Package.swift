@@ -23,7 +23,9 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.2.0")
+        .package(url: "https://github.com/elegantchaos/Files.git", from: "1.1.5"),
+        .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.6.0"),
+        .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.2.0"),
     ],
     targets: [
         .target(
@@ -31,7 +33,7 @@ let package = Package(
             dependencies: ["Lilliput"]),
         .target(
             name: "Lilliput",
-            dependencies: []),
+            dependencies: ["Files", "Logger"]),
         .testTarget(
             name: "LilliputTests",
             dependencies: ["Lilliput", "XCTestExtensions"]),

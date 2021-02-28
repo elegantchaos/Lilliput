@@ -1,0 +1,50 @@
+{
+    "Chair": {
+        "descriptions": {
+            "definite": "the chair",
+            "detailed": "A sturdy looking chair.",
+            "indefinite": "a chair",
+            "location": "You are sitting on a sturdy looking chair. It's not very comfortable.",
+            "outside": "From the chair you can see "
+        },
+        "location": "Room 1",
+        "movable": true,
+        "names": [
+            "chair",
+            "chair"
+        ],
+        "openLocation": true,
+        "sitMode": "on",
+        "sittable": true,
+        "type": "location"
+    },
+    "Room 1": {
+        "descriptions": {
+            "container": "a shabby looking room.",
+            "definite": "room 1",
+            "location": "You are in a shabby looking room."
+        },
+        "exits": {
+            "north": "Room 2"
+        },
+        "type": "location"
+    },
+    "Room 2": {
+        "descriptions": {
+            "definite": "room 2",
+            "detailed": "You are in room 2."
+        },
+        "exits": {
+            "south": "Room 1"
+        },
+        "type": "location"
+    },
+    "player": {
+        "descriptions": {
+            "definite": "Testy McTestFace",
+            "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
+        },
+        "location": "Room 1",
+        "type": "player"
+    }
+}
