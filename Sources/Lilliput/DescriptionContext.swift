@@ -9,7 +9,9 @@ enum DescriptionContext: String {
     case none
     case contentPrefix
     case container
+    case detailed
     case definite
+    case exit
     case indefinite
     case location
     case outside

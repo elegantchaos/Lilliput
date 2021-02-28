@@ -15,6 +15,8 @@ public class Object {
     var commands: [Command]
     var overrides: [String:Any] = [:]
     
+    lazy var exits: [String:Exit] = setupExits()
+    
     init(definition: Definition, engine: Engine) {
         self.definition = definition
         self.engine = engine
@@ -37,20 +39,40 @@ public class Object {
         return objects
     }
     
+    func setupExits() -> [String:Exit] {
+        var exits: [String:Exit] = [:]
+        for exit in definition.exits {
+            if let destination = engine.objects[exit.value] {
+                exits[exit.key] = Exit(to: destination)
+            } else {
+                engine.warning("Missing exit \(exit.value) for \(self).")
+            }
+        }
+        return exits
+    }
+    
     func setup() {
         if let locationId = definition.properties[stringWithKey: "location"] {
             guard let location = engine.objects[locationId] else { engine.error("Missing location for \(self)")}
             add(to: location)
         }
         
-        if let kind = definition.properties[stringWithKey: "type"] {
-            switch kind {
-                case "player":
-                    commands.append(ExamineCommand(shouldMatchTarget: false))
-                    
-                default:
-                    break
-            }
+        switch definition.kind {
+            case "player":
+                commands.append(ExamineCommand(shouldMatchTarget: false))
+                
+            default:
+                break
+        }
+    }
+    
+    func link() {
+        switch definition.kind {
+            case "portal":
+                break // TODO: setup portal
+            
+            default:
+                break
         }
     }
     
@@ -115,7 +137,7 @@ public class Object {
         return definition.strings[context.rawValue]
     }
     
-    func showContents(context: DescriptionContext, prefix: String, showIfEmpty: Bool = false) {
+    func showContents(context: DescriptionContext = .none, prefix: String, showIfEmpty: Bool = false) {
         var objects: [Object] = []
         var recursive: [Object] = []
         
@@ -146,12 +168,12 @@ public class Object {
             }
             
         } else {
-            var briefs: [String] = []
+            var items: [String] = []
             for object in objects {
-                briefs.append(object.getIndefinite())
+                items.append(object.getIndefinite())
             }
-            let objectDescriptions = briefs.joined(separator: ", ")
-            engine.output("\(prefix) \(objectDescriptions)")
+            let list = items.joined(separator: ", ")
+            engine.output("\(prefix) \(list).")
         }
         
         for object in recursive {
@@ -160,15 +182,70 @@ public class Object {
         }
     }
     
-    func showExits() {
-        
+    func hasVisited(location: Object) -> Bool {
+        return false // TODO:
     }
     
-    func showDescription(context: DescriptionContext, prefix: String) {
+    func getExitDescription(exit: Exit, direction: String) -> String {
+        var description = direction
         
+        if let portal = exit.portal {
+            let brief = portal.getDescriptionWarnIfMissing(for: .exit)
+            description += " \(brief)"
+        }
+        
+        if engine.player.hasVisited(location: exit.destination) {
+            let brief = exit.destination.getDefinite()
+            description += " to \(brief)"
+        }
+
+        return description
+    }
+    
+    func showExits() {
+        let count = exits.count
+        if count > 0 {
+            let start = count == 1 ? "There is a single exit " : "There are exits "
+            
+            var body: [String] = []
+            for exit in exits {
+                let string = getExitDescription(exit: exit.value, direction: exit.key)
+                body.append(string)
+            }
+            
+            let list = body.joined(separator: ", ")
+            engine.output("\(start)\(list).")
+        }
+    }
+    
+    func hasFlagMatchingKey(_ key: String) -> Bool {
+        if hasFlag(key) {
+            return true
+        }
+        
+        return key.starts(with: "not-") && hasFlag(String(key.dropFirst(4)))
+    }
+    
+    func showDescription(context: DescriptionContext, prefix: String = "") {
+        let description = prefix + getDescriptionWarnIfMissing(for: context)
+        engine.output(description)
+        
+        for string in definition.strings {
+            if hasFlagMatchingKey(string.key) {
+                engine.output(string.value)
+            }
+        }
+    }
+    
+    func showContentsIfVisible() {
+        if hasFlag("open") || !hasFlag("openable") {
+            let prefix = getContentPrefix()
+            showContents(prefix: prefix)
+        }
     }
     
     func showDescriptionAndContents() {
+        showDescription(context: .detailed)
         engine.output(id)
     }
     

@@ -60,6 +60,10 @@ public class Engine {
             object.setup()
         }
         
+        for object in objects.values {
+            object.link()
+        }
+        
         if let player = objects["player"] {
             self.player = player
         } else {
