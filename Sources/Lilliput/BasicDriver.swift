@@ -12,6 +12,7 @@ public struct BasicDriver: Driver {
     
     public func getInput() -> Input {
         while true {
+            print("\n> ", terminator: "")
             if let string = readLine() {
                 let words = string.split(separator: " ")
                 if words.count > 0 {
@@ -23,5 +24,9 @@ public struct BasicDriver: Driver {
                 
             }
         }
+    }
+    
+    public func output(_ string: String) {
+        print(string)
     }
 }

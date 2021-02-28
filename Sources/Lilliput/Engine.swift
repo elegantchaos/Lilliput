@@ -17,6 +17,17 @@ public struct Engine {
     }
     
     public func run() {
+        var running = true
         
+        while running {
+            let input = driver.getInput()
+            switch input.command {
+                case "quit", "q":
+                    running = false
+                    
+                default:
+                    print(input)
+            }
+        }
     }
 }

@@ -19,4 +19,17 @@ public struct Input {
 
 public protocol Driver {
     func getInput() -> Input
+    func output(_ string: String)
+    func warning(_ string: String)
+    func error(_ string: String)
+}
+
+public extension Driver {
+    func warning(_ string: String) {
+        output("Warning: \(string)")
+    }
+
+    func error(_ string: String) {
+        output("Error: \(string)")
+    }
 }
