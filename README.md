@@ -1,2 +1,3 @@
 # Lilliput
-Adventure game engine, written in Swift
+
+A description of this package.
