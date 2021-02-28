@@ -20,7 +20,7 @@ struct DefinitionsFile {
                 var count = 0
                 for item in definitions {
                     if let properties = item.value as? [String:Any] {
-                        let definition = ObjectDefinition(id: item.key, properties: properties)
+                        let definition = Definition(id: item.key, properties: properties)
                         engine.register(definition: definition)
                         count += 1
                     } else {

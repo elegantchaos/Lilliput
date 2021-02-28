@@ -8,11 +8,13 @@ import Foundation
 
 public class Engine {
     let driver: Driver
-    var definitions: [String:ObjectDefinition]
+    var running = true
+    var definitions: [String:Definition] = [:]
+    var objects: [String:Object] = [:]
+    var player: Object!
     
     public init(driver: Driver) {
         self.driver = driver
-        self.definitions = [:]
     }
     
     public func load(url: URL) {
@@ -35,29 +37,52 @@ public class Engine {
     }
     
     public func warning(_ string: String) {
-        
+        driver.warning(string)
     }
     
-    public func error(_ string: String) {
+    public func error(_ string: String) -> Never {
+        driver.error(string)
+        exit(1)
+    }
+    
+    func setupObjects() {
+        for definition in definitions {
+            let object = Object(definition: definition.value, engine: self)
+            objects[definition.key] = object
+        }
+        
+        if let player = objects["player"] {
+            self.player = player
+        } else {
+            error("Couldn't find player object.")
+        }
+    }
+    
+    func handleInput() {
+        let input = driver.getInput()
+        switch input.command {
+            case "quit", "q":
+                running = false
+                
+            default:
+                print(input)
+        }
+    }
+    
+    func handleEvents() {
         
     }
     
     public func run() {
-        var running = true
-        
         while running {
-            let input = driver.getInput()
-            switch input.command {
-                case "quit", "q":
-                    running = false
-                    
-                default:
-                    print(input)
-            }
+            handleEvents()
+            handleInput()
         }
+        
+        output("Bye.")
     }
     
-    public func register(definition: ObjectDefinition) {
+    public func register(definition: Definition) {
         definitions[definition.id] = definition
         print("registered \(definition.id)")
     }

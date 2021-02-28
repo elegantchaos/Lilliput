@@ -1,13 +1,11 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Developer on 28/02/2021.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 28/02/21.
+//  All code (c) 2021 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 
-public struct ObjectDefinition {
+public struct Definition {
     let id: String
     let strings: [String:String]
     let properties: [String:Any]
