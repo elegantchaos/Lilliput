@@ -12,6 +12,7 @@ public class Engine {
     var definitions: [String:Definition] = [:]
     var objects: [String:Object] = [:]
     var player: Object!
+    var events: [Event] = []
     
     public init(driver: Driver) {
         self.driver = driver
@@ -45,10 +46,18 @@ public class Engine {
         exit(1)
     }
     
+    func post(event: Event) {
+        events.append(event)
+    }
+    
     func setupObjects() {
         for definition in definitions {
             let object = Object(definition: definition.value, engine: self)
             objects[definition.key] = object
+        }
+        
+        for object in objects.values {
+            object.setup()
         }
         
         if let player = objects["player"] {
@@ -70,10 +79,20 @@ public class Engine {
     }
     
     func handleEvents() {
+        if events.count == 0 {
+            events.append(Event(id: "idle", target: player))
+        }
         
+        for event in events {
+            print(event)
+        }
+        
+        events = []
     }
     
     public func run() {
+        setupObjects()
+
         while running {
             handleEvents()
             handleInput()

@@ -20,20 +20,24 @@ public class Object {
     var id: String { definition.id }
     
     func setup() {
-        guard let locationId = definition.properties[stringWithKey: "location"] else { engine.error("Unknown location for \(self)") }
-        guard let location = engine.objects[locationId] else { engine.error("Missing location for \(self)")}
-        
-        add(to: location)
+        if let locationId = definition.properties[stringWithKey: "location"] {
+            guard let location = engine.objects[locationId] else { engine.error("Missing location for \(self)")}
+            add(to: location)
+        }
     }
     
     func remove(from object: Object) {
         object.contents.remove(self)
-        self.location = nil
+        location = nil
+        engine.post(event: Event(id: "contentRemoved", target: object, parameters: ["object": self]))
+        engine.post(event: Event(id: "movedFrom", target: self, parameters: ["container": object]))
     }
     
     func add(to object: Object) {
         object.contents.insert(object)
-        self.location = object
+        location = object
+        engine.post(event: Event(id: "contentAdded", target: object, parameters: ["object": self]))
+        engine.post(event: Event(id: "movedTo", target: self, parameters: ["container": object]))
     }
     
     func move(to newLocation: Object) {
