@@ -15,5 +15,11 @@ struct Event {
         self.target = target
         self.parameters = parameters
     }
-    
+}
+
+extension Event: CustomStringConvertible {
+    var description: String {
+        let params = parameters.count > 0 ? " params: \(parameters)" : ""
+        return "«event \(id) target: \(target)\(params)»"
+    }
 }

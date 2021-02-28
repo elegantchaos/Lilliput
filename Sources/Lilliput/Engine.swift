@@ -67,14 +67,29 @@ public class Engine {
         }
     }
     
+    func inputCandidates() -> [CommandOwner] {
+        var candidates: [CommandOwner] = []
+        
+        if let location = player.location {
+            candidates.append(contentsOf: Array(location.contents))
+            candidates.append(location)
+        }
+        candidates.append(self)
+        
+        return candidates
+    }
+    
+    
     func handleInput() {
         let input = driver.getInput()
-        switch input.command {
-            case "quit", "q":
-                running = false
-                
-            default:
-                print(input)
+        let candidates = inputCandidates()
+        for object in candidates {
+            let context = Context(input: input, target: object, engine: self)
+            for command in object.commands {
+                if command.matches(context) {
+                    command.perform(in: context)
+                }
+            }
         }
     }
     
@@ -104,5 +119,11 @@ public class Engine {
     public func register(definition: Definition) {
         definitions[definition.id] = definition
         print("registered \(definition.id)")
+    }
+}
+
+extension Engine: CommandOwner {
+    var commands: [Command] {
+        return [QuitCommand()]
     }
 }

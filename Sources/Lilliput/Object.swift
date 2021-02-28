@@ -41,11 +41,13 @@ public class Object {
     }
     
     func move(to newLocation: Object) {
-        if let location = location {
-            remove(from: location)
+        if location != newLocation {
+            if let location = location {
+                remove(from: location)
+            }
+            
+            add(to: newLocation)
         }
-        
-        add(to: newLocation)
     }
 }
 
@@ -59,5 +61,17 @@ extension Object: Equatable {
 extension Object: Hashable {
     public func hash(into hasher: inout Hasher) {
         definition.id.hash(into: &hasher)
+    }
+}
+
+extension Object: CustomStringConvertible {
+    public var description: String {
+        "«\(id)»"
+    }
+}
+
+extension Object: CommandOwner {
+    var commands: [Command] {
+        []
     }
 }
