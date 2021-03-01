@@ -19,6 +19,7 @@ public class Object {
     let definition: Definition
     let engine: Engine
     var location: Object?
+    var position: Position?
     var contents: ContentList
     var commands: [Command]
     var overrides: [String:Any] = [:]
@@ -88,17 +89,18 @@ public class Object {
     func add(to object: Object, position: Position = .in) {
         object.contents.add(self, position: position)
         location = object
+        self.position = position
         engine.post(event: Event(id: .contentAdded, target: object, parameters: ["object": self]))
         engine.post(event: Event(id: .movedTo, target: self, parameters: ["container": object]))
     }
     
-    func move(to newLocation: Object, position: String = "in", quiet: Bool = false) {
-        if location != newLocation {
+    func move(to newLocation: Object, position newPosition: Position = .in, quiet: Bool = false) {
+        if (location != newLocation) || (position != newPosition) {
             if let location = location {
                 remove(from: location)
             }
             
-            add(to: newLocation)
+            add(to: newLocation, position: newPosition)
         }
     }
     
