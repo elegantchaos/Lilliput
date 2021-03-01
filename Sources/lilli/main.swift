@@ -6,9 +6,10 @@
 import Foundation
 import Lilliput
 
+portalChannel.enabled = true
 
 let driver = BasicDriver()
 let engine = Engine(driver: driver)
 
-engine.load(url: URL(fileURLWithPath: "Extras/Games/ChairTest"))
+engine.load(url: URL(fileURLWithPath: "Extras/Games/PortalTest"))
 engine.run()

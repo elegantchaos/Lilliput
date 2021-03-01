@@ -35,7 +35,7 @@ struct PlayerTrait: Trait {
         for location in locations {
             location.showContents(context: .location, prefix: "You can see")
             if let trait = location.trait(LocationTrait.self) {
-                trait.showExits(for: location)
+                trait.exits.show(for: location)
             }
         }
     }

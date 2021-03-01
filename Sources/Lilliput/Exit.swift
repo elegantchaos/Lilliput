@@ -7,7 +7,7 @@ import Foundation
 
 struct Exit {
     let destination: Object
-    let portal: Object?
+    var portal: Object?
     
     init(to destination: Object, portal: Object? = nil) {
         self.destination = destination

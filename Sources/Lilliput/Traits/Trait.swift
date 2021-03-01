@@ -6,14 +6,20 @@
 import Foundation
 
 protocol Trait {
-    init(with object: Object)
     static var id: String { get }
     static var commands: [Command] { get }
+
+    init(with object: Object)
+    func didSetup(_ object: Object)
     func handle(_ event: Event) -> Bool
 }
 
 extension Trait {
     static var commands: [Command] { [] }
+
+    func didSetup(_ object: Object) {
+    }
+    
     func handle(_ event: Event) -> Bool {
         return false
     }

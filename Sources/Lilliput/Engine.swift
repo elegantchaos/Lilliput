@@ -75,7 +75,7 @@ public class Engine {
         }
         
         for object in objects.values {
-            object.link()
+            object.didSetup()
         }
         
         if let player = objects["player"] {

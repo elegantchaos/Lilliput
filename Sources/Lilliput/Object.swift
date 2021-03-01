@@ -56,13 +56,9 @@ public class Object {
         }
     }
     
-    func link() {
-        switch definition.kind {
-            case "portal":
-                break // TODO: setup portal
-            
-            default:
-                break
+    func didSetup() {
+        for trait in traits.values {
+            trait.didSetup(self)
         }
     }
     

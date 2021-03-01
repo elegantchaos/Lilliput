@@ -6,47 +6,16 @@
 import Foundation
 
 struct LocationTrait: Trait {
-    let exits: [String:Exit]
+    static var id: String { "location" }
+
+    let exits: Exits
     
     init(with object: Object) {
-        self.exits = object.setupExits()
-    }
-    
-    static var id: String { "location" }
-    
-    
-
-
-    func showExits(for object: Object) {
-        let count = exits.count
-        if count > 0 {
-            let start = count == 1 ? "There is a single exit " : "There are exits "
-            
-            var body: [String] = []
-            for exit in exits {
-                let string = object.getExitDescription(exit: exit.value, direction: exit.key)
-                body.append(string)
-            }
-            
-            let list = body.joined(separator: ", ")
-            object.engine.output("\(start)\(list).")
-        }
+        self.exits = Exits(for: object)
     }
 }
 
 extension Object {
-    func setupExits() -> [String:Exit] {
-        var exits: [String:Exit] = [:]
-        for exit in definition.exits {
-            if let destination = engine.objects[exit.value] {
-                exits[exit.key] = Exit(to: destination)
-            } else {
-                engine.warning("Missing exit \(exit.value) for \(self).")
-            }
-        }
-        return exits
-    }
-
     func getExitDescription(exit: Exit, direction: String) -> String {
         var description = direction
         
@@ -67,7 +36,7 @@ extension Object {
         var exits: [String:Exit] = [:]
         var location: Object? = self
         while let traits = location?.trait(LocationTrait.self) {
-            exits.merge(traits.exits, uniquingKeysWith: { existing, new in existing })
+            exits.merge(traits.exits.exits, uniquingKeysWith: { existing, new in existing })
             location = location?.location
         }
         return exits
