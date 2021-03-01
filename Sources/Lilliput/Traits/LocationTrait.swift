@@ -8,7 +8,7 @@ import Foundation
 struct LocationTrait: Trait {
     static var id: String { "location" }
 
-    let exits: Exits
+    fileprivate let exits: Exits
     
     init(with object: Object) {
         self.exits = Exits(for: object)
@@ -35,11 +35,22 @@ extension Object {
     var allExits: [String:Exit] {
         var exits: [String:Exit] = [:]
         var location: Object? = self
-        while let traits = location?.trait(LocationTrait.self) {
-            exits.merge(traits.exits.exits, uniquingKeysWith: { existing, new in existing })
+        while let aspect = location?.aspect(LocationTrait.self) {
+            exits.merge(aspect.exits.exits, uniquingKeysWith: { existing, new in existing })
             location = location?.location
         }
         return exits
     }
 
+    func showExits() {
+        if let aspect = self.aspect(LocationTrait.self) {
+            aspect.exits.show(for: self)
+        }
+    }
+    
+    func link(_ object: Object, as portal: PortalTrait) {
+        if let aspect = self.aspect(LocationTrait.self) {
+            aspect.exits.link(object: object, asPortal: portal)
+        }
+    }
 }

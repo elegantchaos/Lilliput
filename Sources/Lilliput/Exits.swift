@@ -4,7 +4,9 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+import Logger
 
+let exitsChannel = Channel("Exits")
 class Exits {
     var exits: [String:Exit]
     
@@ -41,7 +43,9 @@ class Exits {
     func link(object: Object, asPortal portal: PortalTrait) {
         let links = portal.links
         for exit in exits {
-            if links.contains(exit.value.destination.id) {
+            let destination = exit.value.destination
+            if links.contains(destination.id) {
+                exitsChannel.debug("Linked \(object) as portal to \(destination)")
                 var updated = exit.value
                 updated.portal = object
                 exits[exit.key] = updated

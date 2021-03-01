@@ -6,8 +6,6 @@
 import Foundation
 import Lilliput
 
-portalChannel.enabled = true
-
 let driver = BasicDriver()
 let engine = Engine(driver: driver)
 

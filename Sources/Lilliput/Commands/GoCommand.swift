@@ -33,8 +33,8 @@ class GoCommand: Command {
             matchedExit = nil
             if exit.isPassable {
                 context.player.move(to: exit.destination)
-            } else if let portal = exit.portal, let trait = portal.trait(PortalTrait.self) {
-                context.engine.output(trait.getImpassableDescription(for: portal))
+            } else if let portal = exit.portal, let aspect = portal.aspect(PortalTrait.self) {
+                context.engine.output(aspect.getImpassableDescription(for: portal))
             } else {
                 context.engine.output("You can't go that way!")
             }

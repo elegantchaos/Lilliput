@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "CollectionExtensions",
+        "repositoryURL": "https://github.com/elegantchaos/CollectionExtensions.git",
+        "state": {
+          "branch": null,
+          "revision": "6fad2f2176fba533b0ea0c608d534810a1a37bd7",
+          "version": "1.1.1"
+        }
+      },
+      {
         "package": "Files",
         "repositoryURL": "https://github.com/elegantchaos/Files.git",
         "state": {

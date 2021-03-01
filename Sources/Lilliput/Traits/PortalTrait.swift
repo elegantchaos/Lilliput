@@ -6,7 +6,6 @@
 import Foundation
 import Logger
 
-public let portalChannel = Channel("Portal")
 
 struct PortalTrait: Trait {
     static var id: String { "portal" }
@@ -20,9 +19,8 @@ struct PortalTrait: Trait {
     func didSetup(_ object: Object) {
         let engine = object.engine
         for link in links {
-            if let location = engine.objects[link], let trait = location.trait(LocationTrait.self) {
-                portalChannel.debug("Linked \(object) as portal to \(location)")
-                trait.exits.link(object: object, asPortal: self)
+            if let location = engine.objects[link] {
+                location.link(object, as: self)
             }
         }
         

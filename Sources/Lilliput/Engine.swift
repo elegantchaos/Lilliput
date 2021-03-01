@@ -89,7 +89,7 @@ public class Engine {
         var candidates: [CommandOwner] = []
         
         if let location = player.location {
-            candidates.append(contentsOf: Array(location.completeContents))
+            candidates.append(contentsOf: location.contents.allObjects)
             candidates.append(location)
         }
         candidates.append(self)

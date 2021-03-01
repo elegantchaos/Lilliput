@@ -4,6 +4,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Coercion
+import CollectionExtensions
 import Foundation
 
 
@@ -11,7 +12,7 @@ public class Object {
     let definition: Definition
     let engine: Engine
     var location: Object?
-    var contents: Set<Object> = []
+    var contents: ContentList
     var commands: [Command]
     var overrides: [String:Any] = [:]
     var traits: [String:Trait] = [:]
@@ -20,6 +21,7 @@ public class Object {
         self.definition = definition
         self.engine = engine
         self.commands = [ExamineCommand()]
+        self.contents = ContentList()
     }
     
     var id: String { definition.id }
@@ -28,29 +30,7 @@ public class Object {
 
     var isPlayer: Bool { definition.id == "player" }
     
-    var completeContents: [Object] {
-        var objects: [Object] = []
-        for object in contents {
-            objects.append(object)
-            objects.append(contentsOf: object.completeContents)
-        }
-        
-        return objects
-    }
-    
-    func contains(_ object: Object) -> Bool {
-        if contents.contains(object) {
-            return true
-        }
-        
-        for carried in contents {
-            if carried.contains(object) {
-                return true
-            }
-        }
-        
-        return false
-    }
+    func contains(_ object: Object) -> Bool { contents.contains(object) }
     
     var isCarriedByPlayer: Bool {
         location?.isPlayer == true
@@ -87,14 +67,14 @@ public class Object {
         engine.post(event: Event(id: .movedFrom, target: self, parameters: ["container": object]))
     }
     
-    func add(to object: Object) {
-        object.contents.insert(self)
+    func add(to object: Object, position: Position = .in) {
+        object.contents.add(self, position: position)
         location = object
         engine.post(event: Event(id: .contentAdded, target: object, parameters: ["object": self]))
         engine.post(event: Event(id: .movedTo, target: self, parameters: ["container": object]))
     }
     
-    func move(to newLocation: Object) {
+    func move(to newLocation: Object, position: String = "in", quiet: Bool = false) {
         if location != newLocation {
             if let location = location {
                 remove(from: location)
@@ -157,7 +137,7 @@ public class Object {
         
         let playerLocation = engine.player.location
         
-        for object in contents {
+        contents.forEach { object, position in
             if !object.hasFlag("hidden") && !object.isPlayer && object != playerLocation {
                 let descriptions = object.getContextDescriptions(for: context)
                 if descriptions.count == 0 && !object.hasFlag("skipBrief") {
@@ -255,7 +235,7 @@ public class Object {
         (getProperty(withKey: key) as? Bool) == true
     }
     
-    func trait<T>(_ kind: T.Type) -> T? where T: Trait {
+    func aspect<T>(_ kind: T.Type) -> T? where T: Trait {
         traits[kind.id] as? T
     }
 }

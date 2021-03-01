@@ -10,13 +10,43 @@ struct PlayerTrait: Trait {
     static var commands: [Command] {
         [
             ExamineCommand(shouldMatchTarget: false),
-            GoCommand()
+            GoCommand(),
+            InventoryCommand()
         ]
     }
     
     init(with object: Object) {
     }
 
+    func showInventory(of player: Object) {
+        var worn: [String] = []
+        var held: [String] = []
+        
+        player.contents.forEach { object, position in
+            let brief = object.getIndefinite()
+            if position == .worn {
+                worn.append(brief)
+            } else {
+                let extra = (position == .in) ? "" : " (\(position.rawValue))"
+                held.append("\(brief)\(extra)")
+            }
+        }
+        
+        if (held.count + worn.count) == 0 {
+            player.engine.output("You are not carrying anything.")
+        } else {
+            if held.count > 0 {
+                let list = held.joined(separator: ", ")
+                player.engine.output("You are carrying \(list).")
+            }
+            
+            if worn.count > 0 {
+                let list = worn.joined(separator: ", ")
+                player.engine.output("You are wearing \(list).")
+            }
+        }
+    }
+    
     func showLocation(object: Object) {
         var locations: [Object] = []
         var context = DescriptionContext.location
@@ -34,9 +64,7 @@ struct PlayerTrait: Trait {
 
         for location in locations {
             location.showContents(context: .location, prefix: "You can see")
-            if let trait = location.trait(LocationTrait.self) {
-                trait.exits.show(for: location)
-            }
+            location.showExits()
         }
     }
     
@@ -49,6 +77,14 @@ struct PlayerTrait: Trait {
                 
             default:
                 return false
+        }
+    }
+}
+
+extension Object {
+    func showInventory() {
+        if let aspect = self.aspect(PlayerTrait.self) {
+            aspect.showInventory(of: self)
         }
     }
 }
