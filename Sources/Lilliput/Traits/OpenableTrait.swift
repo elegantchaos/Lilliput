@@ -5,6 +5,6 @@
 
 import Foundation
 
-public struct OpenableTrait: Trait {
-    public static var id: String { "openable" }
+struct OpenableTrait: Trait {
+    static var id: String { "openable" }
 }

@@ -5,6 +5,6 @@
 
 import Foundation
 
-public struct MovableTrait: Trait {
-    public static var id: String { "movable" }
+struct MovableTrait: Trait {
+    static var id: String { "movable" }
 }

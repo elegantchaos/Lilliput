@@ -14,7 +14,7 @@ public class Object {
     var contents: Set<Object> = []
     var commands: [Command]
     var overrides: [String:Any] = [:]
-    var traits: [Trait] = []
+    var traits: [String:Trait.Type] = [:]
     
     lazy var exits: [String:Exit] = setupExits()
     
@@ -59,12 +59,13 @@ public class Object {
         }
         
         for trait in engine.traits.values {
-            if (definition.kind == trait.id) || definition.hasFlag(trait.id) {
-                traits.append(trait)
+            let id = trait.id
+            if (definition.kind == id) || definition.hasFlag(id) {
+                traits[id] = trait
             }
         }
         
-        for trait in traits {
+        for trait in traits.values {
             commands.append(contentsOf: trait.commands)
         }
     }
@@ -82,15 +83,15 @@ public class Object {
     func remove(from object: Object) {
         object.contents.remove(self)
         location = nil
-        engine.post(event: Event(id: "contentRemoved", target: object, parameters: ["object": self]))
-        engine.post(event: Event(id: "movedFrom", target: self, parameters: ["container": object]))
+        engine.post(event: Event(id: .contentRemoved, target: object, parameters: ["object": self]))
+        engine.post(event: Event(id: .movedFrom, target: self, parameters: ["container": object]))
     }
     
     func add(to object: Object) {
         object.contents.insert(self)
         location = object
-        engine.post(event: Event(id: "contentAdded", target: object, parameters: ["object": self]))
-        engine.post(event: Event(id: "movedTo", target: self, parameters: ["container": object]))
+        engine.post(event: Event(id: .contentAdded, target: object, parameters: ["object": self]))
+        engine.post(event: Event(id: .movedTo, target: self, parameters: ["container": object]))
     }
     
     func move(to newLocation: Object) {
@@ -101,6 +102,16 @@ public class Object {
             
             add(to: newLocation)
         }
+    }
+    
+    func handle(_ event: Event) -> Bool {
+        for trait in traits.values {
+            if trait.handle(event) {
+                return true
+            }
+        }
+        
+        return false
     }
     
     func getContextDescriptions(for context: DescriptionContext) -> [String] {
@@ -252,27 +263,6 @@ public class Object {
         engine.output(id)
     }
     
-    func showLocation() {
-        var locations: [Object] = []
-        var context = DescriptionContext.location
-        var prefix = ""
-        var next = self.location
-        while let location = next {
-            locations.append(location)
-            location.showDescription(context: context, prefix: prefix)
-            next = location.location
-            if next != nil {
-                context = .container
-                prefix = location.getDescription(for: .outside) ?? ""
-            }
-        }
-
-        for location in locations {
-            location.showContents(context: .location, prefix: "You can see")
-            location.showExits()
-        }
-    }
-    
     func getProperty(withKey key: String) -> Any? {
         return overrides[key] ?? definition.properties[key]
     }
@@ -295,6 +285,10 @@ public class Object {
     
     func hasFlag(_ key: String) -> Bool {
         (getProperty(withKey: key) as? Bool) == true
+    }
+    
+    func trait<T>(_ kind: T.Type) -> T.Type? where T: Trait {
+        traits[id] as? T.Type
     }
 }
 

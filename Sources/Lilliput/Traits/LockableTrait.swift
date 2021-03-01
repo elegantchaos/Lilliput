@@ -5,6 +5,6 @@
 
 import Foundation
 
-public struct LockableTrait: Trait {
-    public static var id: String { "lockable" }
+struct LockableTrait: Trait {
+    static var id: String { "lockable" }
 }

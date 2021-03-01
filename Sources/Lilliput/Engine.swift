@@ -13,7 +13,7 @@ public class Engine {
     var objects: [String:Object] = [:]
     var player: Object!
     var events: [Event] = []
-    var traits: [String:Trait] = [:]
+    var traits: [String:Trait.Type] = [:]
     
     public init(driver: Driver) {
         self.driver = driver
@@ -21,15 +21,15 @@ public class Engine {
     }
     
     public func registerStandardTraits() {
-        register(trait: LocationTrait())
-        register(trait: LockableTrait())
-        register(trait: MovableTrait())
-        register(trait: OpenableTrait())
-        register(trait: PersonTrait())
-        register(trait: PlayerTrait())
-        register(trait: PortalTrait())
-        register(trait: SittableTrait())
-        register(trait: WearableTrait())
+        register(trait: LocationTrait.self)
+        register(trait: LockableTrait.self)
+        register(trait: MovableTrait.self)
+        register(trait: OpenableTrait.self)
+        register(trait: PersonTrait.self)
+        register(trait: PlayerTrait.self)
+        register(trait: PortalTrait.self)
+        register(trait: SittableTrait.self)
+        register(trait: WearableTrait.self)
     }
     
     public func load(url: URL) {
@@ -114,14 +114,25 @@ public class Engine {
         output("I don't know how to \(input.raw)!")
     }
     
+    func deliver(_ event: Event, to object: Object) -> Bool {
+        if object.handle(event) {
+            return true
+        }
+        
+        if event.propogates, let parent = object.location {
+            return deliver(event, to: parent)
+        }
+        
+        return false
+    }
+    
     func handleEvents() {
         if events.count == 0 {
             events.append(Event(id: "idle", target: player))
         }
         
-        print("\nEvents:")
         for event in events {
-            print(event)
+            _ = deliver(event, to: event.target)
         }
         
         events = []
@@ -138,12 +149,12 @@ public class Engine {
         output("Bye.")
     }
     
-    public func register(definition: Definition) {
+    func register(definition: Definition) {
         definitions[definition.id] = definition
         print("registered \(definition.id)")
     }
     
-    public func register(trait: Trait) {
+    func register(trait: Trait.Type) {
         traits[trait.id] = trait
     }
 }

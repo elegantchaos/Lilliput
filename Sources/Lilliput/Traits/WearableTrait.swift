@@ -5,6 +5,6 @@
 
 import Foundation
 
-public struct WearableTrait: Trait {
-    public static var id: String { "wearable" }
+struct WearableTrait: Trait {
+    static var id: String { "wearable" }
 }

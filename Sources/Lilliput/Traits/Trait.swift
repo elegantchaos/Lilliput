@@ -5,14 +5,15 @@
 
 import Foundation
 
-public protocol Trait {
+protocol Trait {
     static var id: String { get }
     static var commands: [Command] { get }
+    static func handle(_ event: Event) -> Bool
 }
 
-public extension Trait {
+extension Trait {
     static var commands: [Command] { [] }
-    
-    var id: String { Self.id }
-    var commands: [Command] { Self.commands }
+    static func handle(_ event: Event) -> Bool {
+        return false
+    }
 }

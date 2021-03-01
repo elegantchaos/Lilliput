@@ -26,8 +26,8 @@ class ExamineCommand: Command {
             let object = context.target
             object.showDescriptionAndContents()
             object.setFlag("examined")
-        } else {
-            context.player.showLocation()
+        } else if let trait = context.player.trait(PlayerTrait.self) {
+            trait.showLocation(object: context.player)
         }
     }
 }

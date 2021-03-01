@@ -5,6 +5,6 @@
 
 import Foundation
 
-public struct SittableTrait: Trait {
-    public static var id: String { "sittable" }
+struct SittableTrait: Trait {
+    static var id: String { "sittable" }
 }

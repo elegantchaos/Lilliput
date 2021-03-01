@@ -5,6 +5,6 @@
 
 import Foundation
 
-public struct PortalTrait: Trait {
-    public static var id: String { "portal" }
+struct PortalTrait: Trait {
+    static var id: String { "portal" }
 }

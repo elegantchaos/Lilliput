@@ -5,14 +5,28 @@
 
 import Foundation
 
+enum EventId: String {
+    case contentAdded
+    case contentRemoved
+    case movedFrom
+    case movedTo
+    
+}
+
 struct Event {
     let id: String
     let target: Object
     let parameters: [String:Any]
+    let propogates: Bool
 
-    internal init(id: String, target: Object, parameters: [String : Any] = [:]) {
+    init(id: EventId, target: Object, propogates: Bool = false, parameters: [String:Any]) {
+        self.init(id: id.rawValue, target: target, propogates: propogates, parameters: parameters)
+    }
+    
+    init(id: String, target: Object, propogates: Bool = false, parameters: [String : Any] = [:]) {
         self.id = id
         self.target = target
+        self.propogates = propogates
         self.parameters = parameters
     }
 }
