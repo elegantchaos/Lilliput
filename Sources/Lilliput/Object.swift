@@ -16,8 +16,6 @@ public class Object {
     var overrides: [String:Any] = [:]
     var traits: [String:Trait] = [:]
     
-    lazy var exits: [String:Exit] = setupExits()
-    
     init(definition: Definition, engine: Engine) {
         self.definition = definition
         self.engine = engine
@@ -38,18 +36,6 @@ public class Object {
         }
         
         return objects
-    }
-    
-    func setupExits() -> [String:Exit] {
-        var exits: [String:Exit] = [:]
-        for exit in definition.exits {
-            if let destination = engine.objects[exit.value] {
-                exits[exit.key] = Exit(to: destination)
-            } else {
-                engine.warning("Missing exit \(exit.value) for \(self).")
-            }
-        }
-        return exits
     }
     
     func setup() {
@@ -199,39 +185,7 @@ public class Object {
     func hasVisited(location: Object) -> Bool {
         return false // TODO:
     }
-    
-    func getExitDescription(exit: Exit, direction: String) -> String {
-        var description = direction
         
-        if let portal = exit.portal {
-            let brief = portal.getDescriptionWarnIfMissing(for: .exit)
-            description += " \(brief)"
-        }
-        
-        if engine.player.hasVisited(location: exit.destination) {
-            let brief = exit.destination.getDefinite()
-            description += " to \(brief)"
-        }
-
-        return description
-    }
-    
-    func showExits() {
-        let count = exits.count
-        if count > 0 {
-            let start = count == 1 ? "There is a single exit " : "There are exits "
-            
-            var body: [String] = []
-            for exit in exits {
-                let string = getExitDescription(exit: exit.value, direction: exit.key)
-                body.append(string)
-            }
-            
-            let list = body.joined(separator: ", ")
-            engine.output("\(start)\(list).")
-        }
-    }
-    
     func hasFlagMatchingKey(_ key: String) -> Bool {
         if hasFlag(key) {
             return true
@@ -288,7 +242,7 @@ public class Object {
     }
     
     func trait<T>(_ kind: T.Type) -> T? where T: Trait {
-        traits[id] as? T
+        traits[kind.id] as? T
     }
 }
 

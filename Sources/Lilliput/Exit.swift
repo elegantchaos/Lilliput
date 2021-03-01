@@ -1,9 +1,7 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Developer on 28/02/2021.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 01/03/21.
+//  All code (c) 2021 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 
@@ -14,5 +12,10 @@ struct Exit {
     init(to destination: Object, portal: Object? = nil) {
         self.destination = destination
         self.portal = portal
+    }
+    
+    var isPassable: Bool {
+        guard let portal = portal else { return true }
+        return !portal.hasFlag("locked")
     }
 }

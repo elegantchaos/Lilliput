@@ -6,6 +6,8 @@
 import Foundation
 
 class GoCommand: Command {
+    var matchedExit: Exit?
+    
     init() {
         super.init(keywords: ["go", "g"])
     }
@@ -14,14 +16,28 @@ class GoCommand: Command {
         let input = context.input
         let direction = super.matches(context) ? input.arguments[0] : input.command
         
-        
-        if let location = context.player.location, let trait = location.trait(LocationTrait.self) {
-            let exits = trait.allExits
+        if let location = context.player.location {
+            for exit in location.allExits {
+                if (exit.key == direction) || exit.key.starts(with: direction) {
+                    matchedExit = exit.value
+                    return true
+                }
+            }
         }
         
         return false
     }
     
     override func perform(in context: Context) {
+        if let exit = matchedExit {
+            matchedExit = nil
+            if exit.isPassable {
+                context.player.move(to: exit.destination)
+            } else if let portal = exit.portal, let trait = portal.trait(PortalTrait.self) {
+                context.engine.output(trait.getImpassableDescription(for: portal))
+            } else {
+                context.engine.output("You can't go that way!")
+            }
+        }
     }
 }

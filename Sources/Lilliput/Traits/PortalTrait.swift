@@ -10,4 +10,12 @@ struct PortalTrait: Trait {
 
     init(with object: Object) {
     }
+    
+    func getImpassableDescription(for object: Object) -> String {
+        if let description = object.getDescription(for: .locked) {
+            return description
+        }
+        
+        return "\(object.getDefinite()) is locked."
+    }
 }

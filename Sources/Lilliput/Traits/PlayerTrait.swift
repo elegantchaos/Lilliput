@@ -7,7 +7,12 @@ import Foundation
 
 struct PlayerTrait: Trait {
     static var id: String { "player" }
-    static var commands: [Command] { [ExamineCommand(shouldMatchTarget: false)]}
+    static var commands: [Command] {
+        [
+            ExamineCommand(shouldMatchTarget: false),
+            GoCommand()
+        ]
+    }
     
     init(with object: Object) {
     }
@@ -29,7 +34,9 @@ struct PlayerTrait: Trait {
 
         for location in locations {
             location.showContents(context: .location, prefix: "You can see")
-            location.showExits()
+            if let trait = location.trait(LocationTrait.self) {
+                trait.showExits(for: location)
+            }
         }
     }
     

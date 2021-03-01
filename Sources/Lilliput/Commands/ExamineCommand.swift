@@ -14,6 +14,8 @@ class ExamineCommand: Command {
     }
     
     override func matches(_ context: Context) -> Bool {
+        guard super.matches(context) else { return false }
+        
         if shouldMatchTarget && inputMatchesTarget(in: context) {
             return true
         }

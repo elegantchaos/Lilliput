@@ -18,6 +18,7 @@
         "sittable": true,
         "type": "location"
     },
+    
     "Room 1": {
         "descriptions": {
             "container": "a shabby looking room.",
@@ -29,16 +30,18 @@
         },
         "type": "location"
     },
+    
     "Room 2": {
         "descriptions": {
             "definite": "room 2",
-            "detailed": "You are in room 2."
+            "location": "You are in room 2."
         },
         "exits": {
             "south": "Room 1"
         },
         "type": "location"
     },
+    
     "player": {
         "descriptions": {
             "definite": "Testy McTestFace",
