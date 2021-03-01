@@ -7,4 +7,7 @@ import Foundation
 
 struct WearableTrait: Trait {
     static var id: String { "wearable" }
+
+    init(with object: Object) {
+    }
 }

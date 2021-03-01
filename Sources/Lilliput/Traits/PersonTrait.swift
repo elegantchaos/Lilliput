@@ -7,4 +7,7 @@ import Foundation
 
 struct PersonTrait: Trait {
     static var id: String { "person" }
+
+    init(with object: Object) {
+    }
 }

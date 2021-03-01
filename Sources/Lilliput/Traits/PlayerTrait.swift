@@ -9,7 +9,10 @@ struct PlayerTrait: Trait {
     static var id: String { "player" }
     static var commands: [Command] { [ExamineCommand(shouldMatchTarget: false)]}
     
-    static func showLocation(object: Object) {
+    init(with object: Object) {
+    }
+
+    func showLocation(object: Object) {
         var locations: [Object] = []
         var context = DescriptionContext.location
         var prefix = ""
@@ -30,7 +33,7 @@ struct PlayerTrait: Trait {
         }
     }
     
-    static func handle(_ event: Event) -> Bool {
+    func handle(_ event: Event) -> Bool {
         guard let id = EventId(rawValue: event.id) else { return false }
         switch id {
             case .movedTo:

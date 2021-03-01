@@ -14,7 +14,7 @@ public class Object {
     var contents: Set<Object> = []
     var commands: [Command]
     var overrides: [String:Any] = [:]
-    var traits: [String:Trait.Type] = [:]
+    var traits: [String:Trait] = [:]
     
     lazy var exits: [String:Exit] = setupExits()
     
@@ -61,7 +61,7 @@ public class Object {
         for trait in engine.traits.values {
             let id = trait.id
             if (definition.kind == id) || definition.hasFlag(id) {
-                traits[id] = trait
+                traits[id] = trait.init(with: self)
             }
         }
         
@@ -287,8 +287,8 @@ public class Object {
         (getProperty(withKey: key) as? Bool) == true
     }
     
-    func trait<T>(_ kind: T.Type) -> T.Type? where T: Trait {
-        traits[id] as? T.Type
+    func trait<T>(_ kind: T.Type) -> T? where T: Trait {
+        traits[id] as? T
     }
 }
 

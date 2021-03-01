@@ -7,4 +7,7 @@ import Foundation
 
 struct SittableTrait: Trait {
     static var id: String { "sittable" }
+
+    init(with object: Object) {
+    }
 }

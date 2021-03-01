@@ -7,4 +7,7 @@ import Foundation
 
 struct MovableTrait: Trait {
     static var id: String { "movable" }
+
+    init(with object: Object) {
+    }
 }

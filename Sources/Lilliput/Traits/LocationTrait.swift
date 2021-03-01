@@ -6,5 +6,12 @@
 import Foundation
 
 struct LocationTrait: Trait {
+    var exits: [Exit] = []
+    
+    init(with object: Object) {
+    }
+    
     static var id: String { "location" }
+    
+    var allExits: [Exit] { [] }
 }

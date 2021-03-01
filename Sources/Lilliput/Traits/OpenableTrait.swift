@@ -7,4 +7,7 @@ import Foundation
 
 struct OpenableTrait: Trait {
     static var id: String { "openable" }
+
+    init(with object: Object) {
+    }
 }

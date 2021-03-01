@@ -7,4 +7,7 @@ import Foundation
 
 struct PortalTrait: Trait {
     static var id: String { "portal" }
+
+    init(with object: Object) {
+    }
 }

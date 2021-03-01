@@ -7,4 +7,7 @@ import Foundation
 
 struct LockableTrait: Trait {
     static var id: String { "lockable" }
+
+    init(with object: Object) {
+    }
 }
