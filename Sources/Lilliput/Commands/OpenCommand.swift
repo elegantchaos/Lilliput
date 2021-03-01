@@ -15,13 +15,13 @@ class OpenCloseCommand: ChangeFlagCommand {
 
 class OpenCommand: ChangeFlagCommand {
     init() {
-        super.init(flag: .openedFlag, state: true, mode: "open", keywords: ["open"])
+        super.init(flag: .openedFlag, state: true, mode: .openAction, keywords: ["open"])
     }
 }
 
 class CloseCommand: ChangeFlagCommand {
     init() {
-        super.init(flag: .openedFlag, state: false, mode: "close", keywords: ["close"])
+        super.init(flag: .openedFlag, state: false, mode: .closeAction, keywords: ["close"])
     }
 }
 

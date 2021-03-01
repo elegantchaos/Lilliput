@@ -5,6 +5,12 @@
 
 import Foundation
 
+extension String {
+    static let flagChangedEvent = "flagChanged"
+    static let flagParameter = "flag"
+    static let stateParameter = "state"
+}
+
 class ChangeFlagCommand: TargetedCommand {
     let flag: String
     let state: Bool
@@ -50,7 +56,7 @@ class ChangeFlagCommand: TargetedCommand {
             outputReport(forKey: "missing", in: context)
         } else {
             object.setProperty(withKey: flag, to: state)
-            context.engine.post(event: Event(id: mode, target: object))
+            context.engine.post(event: Event(id: .flagChangedEvent, target: object, parameters: [.flagParameter: flag, .stateParameter: state]))
             outputReport(forKey: "changed", in: context)
         }
     }

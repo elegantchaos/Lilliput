@@ -219,6 +219,7 @@ public class Object {
     
     func showDescriptionAndContents() {
         showDescription(context: .detailed)
+        showContentsIfVisible()
     }
     
     func getProperty(withKey key: String) -> Any? {

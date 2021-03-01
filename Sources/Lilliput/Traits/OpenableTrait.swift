@@ -3,10 +3,20 @@
 //  All code (c) 2021 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Coercion
 import Foundation
 
 extension String {
     static let openedFlag = "open"
+    static let openAction = "open"
+    static let closeAction = "close"
+}
+
+extension Event {
+    var isOpenedEvent: Bool {
+        guard event.id == .flagChangedEvent else { return false }
+        return event.parameters[stringWithKey: .flagParameter] == .openedFlag
+    }
 }
 
 struct OpenableTrait: Trait {
@@ -20,6 +30,14 @@ struct OpenableTrait: Trait {
     }
     
     init(with object: Object) {
+    }
+    
+    func handle(_ event: Event) -> Bool {
+        if event.isOpenedEvent {
+            event.target.showContentsIfVisible()
+        }
+        
+        return false
     }
 }
 
