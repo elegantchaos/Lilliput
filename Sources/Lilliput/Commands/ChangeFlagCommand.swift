@@ -34,10 +34,10 @@ class ChangeFlagCommand: TargetedCommand {
     }
     
     override func perform(in context: Context) {
-        if !requirementsAreSatisfied(in: context) {
-            outputReport(forKey: "missing", in: context)
-        } else if context.target.hasFlag(flag) == state {
+        if context.target.hasFlag(flag) == state {
             outputReport(forKey: "already", in: context)
+        } else if !requirementsAreSatisfied(in: context) {
+            outputReport(forKey: "missing", in: context)
         } else {
             context.target.setProperty(withKey: flag, to: state)
             outputReport(forKey: "changed", in: context)
