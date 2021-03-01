@@ -9,6 +9,7 @@ struct PlayerTrait: Trait {
     static var id: String { "player" }
     static var commands: [Command] {
         [
+            DebugCommand(),
             ExamineCommand(shouldMatchTarget: false),
             GoCommand(),
             InventoryCommand()

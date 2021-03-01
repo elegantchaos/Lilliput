@@ -4,8 +4,6 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
-import Logger
-
 
 struct PortalTrait: Trait {
     static var id: String { "portal" }
