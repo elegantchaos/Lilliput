@@ -20,18 +20,14 @@ extension String {
 }
 
 class LockUnlockCommand: ChangeFlagCommand {
-    let mode: String
     
     init(state: Bool, keywords: [String]) {
-        mode = state ? "lock" : "unlock"
-        super.init(flag: .lockedFlag, state: state, keywords: keywords)
+        let mode = state ? "lock" : "unlock"
+        super.init(flag: .lockedFlag, state: state, mode: mode, keywords: keywords)
     }
 
     override func defaultReport(forKey key: String, in context: Context) -> String {
-        let brief = context.target.getDefinite()
         switch key {
-            case "already": return "\(brief.capitalizedFirst) is already \(mode)ed."
-            case "changed": return "You \(mode) \(brief)."
             case "missing":
                 let lockable = context.target.aspect(LockableTrait.self)
                 if let lockable = lockable, let object = lockable.requiredObject {

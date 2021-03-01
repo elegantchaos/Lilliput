@@ -8,10 +8,12 @@ import Foundation
 class ChangeFlagCommand: TargetedCommand {
     let flag: String
     let state: Bool
-    
-    init(flag: String, state: Bool, keywords: [String]) {
+    let mode: String
+
+    init(flag: String, state: Bool, mode: String, keywords: [String]) {
         self.flag = flag
         self.state = state
+        self.mode = mode
         super.init(keywords: keywords)
     }
     
@@ -20,7 +22,14 @@ class ChangeFlagCommand: TargetedCommand {
     }
     
     func defaultReport(forKey key: String, in context: Context) -> String {
-        return "\(key): \(context.target.getDefinite())"
+        let brief = context.target.getDefinite()
+        switch key {
+            case "already": return "\(brief.capitalizedFirst) is already \(mode)ed."
+            case "changed": return "You \(mode) \(brief)."
+            case "missing": return "You are missing something."
+            default:
+                return "\(key): \(context.target.getDefinite())"
+        }
     }
     
     func outputReport(forKey key: String, in context: Context) {
@@ -34,12 +43,14 @@ class ChangeFlagCommand: TargetedCommand {
     }
     
     override func perform(in context: Context) {
-        if context.target.hasFlag(flag) == state {
+        let object = context.target
+        if object.hasFlag(flag) == state {
             outputReport(forKey: "already", in: context)
         } else if !requirementsAreSatisfied(in: context) {
             outputReport(forKey: "missing", in: context)
         } else {
-            context.target.setProperty(withKey: flag, to: state)
+            object.setProperty(withKey: flag, to: state)
+            context.engine.post(event: Event(id: mode, target: object))
             outputReport(forKey: "changed", in: context)
         }
     }

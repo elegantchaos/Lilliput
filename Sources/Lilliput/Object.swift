@@ -37,9 +37,20 @@ public class Object {
     }
     
     func setup() {
-        if let locationId = definition.properties[stringWithKey: "location"] {
-            guard let location = engine.objects[locationId] else { engine.error("Missing location for \(self)")}
-            add(to: location)
+        let id: String?
+        var position = Position.in
+        if let spec = definition.properties["location"] as? [String] {
+            id = spec.first
+            if spec.count > 1, let pos = Position(rawValue: spec[1]) {
+                position = pos
+            }
+        } else {
+            id = definition.properties[stringWithKey: "location"]
+        }
+
+        if let id = id {
+            guard let location = engine.objects[id] else { engine.error("Missing location for \(self)")}
+            add(to: location, position: position)
         }
         
         for trait in engine.traits.values {
@@ -185,7 +196,7 @@ public class Object {
             return true
         }
         
-        return key.starts(with: "not-") && hasFlag(String(key.dropFirst(4)))
+        return key.starts(with: "not-") && !hasFlag(String(key.dropFirst(4)))
     }
     
     func showDescription(context: DescriptionContext, prefix: String = "") {
@@ -200,7 +211,7 @@ public class Object {
     }
     
     func showContentsIfVisible() {
-        if hasFlag("open") || !hasFlag("openable") {
+        if isContentVisible {
             let prefix = getContentPrefix()
             showContents(prefix: prefix)
         }
@@ -208,7 +219,6 @@ public class Object {
     
     func showDescriptionAndContents() {
         showDescription(context: .detailed)
-        engine.output(id)
     }
     
     func getProperty(withKey key: String) -> Any? {

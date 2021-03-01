@@ -9,5 +9,5 @@ import Lilliput
 let driver = BasicDriver()
 let engine = Engine(driver: driver)
 
-engine.load(url: URL(fileURLWithPath: "Extras/Games/PortalTest"))
+engine.load(url: URL(fileURLWithPath: "Extras/Games/OpenTest"))
 engine.run()

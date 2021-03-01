@@ -5,6 +5,9 @@
 
 import Files
 import Foundation
+import Logger
+
+let eventChannel = Channel("Events")
 
 public class Engine {
     let driver: Driver
@@ -117,6 +120,8 @@ public class Engine {
     }
     
     func deliver(_ event: Event, to object: Object) -> Bool {
+        eventChannel.log("\(object) received \(event)")
+
         if object.handle(event) {
             return true
         }
