@@ -7,6 +7,13 @@ import Coercion
 import CollectionExtensions
 import Foundation
 
+extension String {
+    static let hiddenFlag = "hidden"
+    static let showIfEmptyFlag = "showEmpty"
+    static let skipBriefFlag = "skipBrief"
+    static let showContentModeProperty = "showContentWhen"
+    static let showContentAlwaysMode = "always"
+}
 
 public class Object {
     let definition: Definition
@@ -106,7 +113,21 @@ public class Object {
     }
     
     func getContextDescriptions(for context: DescriptionContext) -> [String] {
-        []
+        guard context != .none else { return [] }
+        
+        var descriptions: [String] = []
+
+        let isExamined = hasFlag(.examinedFlag)
+        let context = isExamined ? "\(context)-examined" : "\(context)-not-examined"
+        if let description = getDescription(for: context) {
+            descriptions.append(description)
+        }
+
+        if let description = getDescription(for: context) {
+            descriptions.append(description)
+        }
+        
+        return descriptions
     }
     
     func getDescriptionWarnIfMissing(for context: DescriptionContext) -> String {
@@ -131,7 +152,11 @@ public class Object {
             return prefix
         }
         
-        return getDescription(for: .contentPrefix) ?? "It contains"
+        if let prefix = getDescription(for: .contentPrefix) {
+            return prefix
+        }
+        
+        return (context == .location) ? "You can see" : "It contains"
     }
     
     func getDescription(for context: String) -> String? {
@@ -142,31 +167,41 @@ public class Object {
         return definition.strings[context.rawValue]
     }
     
-    func showContents(context: DescriptionContext = .none, prefix: String, showIfEmpty: Bool = false) {
-        var objects: [Object] = []
-        var recursive: [Object] = []
-        
+    func showContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) {
+        // get a phrase like "You can see", or "It contains" to prefix the contents with
+        let prefix = getContentPrefix(for: context)
+
+        var describeBriefly: [Object] = []
+        var describeRecursively: [Object] = []
         let playerLocation = engine.player.location
         
+        // for each of our contents we:
+        // - skip it if it's the player or the player's location
+        // - skip it if it is marked as hidden
+        // - show a custom descriptions for the item if there is one
+        // - add it to the list of objects to describe briefly
+        // - optionally add it to the list of objects to recursively describe the contents of
+        
         contents.forEach { object, position in
-            if !object.hasFlag("hidden") && !object.isPlayer && object != playerLocation {
-                let descriptions = object.getContextDescriptions(for: context)
-                if descriptions.count == 0 && !object.hasFlag("skipBrief") {
-                    objects.append(object)
-                } else {
-                    for description in descriptions {
+            if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
+                let customDescriptions = object.getContextDescriptions(for: context)
+                if customDescriptions.count > 0 {
+                    for description in customDescriptions {
                         engine.output(description)
                     }
+                    
+                } else if !object.hasFlag(.skipBriefFlag) {
+                    describeBriefly.append(object)
                 }
                 
-                let mode = object.getString(withKey: "showContext")
-                if (mode == "always") || object.hasFlag(mode) {
-                    recursive.append(object)
+                let mode = object.getString(withKey: .showContentModeProperty)
+                if (mode == .showContentAlwaysMode) || object.hasFlag(mode) {
+                    describeRecursively.append(object)
                 }
             }
         }
         
-        if objects.count == 0 {
+        if describeBriefly.count == 0 {
             if showIfEmpty {
                 let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
                 engine.output(description)
@@ -174,21 +209,20 @@ public class Object {
             
         } else {
             var items: [String] = []
-            for object in objects {
+            for object in describeBriefly {
                 items.append(object.getIndefinite())
             }
             let list = items.joined(separator: ", ")
             engine.output("\(prefix) \(list).")
         }
         
-        for object in recursive {
-            let prefix = object.getContentPrefix(for: context)
-            object.showContents(context: context, prefix: prefix, showIfEmpty: showIfEmpty || object.hasFlag("showEmpty"))
+        for object in describeRecursively {
+            object.showContents(context: context, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
         }
     }
     
     func hasVisited(location: Object) -> Bool {
-        return false // TODO:
+        return location.hasFlag(.visitedFlag)
     }
         
     func hasFlagMatchingKey(_ key: String) -> Bool {
@@ -212,8 +246,7 @@ public class Object {
     
     func showContentsIfVisible() {
         if isContentVisible {
-            let prefix = getContentPrefix()
-            showContents(prefix: prefix)
+            showContents()
         }
     }
     

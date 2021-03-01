@@ -5,6 +5,10 @@
 
 import Foundation
 
+extension String {
+    static let examinedFlag = "examined"
+}
+
 class ExamineCommand: TargetedCommand {
     let shouldMatchTarget: Bool
     
@@ -25,9 +29,9 @@ class ExamineCommand: TargetedCommand {
         if shouldMatchTarget {
             let object = context.target
             object.showDescriptionAndContents()
-            object.setFlag("examined")
+            object.setFlag(.examinedFlag)
         } else if let aspect = context.player.aspect(PlayerTrait.self) {
-            aspect.showLocation(object: context.player)
+            aspect.showLocation(of: context.player)
         }
     }
 }

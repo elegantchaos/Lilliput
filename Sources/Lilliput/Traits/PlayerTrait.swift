@@ -5,6 +5,10 @@
 
 import Foundation
 
+extension String {
+    static let visitedFlag = "visited"
+}
+
 struct PlayerTrait: Trait {
     static var id: String { "player" }
     static var commands: [Command] {
@@ -48,7 +52,7 @@ struct PlayerTrait: Trait {
         }
     }
     
-    func showLocation(object: Object) {
+    func showLocation(of object: Object) {
         var locations: [Object] = []
         var context = DescriptionContext.location
         var prefix = ""
@@ -64,7 +68,7 @@ struct PlayerTrait: Trait {
         }
 
         for location in locations {
-            location.showContents(context: .location, prefix: "You can see")
+            location.showContents(context: .location)
             location.showExits()
         }
     }
@@ -73,7 +77,8 @@ struct PlayerTrait: Trait {
         guard let id = EventId(rawValue: event.id) else { return false }
         switch id {
             case .movedTo:
-                showLocation(object: event.target)
+                event.target.location?.setFlag(.visitedFlag)
+                showLocation(of: event.target)
                 return true
                 
             default:
