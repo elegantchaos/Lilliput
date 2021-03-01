@@ -90,6 +90,7 @@ public class Engine {
         
         if let location = player.location {
             candidates.append(contentsOf: location.contents.allObjects)
+            candidates.append(contentsOf: location.portals)
             candidates.append(location)
         }
 

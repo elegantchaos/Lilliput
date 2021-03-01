@@ -8,8 +8,6 @@ import Foundation
 class ChangeFlagCommand: TargetedCommand {
     let flag: String
     let state: Bool
-    var meetsRequirements: Bool { true }
-    var reports: [String:String] = [:]
     
     init(flag: String, state: Bool, keywords: [String]) {
         self.flag = flag
@@ -17,26 +15,32 @@ class ChangeFlagCommand: TargetedCommand {
         super.init(keywords: keywords)
     }
     
+    func requirementsAreSatisfied(in context: Context) -> Bool {
+        return true
+    }
+    
+    func defaultReport(forKey key: String, in context: Context) -> String {
+        return "\(key): \(context.target.getDefinite())"
+    }
+    
     func outputReport(forKey key: String, in context: Context) {
         let object = context.target
-        if let custom = object.getDescription(for: "\(flag)\(key)") {
+        if let custom = object.getDescription(for: "\(flag)-\(key)-\(state)") {
             context.engine.output(custom)
         }
         
-        let brief = object.getDefinite()
-        let report = reports[key] ?? key
-        let description = "\(brief) \(report)"
+        let description = defaultReport(forKey: key, in: context)
         context.engine.output(description)
     }
     
     override func perform(in context: Context) {
-        if !meetsRequirements {
-            outputReport(forKey: "MissingRequirements", in: context)
+        if !requirementsAreSatisfied(in: context) {
+            outputReport(forKey: "missing", in: context)
         } else if context.target.hasFlag(flag) == state {
-            outputReport(forKey: "WasAlreadySet", in: context)
+            outputReport(forKey: "already", in: context)
         } else {
             context.target.setProperty(withKey: flag, to: state)
-            outputReport(forKey: "DidSet", in: context)
+            outputReport(forKey: "changed", in: context)
         }
     }
 }

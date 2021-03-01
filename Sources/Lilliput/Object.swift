@@ -223,6 +223,19 @@ public class Object {
         (getProperty(withKey: key) as? String) ?? ""
     }
     
+    func getObject(withKey key: String) -> Object? {
+        let value = getProperty(withKey: key)
+        if let object = value as? Object {
+            return object
+        }
+        
+        if let string = value as? String, let object = engine.objects[string] {
+            return object
+        }
+        
+        return nil
+    }
+    
     func setFlag(_ key: String) {
         setProperty(withKey: key, to: true)
     }

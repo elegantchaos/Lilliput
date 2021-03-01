@@ -23,14 +23,14 @@
 
     "Room 1 Door": {
         "descriptions": {
+            "detailed": "A normal office door, with a keyhole.",
             "definite": "the door",
             "exit": "through a door",
             "indefinite": "a door",
             "locked": "The door is locked.",
-            "lockedMissingRequirements": "You don't have the key.",
+            "locked-missing": "You don't have the key.",
             "not-locked": "The door is unlocked."
         },
-        "detailed": "A normal office door, with a keyhole.",
         "links": [
             "Room 1",
             "Room 2"
@@ -54,7 +54,6 @@
         "location": "Room 1",
         "movable": true,
         "names": [
-            "key",
             "key"
         ],
         "type": "object"

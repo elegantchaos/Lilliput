@@ -42,6 +42,12 @@ extension Object {
         return exits
     }
 
+    var portals: [Object] {
+        guard let aspect = self.aspect(LocationTrait.self) else { return [] }
+        let portals = aspect.exits.exits.values.compactMap({ $0.portal })
+        return portals
+    }
+
     func showExits() {
         if let aspect = self.aspect(LocationTrait.self) {
             aspect.exits.show(for: self)
@@ -53,4 +59,5 @@ extension Object {
             aspect.exits.link(object: object, asPortal: portal)
         }
     }
+    
 }
