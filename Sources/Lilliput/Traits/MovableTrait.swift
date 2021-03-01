@@ -10,6 +10,7 @@ struct MovableTrait: Trait {
 
     static var commands: [Command] {
         [
+            DropCommand(),
             TakeCommand()
         ]
     }

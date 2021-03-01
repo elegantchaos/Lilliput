@@ -63,10 +63,12 @@ class ContentList {
         return false
     }
     
-    
-    func forEach(recursive: Bool = false, _ perform: (Object, Position) -> ()) {
+    func forEach(recursive: Bool = false, perform: (Object, Position) -> ()) {
         for entry in entries {
             perform(entry.key, entry.value)
+            if recursive {
+                entry.key.contents.forEach(recursive: recursive, perform: perform)
+            }
         }
     }
 }

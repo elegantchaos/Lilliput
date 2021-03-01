@@ -92,6 +92,7 @@ public class Engine {
             candidates.append(contentsOf: location.contents.allObjects)
             candidates.append(location)
         }
+
         candidates.append(self)
         
         return candidates
