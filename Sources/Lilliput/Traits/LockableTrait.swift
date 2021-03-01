@@ -8,6 +8,13 @@ import Foundation
 struct LockableTrait: Trait {
     static var id: String { "lockable" }
 
+    static var commands: [Command] {
+        [
+            LockCommand(),
+            UnlockCommand()
+        ]
+    }
+    
     init(with object: Object) {
     }
 }
