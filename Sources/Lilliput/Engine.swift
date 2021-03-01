@@ -13,9 +13,23 @@ public class Engine {
     var objects: [String:Object] = [:]
     var player: Object!
     var events: [Event] = []
+    var traits: [String:Trait] = [:]
     
     public init(driver: Driver) {
         self.driver = driver
+        registerStandardTraits()
+    }
+    
+    public func registerStandardTraits() {
+        register(trait: LocationTrait())
+        register(trait: LockableTrait())
+        register(trait: MovableTrait())
+        register(trait: OpenableTrait())
+        register(trait: PersonTrait())
+        register(trait: PlayerTrait())
+        register(trait: PortalTrait())
+        register(trait: SittableTrait())
+        register(trait: WearableTrait())
     }
     
     public func load(url: URL) {
@@ -127,6 +141,10 @@ public class Engine {
     public func register(definition: Definition) {
         definitions[definition.id] = definition
         print("registered \(definition.id)")
+    }
+    
+    public func register(trait: Trait) {
+        traits[trait.id] = trait
     }
 }
 

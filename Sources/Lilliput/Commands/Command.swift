@@ -5,7 +5,7 @@
 
 import Foundation
 
-class Command {
+public class Command {
     let keywords: [String]
     
     init(keywords: [String] = []) {

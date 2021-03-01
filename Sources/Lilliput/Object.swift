@@ -14,6 +14,7 @@ public class Object {
     var contents: Set<Object> = []
     var commands: [Command]
     var overrides: [String:Any] = [:]
+    var traits: [Trait] = []
     
     lazy var exits: [String:Exit] = setupExits()
     
@@ -57,12 +58,14 @@ public class Object {
             add(to: location)
         }
         
-        switch definition.kind {
-            case "player":
-                commands.append(ExamineCommand(shouldMatchTarget: false))
-                
-            default:
-                break
+        for trait in engine.traits.values {
+            if (definition.kind == trait.id) || definition.hasFlag(trait.id) {
+                traits.append(trait)
+            }
+        }
+        
+        for trait in traits {
+            commands.append(contentsOf: trait.commands)
         }
     }
     

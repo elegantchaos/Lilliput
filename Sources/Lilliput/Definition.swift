@@ -22,5 +22,10 @@ public struct Definition {
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
         self.kind = properties[stringWithKey: "type"] ?? "object"
     }
+    
+    func hasFlag(_ key: String) -> Bool {
+        guard let value = properties[key] as? Bool else { return false }
+        return value
+    }
 }
 
