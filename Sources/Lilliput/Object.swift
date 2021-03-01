@@ -38,6 +38,24 @@ public class Object {
         return objects
     }
     
+    func contains(_ object: Object) -> Bool {
+        if contents.contains(object) {
+            return true
+        }
+        
+        for carried in contents {
+            if carried.contains(object) {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    var isCarriedByPlayer: Bool {
+        location?.isPlayer == true
+    }
+    
     func setup() {
         if let locationId = definition.properties[stringWithKey: "location"] {
             guard let location = engine.objects[locationId] else { engine.error("Missing location for \(self)")}

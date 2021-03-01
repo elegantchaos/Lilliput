@@ -5,7 +5,7 @@
 
 import Foundation
 
-class ExamineCommand: Command {
+class ExamineCommand: TargetedCommand {
     let shouldMatchTarget: Bool
     
     init(shouldMatchTarget: Bool = true) {
@@ -14,13 +14,11 @@ class ExamineCommand: Command {
     }
     
     override func matches(_ context: Context) -> Bool {
-        guard super.matches(context) else { return false }
-        
-        if shouldMatchTarget && inputMatchesTarget(in: context) {
+        if shouldMatchTarget && super.matches(context) {
             return true
         }
         
-        return (!shouldMatchTarget && context.input.arguments.count == 0)
+        return (!shouldMatchTarget && keywordMatches(context: context) && context.input.arguments.count == 0)
     }
     
     override func perform(in context: Context) {

@@ -8,6 +8,12 @@ import Foundation
 struct MovableTrait: Trait {
     static var id: String { "movable" }
 
+    static var commands: [Command] {
+        [
+            TakeCommand()
+        ]
+    }
+    
     init(with object: Object) {
     }
 }

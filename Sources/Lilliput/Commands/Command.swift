@@ -12,19 +12,12 @@ public class Command {
         self.keywords = keywords
     }
     
-    func matches(_ context: Context) -> Bool {
+    func keywordMatches(context: Context) -> Bool {
         return keywords.contains(context.input.command)
     }
-    
-    func inputMatchesTarget(in context: Context) -> Bool {
-        guard context.input.arguments.count > 0 else { return false }
-        
-        var target = context.input.arguments.joined(separator: " ")
-        if target == "self" {
-            target = "player"
-        }
-        
-        return context.target.names.contains(target)
+
+    func matches(_ context: Context) -> Bool {
+        return keywordMatches(context: context)
     }
     
     func perform(in context: Context) {
