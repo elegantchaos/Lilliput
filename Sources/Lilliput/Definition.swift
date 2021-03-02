@@ -32,7 +32,7 @@ public struct Definition {
     let properties: [String:Any]
     let names: [String]
     let exits: [String:String]
-    let kind: String
+    let traits: [String]
     
     init(id: String, properties: [String:Any]) {
         self.id = id
@@ -42,7 +42,12 @@ public struct Definition {
         self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
-        self.kind = properties[stringWithKey: "type"] ?? "object"
+        
+        var traits: [String] = (properties["traits"] as? [String]) ?? []
+        if let kind = properties[stringWithKey: "type"] {
+            traits.append(kind)
+        }
+        self.traits = traits
     }
     
     func hasFlag(_ key: String) -> Bool {

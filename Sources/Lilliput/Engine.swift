@@ -8,17 +8,10 @@ import Foundation
 import Logger
 
 let eventChannel = Channel("Events")
+let engineChannel = Channel("Engine")
 
 extension String {
     static let gameFileExtension = "json"
-}
-
-extension Engine.SaveData {
-    mutating func setUnlessEmpty(_ value: Self, forKey key: String) {
-        if value.count > 0 {
-            self[key] = value
-        }
-    }
 }
 
 public class Engine {
@@ -65,27 +58,13 @@ public class Engine {
             
     }
 
-    func save(to name: String) {
-        let saves = ThrowingManager.folder(for: URL(fileURLWithPath: "Saves"))
-        try? saves.create()
-
-        let file = saves.file(ItemName(name, pathExtension: .gameFileExtension))
-        
-        var dump: SaveData = [:]
-        for object in objects {
-            dump.setUnlessEmpty(object.value.saveData, forKey: object.key)
+    func restore(from data: SaveData) {
+        for item in data {
+            if let object = objects[item.key] {
+                let objectData = (item.value as? SaveData) ?? [:]
+                object.restore(from: objectData)
+            }
         }
-
-        do {
-            let json = try JSONSerialization.data(withJSONObject: dump, options: [.prettyPrinted, .sortedKeys])
-            file.write(asData: json)
-        } catch {
-            warning("Failed to save \(name).\n\(error)")
-        }
-    }
-    
-    func restore(from name: String) {
-        
     }
     
     public func output(_ string: String) {
@@ -192,13 +171,14 @@ public class Engine {
         output("Bye.")
     }
     
-    func register(definition: Definition) {
+    func register(_ definition: Definition) {
         definitions[definition.id] = definition
-        print("registered \(definition.id)")
+        engineChannel.log("registered object \(definition.id)")
     }
     
     func register<T>(_ behaviour: T.Type) where T: Behaviour {
         behaviours[behaviour.id] = behaviour
+        engineChannel.log("registered behaviour \(behaviour.id)")
     }
 }
 

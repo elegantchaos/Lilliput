@@ -51,11 +51,12 @@ public class Object {
             add(to: location, position: spec.position)
         }
         
-        for behaviour in engine.behaviours.values {
-            let id = behaviour.id
-            if (definition.kind == id) || definition.hasFlag(id) {
+        for id in definition.traits {
+            if let behaviour = engine.behaviours[id] {
                 behaviourStorage[id] = behaviour.storage(for: self)
                 commands.append(contentsOf: behaviour.commands)
+            } else {
+                engine.warning("Unknown trait \(id).")
             }
         }
     }
@@ -302,29 +303,6 @@ public class Object {
         (getProperty(withKey: key) as? Bool) == true
     }
     
-    var saveData: Engine.SaveData {
-        var data: Engine.SaveData = [:]
-        
-        data.setUnlessEmpty(overrides, forKey: "properties")
-
-        if let location = location {
-            if (location.id != definition.location?.id) || (position != definition.location?.position) {
-                data["location"] = [location.id, position.rawValue]
-            }
-        }
-
-        var behaviourData: Engine.SaveData = [:]
-        forEachBehaviour { behaviour in
-            behaviourData.setUnlessEmpty(behaviour.saveData, forKey: behaviour.id)
-        }
-        data.setUnlessEmpty(behaviourData, forKey: "behaviours")
-
-        return data
-    }
-    
-    func restore(from data: Engine.SaveData) {
-        
-    }
 }
 
 extension Object: Equatable {

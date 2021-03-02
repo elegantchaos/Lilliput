@@ -21,13 +21,14 @@ struct DefinitionsFile {
                 for item in definitions {
                     if let properties = item.value as? [String:Any] {
                         let definition = Definition(id: item.key, properties: properties)
-                        engine.register(definition: definition)
+                        engine.register(definition)
                         count += 1
                     } else {
                         engine.warning("Invalid definition \(item).")
                     }
                 }
-                engine.output("Loaded \(count) definitions from \(file.name).")
+                
+                engineChannel.log("Loaded \(count) definitions from \(file.name).")
             }
         }
         

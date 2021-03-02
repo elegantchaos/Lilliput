@@ -12,14 +12,14 @@ protocol Behaviour {
     static var commands: [Command] { get }
 
     var object: Object { get }
-    var saveData: Engine.SaveData { get }
+    var persistenceData: PersistenceData { get }
     
     static func storage(for object: Object) -> Any
     init(_ object: Object, storage: Any)
 
     func didSetup()
     func handle(_ event: Event) -> Bool
-    func restore(from data: Engine.SaveData)
+    func restore(from data: PersistenceData)
 }
 
 extension Behaviour {
@@ -37,7 +37,7 @@ extension Behaviour {
     var id: ID { Self.id }
     var commands: [Command] { Self.commands }
     
-    var saveData: Engine.SaveData {
+    var persistenceData: PersistenceData {
         [:]
     }
 
@@ -48,7 +48,7 @@ extension Behaviour {
         return false
     }
     
-    func restore(from data: Engine.SaveData) {
+    func restore(from data: PersistenceData) {
         
     }
 }

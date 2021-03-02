@@ -1,4 +1,41 @@
 {
+  "Bullets" : {
+    "properties" : {
+      "examined" : true
+    }
+  },
+  "Hip Flask" : {
+    "location" : [
+      "player",
+      "in"
+    ],
+    "properties" : {
+      "carried" : true,
+      "examined" : true,
+      "taken" : true
+    }
+  },
+  "Matches" : {
+    "properties" : {
+      "examined" : true
+    }
+  },
+  "Pistol" : {
+    "properties" : {
+      "examined" : true
+    }
+  },
+  "player" : {
+    "location" : [
+      "Police House Corridor",
+      "in"
+    ]
+  },
+  "Police House Corridor" : {
+    "properties" : {
+      "visited" : true
+    }
+  },
   "Window" : {
     "properties" : {
       "examined" : true
@@ -6,7 +43,8 @@
   },
   "Your Desk" : {
     "properties" : {
-      "examined" : true
+      "examined" : true,
+      "open" : true
     }
   },
   "Your Office" : {
