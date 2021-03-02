@@ -7,7 +7,12 @@ import Foundation
 
 struct SittableBehaviour: Behaviour {
     static var id: String { "sittable" }
-    
+    static var commands: [Command] {
+        [
+            LeaveCommand(),
+            SitCommand(),
+        ]
+    }
     let object: Object
     
     init(_ object: Object, storage: Any) {

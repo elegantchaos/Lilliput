@@ -1,5 +1,6 @@
 {
     "Chair": {
+        "traits": ["movable", "sittable", "location"],
         "descriptions": {
             "definite": "the chair",
             "detailed": "A sturdy looking chair.",
@@ -8,18 +9,16 @@
             "outside": "From the chair you can see "
         },
         "location": "Room 1",
-        "movable": true,
         "names": [
             "chair",
             "chair"
         ],
         "openLocation": true,
         "sitMode": "on",
-        "sittable": true,
-        "type": "location"
     },
     
     "Room 1": {
+        "traits": ["location"],
         "descriptions": {
             "container": "a shabby looking room.",
             "definite": "room 1",
@@ -28,10 +27,10 @@
         "exits": {
             "north": "Room 2"
         },
-        "type": "location"
     },
     
     "Room 2": {
+        "traits": ["location"],
         "descriptions": {
             "definite": "room 2",
             "location": "You are in room 2."
@@ -39,15 +38,14 @@
         "exits": {
             "south": "Room 1"
         },
-        "type": "location"
     },
     
     "player": {
+        "traits": ["player"],
         "descriptions": {
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },
         "location": "Room 1",
-        "type": "player"
     }
 }

@@ -17,7 +17,8 @@ struct PlayerBehaviour: Behaviour {
             DebugCommand(),
             ExamineCommand(shouldMatchTarget: false),
             GoCommand(),
-            InventoryCommand()
+            InventoryCommand(),
+            StandCommand()
         ]
     }
 

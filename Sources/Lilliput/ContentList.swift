@@ -7,6 +7,7 @@ import Foundation
 
 enum Position: String {
     case `in`
+    case on
     case worn
 }
 
@@ -20,7 +21,15 @@ class ContentList {
     var objects: [Object] {
         return Array(entries.keys)
     }
-
+    
+    var count: Int {
+        entries.count
+    }
+    
+    var anyObject: Object? {
+        entries.first?.key
+    }
+    
     var allObjects: [Object] {
         var objects: [Object] = []
         forEach(recursive: true) { object, position in
