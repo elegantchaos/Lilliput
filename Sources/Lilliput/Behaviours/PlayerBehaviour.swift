@@ -22,11 +22,11 @@ struct PlayerBehaviour: Behaviour {
 
     let object: Object
     
-    init(_ object: Object, data: Any) {
+    init(_ object: Object, storage: Any) {
         self.object = object
     }
     
-    static func data(for object: Object) -> Any {
+    static func storage(for object: Object) -> Any {
         return ()
     }
     

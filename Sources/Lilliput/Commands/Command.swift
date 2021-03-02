@@ -12,15 +12,15 @@ public class Command {
         self.keywords = keywords
     }
     
-    func keywordMatches(context: Context) -> Bool {
+    func keywordMatches(context: CommandContext) -> Bool {
         return keywords.contains(context.input.command)
     }
 
-    func matches(_ context: Context) -> Bool {
+    func matches(_ context: CommandContext) -> Bool {
         return keywordMatches(context: context)
     }
     
-    func perform(in context: Context) {
+    func perform(in context: CommandContext) {
         
     }
 }

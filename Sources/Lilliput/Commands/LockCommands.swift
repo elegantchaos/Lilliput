@@ -26,7 +26,7 @@ class LockUnlockCommand: ChangeFlagCommand {
         super.init(flag: .lockedFlag, state: state, mode: mode, keywords: keywords)
     }
 
-    override func defaultReport(forKey key: String, in context: Context) -> String {
+    override func defaultReport(forKey key: String, in context: CommandContext) -> String {
         switch key {
             case "missing":
                 if let object = LockableBehaviour(context.target)?.required {
@@ -40,7 +40,7 @@ class LockUnlockCommand: ChangeFlagCommand {
         }
     }
 
-    override func requirementsAreSatisfied(in context: Context) -> Bool {
+    override func requirementsAreSatisfied(in context: CommandContext) -> Bool {
         guard let lockable = LockableBehaviour(context.target) else { return false }
         return lockable.playerHasReqirements
     }

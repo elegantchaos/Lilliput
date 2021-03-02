@@ -23,11 +23,11 @@ class ChangeFlagCommand: TargetedCommand {
         super.init(keywords: keywords)
     }
     
-    func requirementsAreSatisfied(in context: Context) -> Bool {
+    func requirementsAreSatisfied(in context: CommandContext) -> Bool {
         return true
     }
     
-    func defaultReport(forKey key: String, in context: Context) -> String {
+    func defaultReport(forKey key: String, in context: CommandContext) -> String {
         let brief = context.target.getDefinite()
         switch key {
             case "already": return "\(brief.capitalizedFirst) is already \(mode)ed."
@@ -38,7 +38,7 @@ class ChangeFlagCommand: TargetedCommand {
         }
     }
     
-    func outputReport(forKey key: String, in context: Context) {
+    func outputReport(forKey key: String, in context: CommandContext) {
         let object = context.target
         if let custom = object.getDescription(for: "\(flag)-\(key)-\(state)") {
             context.engine.output(custom)
@@ -48,7 +48,7 @@ class ChangeFlagCommand: TargetedCommand {
         context.engine.output(description)
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         let object = context.target
         if object.hasFlag(flag) == state {
             outputReport(forKey: "already", in: context)

@@ -5,22 +5,22 @@
 
 import Foundation
 
-struct Context {
+struct CommandContext {
     let input: Input
-    let targetOwner: CommandOwner
+    let owner: CommandOwner
     let engine: Engine
     let player: Object
     let location: Object
     
     init(input: Input, target: CommandOwner, engine: Engine) {
         self.input = input
-        self.targetOwner = target
+        self.owner = target
         self.engine = engine
         self.player = engine.player
         self.location = player.location!
     }
     
     var target: Object {
-        targetOwner as! Object
+        owner as! Object
     }
 }

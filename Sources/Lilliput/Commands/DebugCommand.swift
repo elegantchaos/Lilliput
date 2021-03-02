@@ -11,7 +11,7 @@ class DebugCommand: Command {
         super.init(keywords: ["debug"])
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         guard let subcommand = context.input.arguments.first else {
             return
         }
@@ -26,7 +26,7 @@ class DebugCommand: Command {
         }
     }
     
-    func performLog(in context: Context) {
+    func performLog(in context: CommandContext) {
         let manager = Channel.defaultManager
         let arguments = context.input.arguments
         let engine = context.engine

@@ -15,7 +15,7 @@ struct LockableBehaviour: Behaviour {
         ]
     }
 
-    struct Data {
+    struct Storage {
         let requiredObject: Object?
         
         init(for object: Object) {
@@ -24,22 +24,22 @@ struct LockableBehaviour: Behaviour {
     }
 
     let object: Object
-    fileprivate let data: Data
+    fileprivate let storage: Storage
     
-    init(_ object: Object, data: Any) {
+    init(_ object: Object, storage: Any) {
         self.object = object
-        self.data = data as! Data
+        self.storage = storage as! Storage
     }
 
-    static func data(for object: Object) -> Any {
-        return Data(for: object)
+    static func storage(for object: Object) -> Any {
+        return Storage(for: object)
     }
     
     var playerHasReqirements: Bool {
-        return data.requiredObject?.isCarriedByPlayer ?? true
+        return storage.requiredObject?.isCarriedByPlayer ?? true
     }
     
     var required: Object? {
-        data.requiredObject
+        storage.requiredObject
     }
 }

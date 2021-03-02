@@ -17,12 +17,12 @@ struct MovableBehaviour: Behaviour {
     let object: Object
     let data: ()
     
-    init(_ object: Object, data: Any) {
+    init(_ object: Object, storage: Any) {
         self.object = object
-        self.data = data as! ()
+        self.data = storage as! ()
     }
     
-    static func data(for object: Object) -> Any {
+    static func storage(for object: Object) -> Any {
         return ()
     }
 }

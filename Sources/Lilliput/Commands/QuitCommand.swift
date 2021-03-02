@@ -10,7 +10,7 @@ class QuitCommand: Command {
         super.init(keywords: ["quit", "q"])
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         context.engine.running = false
     }
 }

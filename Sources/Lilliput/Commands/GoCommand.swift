@@ -12,7 +12,7 @@ class GoCommand: Command {
         super.init(keywords: ["go", "g"])
     }
     
-    override func matches(_ context: Context) -> Bool {
+    override func matches(_ context: CommandContext) -> Bool {
         let input = context.input
         let direction = super.matches(context) ? input.arguments[0] : input.command
         
@@ -28,7 +28,7 @@ class GoCommand: Command {
         return false
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         if let exit = matchedExit {
             matchedExit = nil
             if exit.isPassable {

@@ -15,7 +15,7 @@ class TakeCommand: TargetedCommand {
         super.init(keywords: ["take", "get"])
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         let object = context.target
         let brief = object.getDefinite()
         let output: String
@@ -24,6 +24,8 @@ class TakeCommand: TargetedCommand {
             output = "You already have \(brief)."
         } else if object.contains(context.player) {
             output = "You can't pick up something that contains you!"
+        } else if !object.hasFlag(.examinedFlag) {
+            output = "You can't see \(brief) here."
         } else {
             object.move(to: context.player)
             object.setFlag(.carriedFlag)

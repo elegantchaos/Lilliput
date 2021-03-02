@@ -6,24 +6,41 @@
 import Foundation
 
 protocol Behaviour {
-    static var id: String { get }
+    typealias ID = String
+
+    static var id: ID { get }
     static var commands: [Command] { get }
 
     var object: Object { get }
+    var saveData: Engine.SaveData { get }
+    
+    static func storage(for object: Object) -> Any
+    init(_ object: Object, storage: Any)
 
-    static func data(for object: Object) -> Any
-    init(_ object: Object, data: Any)
     func didSetup()
     func handle(_ event: Event) -> Bool
+    func restore(from data: Engine.SaveData)
 }
 
 extension Behaviour {
     static var commands: [Command] { [] }
 
-    static func data(for object: Object) -> Any {
+    static func storage(for object: Object) -> Any {
         return ()
     }
+
+    init?(_ object: Object?) {
+        guard let data = object?.behaviourStorage[Self.id] else { return nil }
+        self.init(object!, storage: data)
+    }
+
+    var id: ID { Self.id }
+    var commands: [Command] { Self.commands }
     
+    var saveData: Engine.SaveData {
+        [:]
+    }
+
     func didSetup() {
     }
     
@@ -31,11 +48,7 @@ extension Behaviour {
         return false
     }
     
-    var commands: [Command] { Self.commands }
-    
-    init?(_ object: Object?) {
-        guard let object = object else { return nil }
-        guard let data = object.behaviourStorage[Self.id] else { return nil }
-        self.init(object, data: data)
+    func restore(from data: Engine.SaveData) {
+        
     }
 }

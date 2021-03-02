@@ -1,0 +1,17 @@
+{
+  "Window" : {
+    "properties" : {
+      "examined" : true
+    }
+  },
+  "Your Desk" : {
+    "properties" : {
+      "examined" : true
+    }
+  },
+  "Your Office" : {
+    "properties" : {
+      "visited" : true
+    }
+  }
+}

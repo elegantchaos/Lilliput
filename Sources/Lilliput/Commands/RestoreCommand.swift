@@ -1,16 +1,17 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-//  Created by Sam Deane on 01/03/21.
+//  Created by Sam Deane on 02/03/21.
 //  All code (c) 2021 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 
-class InventoryCommand: Command {
+class RestoreCommand: Command {
     init() {
-        super.init(keywords: ["inventory", "i"])
+        super.init(keywords: ["restore"])
     }
-    
+
     override func perform(in context: CommandContext) {
-        PlayerBehaviour(context.player)?.showInventory()
+        let name = context.input.arguments.first ?? "default"
+        context.engine.restore(from: name)
     }
 }

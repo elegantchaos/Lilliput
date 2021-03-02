@@ -10,7 +10,7 @@ struct SittableBehaviour: Behaviour {
     
     let object: Object
     
-    init(_ object: Object, data: Any) {
+    init(_ object: Object, storage: Any) {
         self.object = object
     }
 }

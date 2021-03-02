@@ -6,7 +6,7 @@
 import Foundation
 
 class TargetedCommand: Command {
-    func inputMatchesTarget(in context: Context) -> Bool {
+    func inputMatchesTarget(in context: CommandContext) -> Bool {
         guard context.input.arguments.count > 0 else { return false }
         
         var target = context.input.arguments.joined(separator: " ")
@@ -17,7 +17,7 @@ class TargetedCommand: Command {
         return context.target.names.contains(target)
     }
     
-    override func matches(_ context: Context) -> Bool {
+    override func matches(_ context: CommandContext) -> Bool {
         return super.matches(context) && inputMatchesTarget(in: context)
     }
 }

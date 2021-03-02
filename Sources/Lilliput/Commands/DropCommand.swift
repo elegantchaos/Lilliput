@@ -10,7 +10,7 @@ class DropCommand: TargetedCommand {
         super.init(keywords: ["drop", "put"])
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         if let location = context.player.location {
             let object = context.target
             let brief = object.getDefinite()

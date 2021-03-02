@@ -19,12 +19,12 @@ struct PortalBehaviour: Behaviour {
     let object: Object
     fileprivate let data: Data
 
-    init(_ object: Object, data: Any) {
+    init(_ object: Object, storage: Any) {
         self.object = object
-        self.data = data as! Data
+        self.data = storage as! Data
     }
 
-    static func data(for object: Object) -> Any {
+    static func storage(for object: Object) -> Any {
         return Data(for: object)
     }
     

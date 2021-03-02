@@ -9,7 +9,21 @@ import Logger
 
 let eventChannel = Channel("Events")
 
+extension String {
+    static let gameFileExtension = "json"
+}
+
+extension Engine.SaveData {
+    mutating func setUnlessEmpty(_ value: Self, forKey key: String) {
+        if value.count > 0 {
+            self[key] = value
+        }
+    }
+}
+
 public class Engine {
+    typealias SaveData = [String:Any]
+    
     let driver: Driver
     var running = true
     var definitions: [String:Definition] = [:]
@@ -31,12 +45,13 @@ public class Engine {
         register(PersonBehaviour.self)
         register(PlayerBehaviour.self)
         register(PortalBehaviour.self)
-//        register(SittableBehaviour.self)
-//        register(WearableBehaviour.self)
+        register(SittableBehaviour.self)
+        register(WearableBehaviour.self)
     }
     
     public func load(url: URL) {
-        let folder = FileManager.default.locations.folder(for: url)
+        
+        let folder = ThrowingManager.folder(for: url)
         do {
             try folder.forEach { item in
                 if let file = item as? ThrowingFile {
@@ -50,6 +65,29 @@ public class Engine {
             
     }
 
+    func save(to name: String) {
+        let saves = ThrowingManager.folder(for: URL(fileURLWithPath: "Saves"))
+        try? saves.create()
+
+        let file = saves.file(ItemName(name, pathExtension: .gameFileExtension))
+        
+        var dump: SaveData = [:]
+        for object in objects {
+            dump.setUnlessEmpty(object.value.saveData, forKey: object.key)
+        }
+
+        do {
+            let json = try JSONSerialization.data(withJSONObject: dump, options: [.prettyPrinted, .sortedKeys])
+            file.write(asData: json)
+        } catch {
+            warning("Failed to save \(name).\n\(error)")
+        }
+    }
+    
+    func restore(from name: String) {
+        
+    }
+    
     public func output(_ string: String) {
         driver.output(string)
     }
@@ -105,7 +143,7 @@ public class Engine {
         let input = driver.getInput()
         let candidates = inputCandidates()
         for object in candidates {
-            let context = Context(input: input, target: object, engine: self)
+            let context = CommandContext(input: input, target: object, engine: self)
             for command in object.commands {
                 if command.matches(context) {
                     command.perform(in: context)
@@ -166,7 +204,11 @@ public class Engine {
 
 extension Engine: CommandOwner {
     var commands: [Command] {
-        return [QuitCommand()]
+        return [
+            QuitCommand(),
+            RestoreCommand(),
+            SaveCommand(),
+        ]
     }
     
     var names: [String] { [] }

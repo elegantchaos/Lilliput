@@ -6,22 +6,25 @@
 import Foundation
 
 struct LocationBehaviour: Behaviour {
-    init(_ object: Object, data: Any) {
-        self.object = object
-        self.data = data as! Data
-    }
-    
     static var id: String { "location" }
 
-    struct Data {
+    struct Storage {
         fileprivate let exits: Exits
+        init(for object: Object) {
+            self.exits = Exits(for: object)
+        }
     }
     
     let object: Object
-    let data: Data
+    let data: Storage
 
-    static func data(for object: Object) -> Any {
-        return Data(exits: Exits(for: object))
+    init(_ object: Object, storage: Any) {
+        self.object = object
+        self.data = storage as! Storage
+    }
+
+    static func storage(for object: Object) -> Any {
+        return Storage(for: object)
     }
     
     var inputCandidates: [CommandOwner] {

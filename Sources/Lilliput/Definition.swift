@@ -5,8 +5,29 @@
 
 import Foundation
 
+struct LocationPair {
+    let id: String
+    let position: Position
+    
+    init?(from spec: Any?) {
+        guard let spec = spec else { return nil }
+        
+        if let locAndPos = spec as? [String], locAndPos.count > 1 {
+            id = locAndPos[0]
+            position = Position(rawValue: locAndPos[1]) ?? .in
+        } else if let string = spec as? String {
+            id = string
+            position = .in
+        } else {
+            print("Bad location spec: \(spec)")
+            return nil
+        }
+    }
+}
+
 public struct Definition {
     let id: String
+    let location: LocationPair?
     let strings: [String:String]
     let properties: [String:Any]
     let names: [String]
@@ -17,6 +38,7 @@ public struct Definition {
         self.id = id
         self.properties = properties
         
+        self.location = LocationPair(from: properties["location"])
         self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]

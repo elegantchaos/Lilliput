@@ -19,7 +19,7 @@ public class Object {
     let definition: Definition
     let engine: Engine
     var location: Object?
-    var position: Position?
+    var position: Position
     var contents: ContentList
     var commands: [Command]
     var overrides: [String:Any] = [:]
@@ -30,6 +30,7 @@ public class Object {
         self.engine = engine
         self.commands = [ExamineCommand()]
         self.contents = ContentList()
+        self.position = .in
     }
     
     var id: String { definition.id }
@@ -45,36 +46,33 @@ public class Object {
     }
     
     func setup() {
-        let id: String?
-        var position = Position.in
-        if let spec = definition.properties["location"] as? [String] {
-            id = spec.first
-            if spec.count > 1, let pos = Position(rawValue: spec[1]) {
-                position = pos
-            }
-        } else {
-            id = definition.properties[stringWithKey: "location"]
-        }
-
-        if let id = id {
-            guard let location = engine.objects[id] else { engine.error("Missing location for \(self)")}
-            add(to: location, position: position)
+        if let spec = definition.location {
+            guard let location = engine.objects[spec.id] else { engine.error("Missing location for \(self)")}
+            add(to: location, position: spec.position)
         }
         
         for behaviour in engine.behaviours.values {
             let id = behaviour.id
             if (definition.kind == id) || definition.hasFlag(id) {
-                behaviourStorage[id] = behaviour.data(for: self)
+                behaviourStorage[id] = behaviour.storage(for: self)
                 commands.append(contentsOf: behaviour.commands)
             }
         }
     }
     
-    func forEachBehaviour(perform: (Behaviour) -> (Bool)) -> Bool {
+
+    func forEachBehaviour(perform: (Behaviour) -> ()) {
         for id in behaviourStorage.keys {
-            let behaviour = engine.behaviours[id]?.init(self, data: behaviourStorage[id]!)
-            let stop = perform(behaviour!)
-            if stop {
+            let behaviour = engine.behaviours[id]?.init(self, storage: behaviourStorage[id]!)
+            perform(behaviour!)
+        }
+    }
+
+
+    func forEachBehaviourUntilTrue(perform: (Behaviour) -> (Bool)) -> Bool {
+        for id in behaviourStorage.keys {
+            let behaviour = engine.behaviours[id]?.init(self, storage: behaviourStorage[id]!)
+            if perform(behaviour!) {
                 return true
             }
         }
@@ -83,9 +81,8 @@ public class Object {
     }
 
     func didSetup() {
-        _ = forEachBehaviour() { behaviour in
+        forEachBehaviour { behaviour in
             behaviour.didSetup()
-            return false
         }
     }
     
@@ -115,7 +112,7 @@ public class Object {
     }
     
     func handle(_ event: Event) -> Bool {
-        return forEachBehaviour { behaviour in
+        return forEachBehaviourUntilTrue { behaviour in
             return behaviour.handle(event)
         }
     }
@@ -192,6 +189,7 @@ public class Object {
         
         contents.forEach { object, position in
             if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
+                object.setFlag(.examinedFlag)
                 let customDescriptions = object.getContextDescriptions(for: context)
                 if customDescriptions.count > 0 {
                     for description in customDescriptions {
@@ -302,6 +300,30 @@ public class Object {
     
     func hasFlag(_ key: String) -> Bool {
         (getProperty(withKey: key) as? Bool) == true
+    }
+    
+    var saveData: Engine.SaveData {
+        var data: Engine.SaveData = [:]
+        
+        data.setUnlessEmpty(overrides, forKey: "properties")
+
+        if let location = location {
+            if (location.id != definition.location?.id) || (position != definition.location?.position) {
+                data["location"] = [location.id, position.rawValue]
+            }
+        }
+
+        var behaviourData: Engine.SaveData = [:]
+        forEachBehaviour { behaviour in
+            behaviourData.setUnlessEmpty(behaviour.saveData, forKey: behaviour.id)
+        }
+        data.setUnlessEmpty(behaviourData, forKey: "behaviours")
+
+        return data
+    }
+    
+    func restore(from data: Engine.SaveData) {
+        
     }
 }
 

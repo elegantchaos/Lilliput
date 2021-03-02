@@ -12,7 +12,7 @@ class WearCommand: TargetedCommand {
         super.init(keywords: ["wear"])
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         let object = context.target
         let brief = object.getDefinite()
         let output: String

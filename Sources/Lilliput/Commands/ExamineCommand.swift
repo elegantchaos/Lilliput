@@ -17,7 +17,7 @@ class ExamineCommand: TargetedCommand {
         super.init(keywords: ["examine", "look", "search", "l", "ex"])
     }
     
-    override func matches(_ context: Context) -> Bool {
+    override func matches(_ context: CommandContext) -> Bool {
         if shouldMatchTarget && super.matches(context) {
             return true
         }
@@ -25,7 +25,7 @@ class ExamineCommand: TargetedCommand {
         return (!shouldMatchTarget && keywordMatches(context: context) && context.input.arguments.count == 0)
     }
     
-    override func perform(in context: Context) {
+    override func perform(in context: CommandContext) {
         if shouldMatchTarget {
             let object = context.target
             object.showDescriptionAndContents()
