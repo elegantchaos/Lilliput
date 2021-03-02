@@ -5,19 +5,26 @@
 
 import Foundation
 
-protocol Trait {
+protocol Behaviour {
     static var id: String { get }
     static var commands: [Command] { get }
 
-    init(with object: Object)
-    func didSetup(_ object: Object)
+    var object: Object { get }
+
+    static func data(for object: Object) -> Any
+    init(_ object: Object, data: Any)
+    func didSetup()
     func handle(_ event: Event) -> Bool
 }
 
-extension Trait {
+extension Behaviour {
     static var commands: [Command] { [] }
 
-    func didSetup(_ object: Object) {
+    static func data(for object: Object) -> Any {
+        return ()
+    }
+    
+    func didSetup() {
     }
     
     func handle(_ event: Event) -> Bool {
@@ -25,4 +32,10 @@ extension Trait {
     }
     
     var commands: [Command] { Self.commands }
+    
+    init?(_ object: Object?) {
+        guard let object = object else { return nil }
+        guard let data = object.traits[Self.id] else { return nil }
+        self.init(object, data: data)
+    }
 }

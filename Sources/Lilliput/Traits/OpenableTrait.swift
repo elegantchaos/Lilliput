@@ -19,17 +19,23 @@ extension Event {
     }
 }
 
-struct OpenableTrait: Trait {
+struct OpenableBehaviour: Behaviour {
     static var id: String { "openable" }
-
     static var commands: [Command] {
         [
             OpenCommand(),
             CloseCommand()
         ]
     }
+
+    let object: Object
     
-    init(with object: Object) {
+    init(_ object: Object, data: Any) {
+        self.object = object
+    }
+    
+    static func data(for object: Object) -> Any {
+        return ()
     }
     
     func handle(_ event: Event) -> Bool {
@@ -39,14 +45,9 @@ struct OpenableTrait: Trait {
         
         return false
     }
-}
 
-extension Object {
     var isContentVisible: Bool {
-        if let _ = aspect(OpenableTrait.self) {
-            return hasFlag(.openedFlag)
-        } else {
-            return true
-        }
+        return object.hasFlag(.openedFlag)
     }
+
 }

@@ -6,19 +6,40 @@
 import Coercion
 import Foundation
 
-struct LockableTrait: Trait {
+struct LockableBehaviour: Behaviour {
     static var id: String { "lockable" }
-    
-    let requiredObject: Object?
-    
     static var commands: [Command] {
         [
             LockCommand(),
             UnlockCommand()
         ]
     }
+
+    struct Data {
+        let requiredObject: Object?
+        
+        init(for object: Object) {
+            requiredObject = object.getObject(withKey: "requires")
+        }
+    }
+
+    let object: Object
+    fileprivate let data: Data
     
-    init(with object: Object) {
-        requiredObject = object.getObject(withKey: "requires")
+    init(_ object: Object, data: Any) {
+        self.object = object
+        self.data = data as! Data
+    }
+
+    static func data(for object: Object) -> Any {
+        return Data(for: object)
+    }
+    
+    var playerHasReqirements: Bool {
+        return data.requiredObject?.isCarriedByPlayer ?? true
+    }
+    
+    var required: Object? {
+        data.requiredObject
     }
 }

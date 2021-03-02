@@ -5,9 +5,12 @@
 
 import Foundation
 
-struct WearableTrait: Trait {
+struct WearableTrait: Behaviour {
     static var id: String { "wearable" }
 
-    init(with object: Object) {
+    let object: Object
+    
+    init(_ object: Object, data: Any) {
+        self.object = object
     }
 }

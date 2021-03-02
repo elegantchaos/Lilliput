@@ -29,8 +29,7 @@ class LockUnlockCommand: ChangeFlagCommand {
     override func defaultReport(forKey key: String, in context: Context) -> String {
         switch key {
             case "missing":
-                let lockable = context.target.aspect(LockableTrait.self)
-                if let lockable = lockable, let object = lockable.requiredObject {
+                if let object = LockableBehaviour(context.target)?.required {
                     return "You need \(object.getIndefinite())."
                 } else {
                     return "You need a key."
@@ -42,9 +41,8 @@ class LockUnlockCommand: ChangeFlagCommand {
     }
 
     override func requirementsAreSatisfied(in context: Context) -> Bool {
-        guard let lockable = context.target.aspect(LockableTrait.self) else { return false }
-        
-        return lockable.requiredObject?.isCarriedByPlayer ?? true
+        guard let lockable = LockableBehaviour(context.target) else { return false }
+        return lockable.playerHasReqirements
     }
 }
 

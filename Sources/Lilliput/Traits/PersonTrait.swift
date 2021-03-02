@@ -5,9 +5,16 @@
 
 import Foundation
 
-struct PersonTrait: Trait {
+struct PersonBehaviour: Behaviour {
     static var id: String { "person" }
 
-    init(with object: Object) {
+    let object: Object
+
+    init(_ object: Object, data: Any) {
+        self.object = object
+    }
+    
+    static func data(for object: Object) -> Any {
+        return ()
     }
 }

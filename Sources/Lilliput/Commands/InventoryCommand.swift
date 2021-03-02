@@ -11,6 +11,6 @@ class InventoryCommand: Command {
     }
     
     override func perform(in context: Context) {
-        context.player.showInventory()
+        PlayerBehaviour(context.player)?.showInventory()
     }
 }

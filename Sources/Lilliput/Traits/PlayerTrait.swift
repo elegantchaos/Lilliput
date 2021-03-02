@@ -9,7 +9,7 @@ extension String {
     static let visitedFlag = "visited"
 }
 
-struct PlayerTrait: Trait {
+struct PlayerBehaviour: Behaviour {
     static var id: String { "player" }
     static var commands: [Command] {
         [
@@ -19,15 +19,36 @@ struct PlayerTrait: Trait {
             InventoryCommand()
         ]
     }
+
+    let object: Object
     
-    init(with object: Object) {
+    init(_ object: Object, data: Any) {
+        self.object = object
+    }
+    
+    static func data(for object: Object) -> Any {
+        return ()
+    }
+    
+    func handle(_ event: Event) -> Bool {
+        guard let id = EventId(rawValue: event.id) else { return false }
+        switch id {
+            case .movedTo:
+                assert(event.target == object)
+                object.location?.setFlag(.visitedFlag)
+                showLocation()
+                return true
+                
+            default:
+                return false
+        }
     }
 
-    func showInventory(of player: Object) {
+    func showInventory() {
         var worn: [String] = []
         var held: [String] = []
         
-        player.contents.forEach { object, position in
+        object.contents.forEach { object, position in
             let brief = object.getIndefinite()
             if position == .worn {
                 worn.append(brief)
@@ -38,21 +59,21 @@ struct PlayerTrait: Trait {
         }
         
         if (held.count + worn.count) == 0 {
-            player.engine.output("You are not carrying anything.")
+            object.engine.output("You are not carrying anything.")
         } else {
             if held.count > 0 {
                 let list = held.joined(separator: ", ")
-                player.engine.output("You are carrying \(list).")
+                object.engine.output("You are carrying \(list).")
             }
             
             if worn.count > 0 {
                 let list = worn.joined(separator: ", ")
-                player.engine.output("You are wearing \(list).")
+                object.engine.output("You are wearing \(list).")
             }
         }
     }
     
-    func showLocation(of object: Object) {
+    func showLocation() {
         var locations: [Object] = []
         var context = DescriptionContext.location
         var prefix = ""
@@ -69,28 +90,7 @@ struct PlayerTrait: Trait {
 
         for location in locations {
             location.showContents(context: .location)
-            location.showExits()
-        }
-    }
-    
-    func handle(_ event: Event) -> Bool {
-        guard let id = EventId(rawValue: event.id) else { return false }
-        switch id {
-            case .movedTo:
-                event.target.location?.setFlag(.visitedFlag)
-                showLocation(of: event.target)
-                return true
-                
-            default:
-                return false
-        }
-    }
-}
-
-extension Object {
-    func showInventory() {
-        if let aspect = self.aspect(PlayerTrait.self) {
-            aspect.showInventory(of: self)
+            LocationBehaviour(location)?.showExits()
         }
     }
 }

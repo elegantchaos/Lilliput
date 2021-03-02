@@ -24,14 +24,31 @@ class Exits {
         self.exits = exits
     }
 
+    func getExitDescription(exit: Exit, direction: String, player: Object) -> String {
+        var description = direction
+        
+        if let portal = exit.portal {
+            let brief = portal.getDescriptionWarnIfMissing(for: .exit)
+            description += " \(brief)"
+        }
+        
+        if player.hasVisited(location: exit.destination) {
+            let brief = exit.destination.getDefinite()
+            description += " to \(brief)"
+        }
+
+        return description
+    }
+
     func show(for object: Object) {
+        let player = object.engine.player!
         let count = exits.count
         if count > 0 {
             let start = count == 1 ? "There is a single exit " : "There are exits "
             
             var body: [String] = []
             for exit in exits {
-                let string = object.getExitDescription(exit: exit.value, direction: exit.key)
+                let string = getExitDescription(exit: exit.value, direction: exit.key, player: player)
                 body.append(string)
             }
             
@@ -40,14 +57,13 @@ class Exits {
         }
     }
     
-    func link(object: Object, asPortal portal: PortalTrait) {
-        let links = portal.links
+    func link(portal: Object, to destinations: [String]) {
         for exit in exits {
             let destination = exit.value.destination
-            if links.contains(destination.id) {
-                exitsChannel.debug("Linked \(object) as portal to \(destination)")
+            if destinations.contains(destination.id) {
+                exitsChannel.debug("Linked \(portal) as portal to \(destination)")
                 var updated = exit.value
-                updated.portal = object
+                updated.portal = portal
                 exits[exit.key] = updated
             }
         }

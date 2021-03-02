@@ -5,26 +5,39 @@
 
 import Foundation
 
-struct PortalTrait: Trait {
+struct PortalBehaviour: Behaviour {
     static var id: String { "portal" }
-
-    let links: [String]
     
-    init(with object: Object) {
-        self.links = (object.getProperty(withKey: "links") as? [String]) ?? []
+    fileprivate struct Data {
+        let links: [String]
+        
+        init(for object: Object) {
+            self.links = (object.getProperty(withKey: "links") as? [String]) ?? []
+        }
     }
     
-    func didSetup(_ object: Object) {
+    let object: Object
+    fileprivate let data: Data
+
+    init(_ object: Object, data: Any) {
+        self.object = object
+        self.data = data as! Data
+    }
+
+    static func data(for object: Object) -> Any {
+        return Data(for: object)
+    }
+    
+    func didSetup() {
         let engine = object.engine
-        for link in links {
-            if let location = engine.objects[link] {
-                location.link(object, as: self)
+        for link in data.links {
+            if let location = LocationBehaviour(engine.objects[link]) {
+                location.link(portal: object, to: data.links)
             }
         }
-        
     }
     
-    func getImpassableDescription(for object: Object) -> String {
+    var impassableDescription: String {
         if let description = object.getDescription(for: .locked) {
             return description
         }

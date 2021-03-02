@@ -5,9 +5,12 @@
 
 import Foundation
 
-struct SittableTrait: Trait {
+struct SittableBehaviour: Behaviour {
     static var id: String { "sittable" }
-
-    init(with object: Object) {
+    
+    let object: Object
+    
+    init(_ object: Object, data: Any) {
+        self.object = object
     }
 }

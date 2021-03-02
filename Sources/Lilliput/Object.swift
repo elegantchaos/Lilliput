@@ -23,7 +23,7 @@ public class Object {
     var contents: ContentList
     var commands: [Command]
     var overrides: [String:Any] = [:]
-    var traits: [String:Trait] = [:]
+    var traits: [String:Any] = [:]
     
     init(definition: Definition, engine: Engine) {
         self.definition = definition
@@ -61,21 +61,31 @@ public class Object {
             add(to: location, position: position)
         }
         
-        for trait in engine.traits.values {
-            let id = trait.id
+        for behaviour in engine.behaviours.values {
+            let id = behaviour.id
             if (definition.kind == id) || definition.hasFlag(id) {
-                traits[id] = trait.init(with: self)
+                traits[id] = behaviour.data(for: self)
+                commands.append(contentsOf: behaviour.commands)
             }
-        }
-        
-        for trait in traits.values {
-            commands.append(contentsOf: trait.commands)
         }
     }
     
+    func forEachBehaviour(perform: (Behaviour) -> (Bool)) -> Bool {
+        for id in traits.keys {
+            let behaviour = engine.behaviours[id]?.init(self, data: traits[id]!)
+            let stop = perform(behaviour!)
+            if stop {
+                return true
+            }
+        }
+        
+        return false
+    }
+
     func didSetup() {
-        for trait in traits.values {
-            trait.didSetup(self)
+        _ = forEachBehaviour() { behaviour in
+            behaviour.didSetup()
+            return false
         }
     }
     
@@ -105,13 +115,9 @@ public class Object {
     }
     
     func handle(_ event: Event) -> Bool {
-        for trait in traits.values {
-            if trait.handle(event) {
-                return true
-            }
+        return forEachBehaviour { behaviour in
+            return behaviour.handle(event)
         }
-        
-        return false
     }
     
     func getContextDescriptions(for context: DescriptionContext) -> [String] {
@@ -252,6 +258,10 @@ public class Object {
         }
     }
     
+    var isContentVisible: Bool {
+        OpenableBehaviour(self)?.isContentVisible ?? true
+    }
+    
     func showDescriptionAndContents() {
         showDescription(context: .detailed)
         showContentsIfVisible()
@@ -294,8 +304,9 @@ public class Object {
         (getProperty(withKey: key) as? Bool) == true
     }
     
-    func aspect<T>(_ kind: T.Type) -> T? where T: Trait {
-        traits[kind.id] as? T
+    func behaviour<T>(_ kind: T.Type) -> T? where T: Behaviour {
+        guard let data = traits[T.id] else { return nil }
+        return T(self, data: data)
     }
 }
 

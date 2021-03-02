@@ -16,23 +16,23 @@ public class Engine {
     var objects: [String:Object] = [:]
     var player: Object!
     var events: [Event] = []
-    var traits: [String:Trait.Type] = [:]
+    var behaviours: [String:Behaviour.Type] = [:]
     
     public init(driver: Driver) {
         self.driver = driver
-        registerStandardTraits()
+        registerStandardBehaviours()
     }
     
-    public func registerStandardTraits() {
-        register(trait: LocationTrait.self)
-        register(trait: LockableTrait.self)
-        register(trait: MovableTrait.self)
-        register(trait: OpenableTrait.self)
-        register(trait: PersonTrait.self)
-        register(trait: PlayerTrait.self)
-        register(trait: PortalTrait.self)
-        register(trait: SittableTrait.self)
-        register(trait: WearableTrait.self)
+    public func registerStandardBehaviours() {
+        register(LocationBehaviour.self)
+        register(LockableBehaviour.self)
+        register(MovableBehaviour.self)
+        register(OpenableBehaviour.self)
+        register(PersonBehaviour.self)
+        register(PlayerBehaviour.self)
+        register(PortalBehaviour.self)
+//        register(SittableBehaviour.self)
+//        register(WearableBehaviour.self)
     }
     
     public func load(url: URL) {
@@ -91,10 +91,8 @@ public class Engine {
     func inputCandidates() -> [CommandOwner] {
         var candidates: [CommandOwner] = []
         
-        if let location = player.location {
-            candidates.append(contentsOf: location.contents.allObjects)
-            candidates.append(contentsOf: location.portals)
-            candidates.append(location)
+        if let location = LocationBehaviour(player.location) {
+            candidates.append(contentsOf: location.inputCandidates)
         }
 
         candidates.append(self)
@@ -161,8 +159,8 @@ public class Engine {
         print("registered \(definition.id)")
     }
     
-    func register(trait: Trait.Type) {
-        traits[trait.id] = trait
+    func register<T>(_ behaviour: T.Type) where T: Behaviour {
+        behaviours[behaviour.id] = behaviour
     }
 }
 
