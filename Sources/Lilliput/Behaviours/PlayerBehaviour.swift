@@ -6,6 +6,7 @@
 import Foundation
 
 extension String {
+    static let awareFlag = "aware"
     static let visitedFlag = "visited"
 }
 
@@ -49,6 +50,7 @@ struct PlayerBehaviour: Behaviour {
         var held: [String] = []
         
         object.contents.forEach { object, position in
+            object.setFlag(.awareFlag)
             let brief = object.getIndefinite()
             if position == .worn {
                 worn.append(brief)

@@ -6,7 +6,6 @@
 import Foundation
 
 extension String {
-    static let carriedFlag = "carried"
     static let takenFlag = "taken"
 }
 
@@ -24,11 +23,10 @@ class TakeCommand: TargetedCommand {
             output = "You already have \(brief)."
         } else if object.contains(context.player) {
             output = "You can't pick up something that contains you!"
-        } else if !object.hasFlag(.examinedFlag) {
+        } else if !object.hasFlag(.awareFlag) {
             output = "You can't see \(brief) here."
         } else {
             object.move(to: context.player)
-            object.setFlag(.carriedFlag)
             object.setFlag(.takenFlag)
             output = "You take \(brief)."
         }

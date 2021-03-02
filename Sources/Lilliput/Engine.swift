@@ -15,8 +15,6 @@ extension String {
 }
 
 public class Engine {
-    typealias SaveData = [String:Any]
-    
     let driver: Driver
     var running = true
     var definitions: [String:Definition] = [:]
@@ -58,15 +56,6 @@ public class Engine {
             
     }
 
-    func restore(from data: SaveData) {
-        for item in data {
-            if let object = objects[item.key] {
-                let objectData = (item.value as? SaveData) ?? [:]
-                object.restore(from: objectData)
-            }
-        }
-    }
-    
     public func output(_ string: String) {
         driver.output(string)
     }

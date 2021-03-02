@@ -23,6 +23,10 @@ struct LocationPair {
             return nil
         }
     }
+    
+    var persistenceData: [String] {
+        return [id, position.rawValue]
+    }
 }
 
 public struct Definition {

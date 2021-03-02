@@ -24,7 +24,7 @@ extension Engine {
         
         var dump: PersistenceData = [:]
         for object in objects {
-            dump[unlessEmpty: object.key] = object.value.saveData
+            dump[unlessEmpty: object.key] = object.value.persistenceData
         }
 
         do {
@@ -49,19 +49,29 @@ extension Engine {
             }
         }
     }
+
+    func restore(from data: PersistenceData) {
+        for item in data {
+            if let object = objects[item.key] {
+                let objectData = (item.value as? PersistenceData) ?? [:]
+                object.restore(from: objectData)
+            }
+        }
+    }
     
+
 }
 
 extension Object {
     
-    var saveData: PersistenceData {
+    var persistenceData: PersistenceData {
         var data: PersistenceData = [:]
         
         data[unlessEmpty: .propertiesKey] = overrides
 
         if let location = location {
             if (location.id != definition.location?.id) || (position != definition.location?.position) {
-                data[.locationKey] = [location.id, position.rawValue]
+                data[.locationKey] = location.persistenceData
             }
         }
 

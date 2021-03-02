@@ -30,6 +30,7 @@ class ExamineCommand: TargetedCommand {
             let object = context.target
             object.showDescriptionAndContents()
             object.setFlag(.examinedFlag)
+            object.setFlag(.awareFlag)
         } else {
             PlayerBehaviour(context.player)?.showLocation()
         }

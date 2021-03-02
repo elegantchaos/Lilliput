@@ -5,23 +5,23 @@
 
 import Foundation
 
-class WearCommand: TargetedCommand {
+class RemoveCommand: TargetedCommand {
     init() {
-        super.init(keywords: ["wear"])
+        super.init(keywords: ["remove", "take off"])
     }
     
     override func perform(in context: CommandContext) {
         let object = context.target
         let brief = object.getDefinite()
+
         let output: String
-        if context.target.position == .worn {
-            output = "You are already wearing \(brief)."
+        if !object.isCarriedByPlayer || object.position != .worn {
+            output = "You are not wearing \(brief)."
         } else {
-            output = "You put on \(brief)."
-            object.move(to: context.player, position: .worn)
+            object.move(to: context.player, position: .in)
+            output = "You remove \(brief)."
         }
-
+        
         context.engine.output(output)
-
     }
 }

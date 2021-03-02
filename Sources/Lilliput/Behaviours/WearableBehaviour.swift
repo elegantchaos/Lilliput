@@ -7,10 +7,18 @@ import Foundation
 
 struct WearableBehaviour: Behaviour {
     static var id: String { "wearable" }
-
+    
+    static var commands: [Command] {
+        [
+            RemoveCommand(),
+            WearCommand(),
+        ]
+    }
+    
     let object: Object
     
     init(_ object: Object, storage: Any) {
         self.object = object
     }
+    
 }

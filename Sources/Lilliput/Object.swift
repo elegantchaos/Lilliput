@@ -190,7 +190,7 @@ public class Object {
         
         contents.forEach { object, position in
             if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
-                object.setFlag(.examinedFlag)
+                object.setFlag(.awareFlag)
                 let customDescriptions = object.getContextDescriptions(for: context)
                 if customDescriptions.count > 0 {
                     for description in customDescriptions {
