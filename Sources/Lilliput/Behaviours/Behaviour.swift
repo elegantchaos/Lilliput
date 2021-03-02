@@ -35,7 +35,7 @@ extension Behaviour {
     
     init?(_ object: Object?) {
         guard let object = object else { return nil }
-        guard let data = object.traits[Self.id] else { return nil }
+        guard let data = object.behaviourStorage[Self.id] else { return nil }
         self.init(object, data: data)
     }
 }

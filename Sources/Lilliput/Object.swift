@@ -23,7 +23,7 @@ public class Object {
     var contents: ContentList
     var commands: [Command]
     var overrides: [String:Any] = [:]
-    var traits: [String:Any] = [:]
+    var behaviourStorage: [String:Any] = [:]
     
     init(definition: Definition, engine: Engine) {
         self.definition = definition
@@ -64,15 +64,15 @@ public class Object {
         for behaviour in engine.behaviours.values {
             let id = behaviour.id
             if (definition.kind == id) || definition.hasFlag(id) {
-                traits[id] = behaviour.data(for: self)
+                behaviourStorage[id] = behaviour.data(for: self)
                 commands.append(contentsOf: behaviour.commands)
             }
         }
     }
     
     func forEachBehaviour(perform: (Behaviour) -> (Bool)) -> Bool {
-        for id in traits.keys {
-            let behaviour = engine.behaviours[id]?.init(self, data: traits[id]!)
+        for id in behaviourStorage.keys {
+            let behaviour = engine.behaviours[id]?.init(self, data: behaviourStorage[id]!)
             let stop = perform(behaviour!)
             if stop {
                 return true
@@ -302,11 +302,6 @@ public class Object {
     
     func hasFlag(_ key: String) -> Bool {
         (getProperty(withKey: key) as? Bool) == true
-    }
-    
-    func behaviour<T>(_ kind: T.Type) -> T? where T: Behaviour {
-        guard let data = traits[T.id] else { return nil }
-        return T(self, data: data)
     }
 }
 
