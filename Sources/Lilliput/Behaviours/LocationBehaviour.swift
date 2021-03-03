@@ -16,11 +16,11 @@ struct LocationBehaviour: Behaviour {
     }
     
     let object: Object
-    let data: Storage
+    let storage: Storage
 
     init(_ object: Object, storage: Any) {
         self.object = object
-        self.data = storage as! Storage
+        self.storage = storage as! Storage
     }
 
     static func storage(for object: Object) -> Any {
@@ -41,7 +41,7 @@ struct LocationBehaviour: Behaviour {
         var exits: [String:Exit] = [:]
         var location: LocationBehaviour? = self
         while let behaviour = location {
-            exits.merge(behaviour.data.exits.exits, uniquingKeysWith: { existing, new in existing })
+            exits.merge(behaviour.storage.exits.exits, uniquingKeysWith: { existing, new in existing })
             location = LocationBehaviour(behaviour.object.location)
         }
         
@@ -66,16 +66,16 @@ struct LocationBehaviour: Behaviour {
 
 
     var portals: [Object] {
-        let portals = data.exits.exits.values.compactMap({ $0.portal })
+        let portals = storage.exits.exits.values.compactMap({ $0.portal })
         return portals
     }
 
     func showExits() {
-        data.exits.show(for: object)
+        storage.exits.show(for: object)
     }
     
     func link(portal object: Object, to destinations: [String]) {
-        data.exits.link(portal: object, to: destinations)
+        storage.exits.link(portal: object, to: destinations)
     }
  
 }

@@ -287,6 +287,26 @@ public class Object {
         (getProperty(withKey: key) as? String) ?? ""
     }
     
+    func property(withKey key: String, contains value: String) -> Bool {
+        guard let list = getProperty(withKey: key) as? [String] else { return false }
+        return list.contains(value)
+    }
+    
+    func append(_ value: String, toPropertyWithKey key: String) {
+        var list = getProperty(withKey: key) as? [String] ?? []
+        if !list.contains(value) {
+            list.append(value)
+            setProperty(withKey: key, to: list)
+        }
+    }
+    
+    func remove(_ value: String, fromPropertyWithKey key: String) {
+        guard var list = getProperty(withKey: key) as? [String] else { return }
+        if let index = list.firstIndex(of: value) {
+            list.remove(at: index)
+            setProperty(withKey: key, to: list)
+        }
+    }
     func getObject(withKey key: String) -> Object? {
         let value = getProperty(withKey: key)
         if let object = value as? Object {
