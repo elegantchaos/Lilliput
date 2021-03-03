@@ -27,6 +27,27 @@ public struct BasicDriver: Driver {
     }
     
     public func output(_ string: String) {
-        print("\n\(string)")
+        let columns = 80
+        
+        print("")
+        let lines = string.split(separator: "\n", omittingEmptySubsequences: false)
+        for line in lines {
+            var words = line.split(separator: " ")
+            var buffer = ""
+            while words.count > 0 {
+                let word = words[0]
+                words.remove(at: 0)
+                if buffer.count + word.count > columns {
+                    print(buffer)
+                    buffer = ""
+                }
+                if buffer.count > 0 {
+                    buffer += " "
+                }
+
+                buffer += word
+            }
+            print(buffer)
+        }
     }
 }
