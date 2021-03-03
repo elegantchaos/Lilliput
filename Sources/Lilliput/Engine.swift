@@ -127,12 +127,14 @@ public class Engine {
         eventChannel.log("\(object) received \(event)")
 
         if object.handle(event) {
+            print("\(object) swallowed \(event)")
             return true
         }
         
         if object.observers.count > 0 {
             let nonPropogatingEvent = event.nonPropogating
             for observer in object.observers {
+                print("delivered to \(observer) \(nonPropogatingEvent)")
                 _ = deliver(nonPropogatingEvent, to: observer)
             }
         }
@@ -145,15 +147,17 @@ public class Engine {
     }
     
     func handleEvents() {
-        if events.count == 0 {
-            events.append(Event(id: "idle", target: player))
+        let events: [Event]
+        if self.events.count == 0 {
+            events = [Event(id: "idle", target: player)]
+        } else {
+            events = self.events
+            self.events = []
         }
         
         for event in events {
             _ = deliver(event, to: event.target)
         }
-        
-        events = []
     }
     
     public func run() {

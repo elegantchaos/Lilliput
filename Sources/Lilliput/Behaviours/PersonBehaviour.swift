@@ -26,33 +26,26 @@ struct PersonBehaviour: Behaviour {
     }
     
     func handle(_ event: Event) -> Bool {
+        print(event)
         switch EventId(rawValue: event.id) {
             case .movedFrom:
                 if event.target == object, let location = event.parameters["container"] as? Object {
+                    print("remove obsever from \(location)")
                     location.remove(observer: object)
-                    performActions(inContext: Dialog.Context(speaker: object, subject: object.engine.player, event: event))
                 }
 
             case .movedTo:
                 if event.target == object, let location = event.parameters["container"] as? Object {
+                    print("add \(object) as obsever for \(location)")
                     location.add(observer: object)
-                    performActions(inContext: Dialog.Context(speaker: object, subject: object.engine.player, event: event))
-                }
-
-            case .contentRemoved:
-                if event.target == object.location, let object = event[objectWithKey: "object"], object.isPlayer {
-                    performActions(inContext: Dialog.Context(speaker: object, subject: object.engine.player, event: event))
-                }
-
-            case .contentAdded:
-                if event.target == object.location, let object = event[objectWithKey: "object"], object.isPlayer {
-                    performActions(inContext: Dialog.Context(speaker: object, subject: object.engine.player, event: event))
                 }
                 
             default:
-                return false
+                break
         }
-        
+
+        performActions(inContext: Dialog.Context(speaker: object, subject: object.engine.player, event: event))
+
         return false
         
     }

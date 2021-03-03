@@ -39,11 +39,12 @@ struct PlayerBehaviour: Behaviour {
                 assert(event.target == object)
                 object.location?.setFlag(.visitedFlag)
                 showLocation()
-                return true
                 
             default:
-                return false
+                break
         }
+
+        return false
     }
 
     func showInventory() {
