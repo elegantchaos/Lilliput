@@ -11,5 +11,13 @@ class StandCommand: Command {
     }
     
     override func perform(in context: CommandContext) {
+        let player = context.player
+        if player.hasFlag(.sittingFlag), let location = player.location?.location {
+            player.clearFlag(.sittingFlag)
+            player.move(to: location, position: .in)
+            context.engine.output("You stand up.")
+        } else {
+            context.engine.output("You are already standing.")
+        }
     }
 }
