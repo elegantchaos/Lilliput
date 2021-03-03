@@ -130,6 +130,13 @@ public class Engine {
             return true
         }
         
+        if object.observers.count > 0 {
+            let nonPropogatingEvent = event.nonPropogating
+            for observer in object.observers {
+                _ = deliver(nonPropogatingEvent, to: observer)
+            }
+        }
+        
         if event.propogates, let parent = object.location {
             return deliver(event, to: parent)
         }

@@ -16,8 +16,8 @@ enum EventId: String {
 struct Event {
     let id: String
     let target: Object
-    let parameters: [String:Any]
     let propogates: Bool
+    let parameters: [String:Any]
 
     init(id: EventId, target: Object, propogates: Bool = false, parameters: [String:Any]) {
         self.init(id: id.rawValue, target: target, propogates: propogates, parameters: parameters)
@@ -28,6 +28,20 @@ struct Event {
         self.target = target
         self.propogates = propogates
         self.parameters = parameters
+    }
+    
+    subscript(objectWithKey key: String) -> Object? {
+        get {
+            return parameters[key] as? Object
+        }
+    }
+    
+    var nonPropogating: Event {
+        if !propogates {
+            return self
+        }
+        
+        return Event(id: id, target: target, propogates: false, parameters: parameters)
     }
 }
 

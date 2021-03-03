@@ -1,6 +1,6 @@
 {
     "Room 1": {
-        "type": "location",
+        "traits": ["location"],
         "descriptions": {
             "definite": "room 1",
             "location": "You are in room 1."
@@ -11,6 +11,7 @@
     },
 
     "Room 2": {
+        "traits": ["location"],
         "descriptions": {
             "definite": "room 2",
             "location": "You are in room 2."
@@ -18,49 +19,10 @@
         "exits": {
             "south": "Room 1"
         },
-        "type": "location"
-    },
-
-    "Room 1 Door": {
-        "descriptions": {
-            "definite": "the door",
-            "exit": "through a door",
-            "indefinite": "a door",
-            "locked": "The door is locked.",
-            "lockedMissingRequirements": "You don't have the key.",
-            "not-locked": "The door is unlocked."
-        },
-        "detailed": "A normal office door, with a keyhole.",
-        "links": [
-            "Room 1",
-            "Room 2"
-        ],
-        "lockable": true,
-        "locked": true,
-        "names": [
-            "door",
-            "room 1 door"
-        ],
-        "requires": "Key",
-        "type": "portal"
-    },
-
-    "Key": {
-        "descriptions": {
-            "definite": "the key",
-            "detailed": "A large key.",
-            "indefinite": "a key"
-        },
-        "location": "Room 1",
-        "movable": true,
-        "names": [
-            "key",
-            "key"
-        ],
-        "type": "object"
     },
 
     "npc": {
+        "traits": ["person"],
         "descriptions": {
             "definite": "Norman",
             "detailed": "Normal Percival Charlesworth Esquire.",
@@ -105,15 +67,14 @@
             "norman",
             "npc"
         ],
-        "type": "person"
     },
 
     "player": {
+        "traits": ["player"],
         "descriptions": {
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },
         "location": "Room 1",
-        "type": "player"
     }
 }

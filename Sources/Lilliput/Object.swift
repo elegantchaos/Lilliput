@@ -22,6 +22,7 @@ public class Object {
     var position: Position
     var contents: ContentList
     var commands: [Command]
+    var observers: Set<Object> = []
     var overrides: [String:Any] = [:]
     var behaviourStorage: [String:Any] = [:]
     
@@ -100,6 +101,14 @@ public class Object {
         self.position = position
         engine.post(event: Event(id: .contentAdded, target: object, parameters: ["object": self]))
         engine.post(event: Event(id: .movedTo, target: self, parameters: ["container": object]))
+    }
+    
+    func add(observer: Object) {
+        observers.insert(observer)
+    }
+    
+    func remove(observer: Object) {
+        observers.remove(observer)
     }
     
     func move(to newLocation: Object, position newPosition: Position = .in, quiet: Bool = false) {
