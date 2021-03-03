@@ -38,29 +38,6 @@
                     { "when": "mission", "of": "player", "is": null }
                 ]
             },
-
-            "on-case": {
-                "lines": [
-                    "Chief Inspector Pardoe looks up from the letter he is writing and frowns. “What are you waiting for, Inspector? You have your assignment and the cab is waiting for you outside.”"
-                ],
-                "shows": [
-                    { "when": "event", "is": "idle" },
-                    { "when": "mission", "of": "player", "not": null }
-                ]
-            },
-
-            "case-1": {
-                "lines": [
-                    "The Chief Inspector takes a moment to fill his pipe and light it. He flicks the spent match into the fireplace and sighs, exhaling a cloud of smoke.\n\n“Have you heard of Bray Manor, Edmund?”\n\n“No sir,” you reply.\n\n“It is some way outside our normal jurisdiction,” the old man continues, “but the local constabulary have requested our help. It seems there are strange goings on at the old house on the hill. First, all the domestic staff quit their posts and refused to return, and now there are reports that the entire family who lived there have vanished… not been seen in months. I want you to go to the manor and have a sniff around, find out what happened. I know you have a nose for this sort of thing. There is a Hansom waiting outside, the driver will take you there.”"
-                ],
-                "shows": [
-                    { "when": "event", "is": "sat" },
-                    { "when": "mission", "of": "player", "is": null }
-                ],
-                "actions": [
-                    { "set": "mission", "of": "player", "to": "mission1"}
-                ]
-            }
         },
         "location": "Room 1",
         "names": [

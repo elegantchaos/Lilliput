@@ -17,7 +17,7 @@ struct Dialog {
         let data: [String:Any]
         
         func value(_ value: Any?, matches expected: Any?) -> Bool {
-            if (value == nil) && (expected == nil) {
+            if (value == nil) && (expected is NSNull) {
                 return true
             }
 
