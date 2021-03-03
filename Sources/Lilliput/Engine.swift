@@ -8,6 +8,7 @@ import Foundation
 import Logger
 
 let eventChannel = Channel("Events")
+let observerChannel = Channel("Observers")
 let engineChannel = Channel("Engine")
 
 extension String {
@@ -127,14 +128,14 @@ public class Engine {
         eventChannel.log("\(object) received \(event)")
 
         if object.handle(event) {
-            print("\(object) swallowed \(event)")
+            eventChannel.log("\(object) swallowed \(event)")
             return true
         }
         
         if object.observers.count > 0 {
             let nonPropogatingEvent = event.nonPropogating
             for observer in object.observers {
-                print("delivered to \(observer) \(nonPropogatingEvent)")
+                observerChannel.log("delivered to \(observer) \(nonPropogatingEvent)")
                 _ = deliver(nonPropogatingEvent, to: observer)
             }
         }
@@ -149,7 +150,7 @@ public class Engine {
     func handleEvents() {
         let events: [Event]
         if self.events.count == 0 {
-            events = [Event(id: "idle", target: player)]
+            events = [Event(id: "idle", target: player, propogates: true)]
         } else {
             events = self.events
             self.events = []

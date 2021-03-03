@@ -3,7 +3,11 @@
 //  All code (c) 2021 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Coercion
 import Foundation
+import Logger
+
+let dialogChannel = Channel("Dialogue")
 
 struct Dialog {
     struct Context {
@@ -51,7 +55,7 @@ struct Dialog {
             } else if let bool = actual as? Bool {
                 return bool
             } else {
-                context.event.target.engine.warning("Missing test condition for \(actual) in test \(data)")
+                context.event.target.engine.warning("Missing test condition for \(String(describing: actual)) in test \(data)")
             }
 
             return false
@@ -65,6 +69,12 @@ struct Dialog {
     
     struct Action {
         let data: [String:Any]
+        
+        func perform(with engine: Engine) {
+            if let key = data[stringWithKey: "set"], let value = data["to"], let id = data[stringWithKey: "of"], let object = engine.objects[id] {
+                object.setProperty(withKey: key, to: value)
+            }
+        }
     }
     
     struct Output {
@@ -86,12 +96,12 @@ struct Dialog {
         
         init?(id: String, data: [String:Any]?) {
             guard let data = data else {
-                print("Sentence \(id) has no data.")
+                dialogChannel.log("Sentence \(id) has no data.")
                 return nil
             }
             
             guard let lines = data["lines"] as? [String] else {
-                print("Sentence \(id) has no lines.")
+                dialogChannel.log("Sentence \(id) has no lines.")
                 return nil
             }
 
@@ -107,18 +117,18 @@ struct Dialog {
         
         func matches(_ context: Context) -> Bool {
             if (repeatInterval == 0) && context.speaker.property(withKey: "spoken", contains: id) {
-                print("\(id) already spoken")
+                dialogChannel.log("\(id) already spoken")
                 return false
             }
             
             for trigger in triggers {
                 if !trigger.matches(context) {
-                    print("\(id) failed trigger \(trigger)")
+                    dialogChannel.log("\(id) failed trigger \(trigger)")
                     return false
                 }
             }
             
-            print("\(id) matches")
+            dialogChannel.log("\(id) matches")
             return true
         }
 

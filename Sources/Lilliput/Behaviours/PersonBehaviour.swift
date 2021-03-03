@@ -26,17 +26,14 @@ struct PersonBehaviour: Behaviour {
     }
     
     func handle(_ event: Event) -> Bool {
-        print(event)
         switch EventId(rawValue: event.id) {
             case .movedFrom:
                 if event.target == object, let location = event.parameters["container"] as? Object {
-                    print("remove obsever from \(location)")
                     location.remove(observer: object)
                 }
 
             case .movedTo:
                 if event.target == object, let location = event.parameters["container"] as? Object {
-                    print("add \(object) as obsever for \(location)")
                     location.add(observer: object)
                 }
                 
@@ -51,10 +48,11 @@ struct PersonBehaviour: Behaviour {
     }
     
     func performActions(inContext context: Dialog.Context) {
+        let engine = object.engine
         if let output = dialogue.speak(inContext: context) {
             object.engine.output(output.line)
             for action in output.actions {
-                print(action)
+                action.perform(with: engine)
             }
         }
     }

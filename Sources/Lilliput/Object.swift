@@ -104,10 +104,12 @@ public class Object {
     }
     
     func add(observer: Object) {
+        observerChannel.log("Added \(observer) as observer for \(self)")
         observers.insert(observer)
     }
     
     func remove(observer: Object) {
+        observerChannel.log("Removed \(observer) as observer for \(self)")
         observers.remove(observer)
     }
     
