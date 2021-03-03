@@ -47,7 +47,11 @@ struct Event {
 
 extension Event: CustomStringConvertible {
     var description: String {
-        let params = parameters.count > 0 ? " params: \(parameters)" : ""
-        return "«event \(id) target: \(target)\(params)»"
+        if parameters.count == 0 {
+            return "«event \(id) target: \(target)»"
+        } else {
+            let params = parameters.map({ "\($0.key): \($0.value)" }).joined(separator: " ")
+            return "«event \(id) target: \(target) \(params)»"
+        }
     }
 }
