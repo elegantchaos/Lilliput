@@ -35,7 +35,8 @@ struct Dialog {
         func valueToTest(in context: Context) -> Any? {
             if when == "playerArrived" {
                 let wasPlayerArrived = (context.event.id == "contentAdded") && context.subject.isPlayer
-                return wasPlayerArrived
+                let inOurLocation = (context.event.target == context.speaker.location)
+                return wasPlayerArrived && inOurLocation
             } else if when == "event" {
                 return context.event.id
             } else if let id = data["of"] as? String {
