@@ -81,24 +81,220 @@
                     ]
                 },
                 
-                "reply1": {
+                "answer1": {
                     "lines": [
                         "As I said, Inspector, it’s not within our normal jurisdiction. The village of Featherwell is a couple of hours south of the city.” The Chief Inspector waves a hand somewhat dismissively. “A typical rural village. A few farms, a small pub, and two dozen jumpy locals."
                     ],
                     "shows": [
-                        { "when": "reply", "was": "reply1" }
+                        { "when": "reply", "was": "question1" }
+                    ]
+                },
+                
+                "answer1a": {
+                    "lines": [
+                        "Bray Manor is one of the older houses in the area. It sits on a hill just on the outskirts of the village. As is so often with these old houses, the manor has been owned by the same family for generations."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question1a" }
+                    ]
+                },
+                
+                "answer1b": {
+                    "lines": [
+                        "The old man stifles a laugh as he responds. “I am afraid not, Edmund. The wheels of progress have not yet arrived in Featherwell. You will have to travel there by cab."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question1a" }
+                    ]
+                },
+
+                "answer2": {
+                    "lines": [
+                        "Pardoe leans back in his leather chair and rubs his hands together as he thinks. After a few moments of contemplation he begins to speak, his remarkable memory reciting the details from the case file. “The current head of the family is Mister John Bray. Married to Penelope Bray. There are two children: an infant called Amelia and an older girl called Cecile. The family owns a lot of the land around the village. Their income comes from the rents paid by the tenant farmers."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question2" }
+                    ]
+                },
+
+                "answer2a": {
+                    "lines": [
+                        "That’s the curious thing, Edmund.” Pardoe responds, pointing the stem of his pipe at you. “The tenants didn’t report it, though they seemed to know something was not right. They just kept paying their rents and tending to the fields. It was only when the harvest was taken in that one of them went to the local constabulary, saying they hadn’t seen John Bray for weeks."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question2a" }
+                    ]
+                },
+
+                "answer2b": {
+                    "lines": [
+                        "They do not suspect the villagers. That much is clear from their report. By all accounts, John Bray was a reasonable landlord. He was well-regarded by his tenants and they had no reason to do away with him. The local police have searched the house and the grounds but found nothing."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question2b" }
+                    ]
+                },
+
+                "answer2c": {
+                    "lines": [
+                        "The local police interviewed every man, woman, and articulate child in the village. They learned nothing. Just a lot of local superstition and confusion."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question2c" }
+                    ]
+                },
+
+                "answer2d": {
+                    "lines": [
+                        "Pardoe groans and shakes his head. “You are predictable, Edmund. The faintest whiff of anything supernatural and you start sniffing around with that busted nose of yours like a damned bloodhound. There is an old legend about the land around the village being the stomping grounds of a… creature of some sort. The locals have told stories of this beast for hundreds of years. You know the sort, typical nonsensical folk tales. However, the disappearance of the Bray family only seems to have fanned the flames of this hysteria."
+                    ],
+                    "shows": [
+                        { "when": "reply", "in": ["question2d","question3d"] }
+                    ]
+                },
+
+                "answer2e": {
+                    "lines": [
+                        "Your line of questioning is clearly trying the Chief Inspector’s patience. “Damnation, Forrester!” he bellows, slamming his fist down on the desk. “I tell you it is just a local myth. The penny dreadful delusions of the cider-addled minds at the village pub. A big hairy beast that stalks the fields by moonlight. Every fifty years or so, an inhabitant of the village comes forth with some tall tale of being chased by the creature, although the teller of such fanciful stories is invariably mad or drunk or both."
+                    ],
+                    "shows": [
+                        { "when": "reply", "in": ["question2e", "question3e"] }
+                    ]
+                },
+
+                "answer3": {
+                    "lines": [
+                        "Because you are the only one available today,” Pardoe sighs. “Now that you have concluded that nasty business with the late widow Phrigg, I see no reason why you cannot work this case."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question3" }
+                    ]
+                },
+
+                "answer3a": {
+                    "lines": [
+                        "Walmsley?” Parode scowls. “That damned fool claims he is sick but I suspect he is just hung over again.”"
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question3a" }
+                    ]
+                },
+
+                "answer3b": {
+                    "lines": [
+                        "“Gilchrist is to old and soft to send. The great pudding would probably fall asleep on the carriage ride out there.”"
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question3b" }
+                    ]
+                },
+
+                "answer3c": {
+                    "lines": [
+                        "“You do not have a choice in this matter, Inspector. The local police are at their wit’s end. The have interviewed everyone in the village and have come up with nothing. No suspects. No witnesses. No leads… Just a lot of superstition and confusion.”"
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "question3c" }
                     ]
                 }
+
             },
             
             "replies": {
-                "reply1": {
+                "question1": {
                     "text": "Where is Bray Manor, Sir?",
                     "shows": [
                         { "when": "mission", "of": "player", "is": "bray" },
-                        { "when": "sentence", "not": "reply1" }
+                        { "when": "sentence", "not": "answer1" }
                     ]
-                }
+                },
+                
+                "question1a": {
+                    "text": "And what of the manor itself, sir?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer1" }
+                    ]
+                },
+
+                "question1b": {
+                    "text": "Is there no train that could take me there?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer1" }
+                    ]
+                },
+
+                "question2": {
+                    "text": "What can you tell me about the family who are missing?",
+                    "shows": [
+                        { "when": "mission", "of": "player", "is": "bray" },
+                        { "when": "sentence", "not": "answer2" }
+                    ]
+                },
+
+                "question2a": {
+                    "text": "Who reported the family missing?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer2" }
+                    ]
+                },
+
+                "question2b": {
+                    "text": "What do the local police think happened?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer2" }
+                    ]
+                },
+
+                "question2c": {
+                    "text": "The villagers… What do they say about the matter?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer2" }
+                    ]
+                },
+
+                "question2d3d": {
+                    "text": "Superstition, sir? What do you mean by that?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer2c" }
+                    ]
+                },
+
+                "question2e3e": {
+                    "text": "Can you tell me any more about this creature?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer2d" }
+                    ]
+                },
+
+                "question3": {
+                    "text": "Why are you giving this case to me?",
+                    "shows": [
+                        { "when": "mission", "of": "player", "is": "bray" },
+                        { "when": "sentence", "not": "answer3" }
+                    ]
+                },
+
+                "question3a": {
+                    "text": "What about Constable Walmsley?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer3" }
+                    ]
+                },
+
+                "question3b": {
+                    "text": "What about Constable Gilchrist?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer3" }
+                    ]
+                },
+
+                "question3c": {
+                    "text": "What if I refuse?",
+                    "shows": [
+                        { "when": "sentence", "was": "answer3" }
+                    ]
+                },
+
             }
         },
         "location": "Room 1",

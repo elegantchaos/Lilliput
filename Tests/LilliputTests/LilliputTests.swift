@@ -22,7 +22,7 @@ class TestDriver: Driver {
         return Input(string)!
     }
     
-    func output(_ string: String) {
+    func output(_ string: String, newParagraph: Bool) {
         output.append(string)
     }
     

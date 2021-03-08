@@ -74,21 +74,14 @@ struct Dialogue {
         let replies: [Reply]
         let context: Dialogue.Context
         
-        func speak() -> Bool {
+        func speak() -> [Reply] {
             let engine = context.engine
             engine.output(sentence.output)
             for action in sentence.actions {
                 action.perform(with: engine)
             }
             
-            var n = 1
-            let replies = replies.filter({ $0.matches(context) })
-            for reply in replies {
-                engine.output("\(n): \(reply.text)")
-                n += 1
-            }
-            
-            return n > 1
+            return replies.filter({ $0.matches(context) }).sorted(by: \.id)
         }
     }
     
@@ -116,7 +109,7 @@ struct Dialogue {
             self.lines = lines
             self.triggers = Triggers(from: data["shows"])
             self.actions = actions.map({ Action(data: $0) })
-            self.repeatInterval = (data["repeatInterval"] as? Int) ?? 0
+            self.repeatInterval = (data["repeatInterval"] as? Int) ?? 1
         }
         
         func matches(_ context: Context) -> Bool {

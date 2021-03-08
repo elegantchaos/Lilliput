@@ -19,10 +19,13 @@ public struct BasicDriver: Driver {
         }
     }
     
-    public func output(_ string: String) {
+    public func output(_ string: String, newParagraph: Bool) {
         let columns = 80
         
-        print("")
+        if newParagraph {
+            print("")
+        }
+        
         let lines = string.split(separator: "\n", omittingEmptySubsequences: false)
         for line in lines {
             var words = line.split(separator: " ")

@@ -29,17 +29,21 @@ public struct Input {
 
 public protocol Driver {
     func getInput() -> Input
-    func output(_ string: String)
+    func output(_ string: String, newParagraph: Bool)
     func warning(_ string: String)
     func error(_ string: String)
 }
 
 public extension Driver {
+    func output(_ string: String) {
+        output(string, newParagraph: true)
+    }
+    
     func warning(_ string: String) {
-        output("Warning: \(string)")
+        output("Warning: \(string)", newParagraph: true)
     }
 
     func error(_ string: String) {
-        output("Error: \(string)")
+        output("Error: \(string)", newParagraph: true)
     }
 }

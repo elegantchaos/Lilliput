@@ -17,6 +17,11 @@ extension String {
 }
 
 public class Engine {
+    struct ReplySelection {
+        let id: String
+        let speaker: Object
+    }
+    
     let driver: Driver
     var running = true
     var definitions: [String:Definition] = [:]
@@ -25,6 +30,7 @@ public class Engine {
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
     var spoken: [Dialogue.Speech] = []
+    var replies: [ReplySelection] = []
     var tick = 0
     
     public init(driver: Driver) {
@@ -70,8 +76,8 @@ public class Engine {
             
     }
 
-    public func output(_ string: String) {
-        driver.output(string)
+    public func output(_ string: String, newParagraph: Bool = true) {
+        driver.output(string, newParagraph: newParagraph)
     }
     
     public func warning(_ string: String) {
@@ -152,17 +158,10 @@ public class Engine {
     func handleInput() {
         let input = driver.getInput()
         
-        if input.arguments.count == 0, let index = Int(input.command) {
-            var n = 1
-            for speech in spoken {
-                for reply in speech.replies {
-                    if index == n {
-                        post(event: Event(id: .replied, target: speech.context.speaker, parameters: [ .replyIDParameter : reply.id ]))
-                        return
-                    }
-                    n += 1
-                }
-            }
+        if input.arguments.count == 0, let index = Int(input.command), index > 0, index <= replies.count {
+            let reply = replies[index - 1]
+            post(event: Event(id: .replied, target: reply.speaker, parameters: [ .replyIDParameter : reply.id ]))
+            return
         }
         
         let candidates = inputCandidates()
@@ -193,20 +192,25 @@ public class Engine {
             _ = deliver(event, to: event.target)
         }
     }
-    
-    func handleSpeech() {
-        var hasReplies = false
-        for speech in spoken {
-            hasReplies = speech.speak() || hasReplies
-        }
 
-        if hasReplies {
-            output("(type a number to respond, or enter a normal command)")
+    func handleSpeech() {
+        var n = 1
+        for speech in spoken {
+            for reply in speech.speak() {
+                output("\(n). \(reply.text)", newParagraph: n == 1)
+                replies.append(ReplySelection(id: reply.id, speaker: speech.context.speaker))
+                n += 1
+            }
+        }
+        
+        if replies.count > 0 {
+            output("(type a number to respond, or a normal command to end the conversation)")
         }
     }
     
     func clearSpeech() {
         spoken = []
+        replies = []
     }
     
     public func run() {
