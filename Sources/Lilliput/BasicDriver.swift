@@ -13,15 +13,8 @@ public struct BasicDriver: Driver {
     public func getInput() -> Input {
         while true {
             print("\n> ", terminator: "")
-            if let string = readLine()?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
-                let words = string.split(separator: " ")
-                if words.count > 0 {
-                    let command = String(words[0])
-                    let args = words.dropFirst().map({ String($0) })
-                    return Input(raw: string, command: command, arguments: args)
-
-                }
-                
+            if let string = readLine(), let input = Input(string) {
+                return input
             }
         }
     }

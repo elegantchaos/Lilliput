@@ -23,6 +23,8 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
+    var speech: [Dialog.Output] = []
+    var tick = 0
     
     public init(driver: Driver) {
         self.driver = driver
@@ -39,6 +41,16 @@ public class Engine {
         register(PortalBehaviour.self)
         register(SittableBehaviour.self)
         register(WearableBehaviour.self)
+    }
+    
+    func register(_ definition: Definition) {
+        definitions[definition.id] = definition
+        engineChannel.log("registered object \(definition.id)")
+    }
+    
+    func register<T>(_ behaviour: T.Type) where T: Behaviour {
+        behaviours[behaviour.id] = behaviour
+        engineChannel.log("registered behaviour \(behaviour.id)")
     }
     
     public func load(url: URL) {
@@ -75,24 +87,30 @@ public class Engine {
     }
     
     func setupObjects() {
-        for definition in definitions {
-            let object = Object(definition: definition.value, engine: self)
-            objects[definition.key] = object
+        
+        let objectIds = definitions.keys.sorted()
+
+        var created: [Object] = []
+        for id in objectIds {
+            let object = Object(definition: definitions[id]!, engine: self)
+            created.append(object)
+            objects[id] = object
         }
         
-        for object in objects.values {
+        for object in created {
             object.setup()
         }
-        
-        for object in objects.values {
-            object.didSetup()
-        }
-        
+
         if let player = objects["player"] {
             self.player = player
         } else {
             error("Couldn't find player object.")
         }
+
+        for object in created {
+            object.didSetup()
+        }
+        
     }
     
     func inputCandidates() -> [CommandOwner] {
@@ -105,23 +123,6 @@ public class Engine {
         candidates.append(self)
         
         return candidates
-    }
-    
-    
-    func handleInput() {
-        let input = driver.getInput()
-        let candidates = inputCandidates()
-        for object in candidates {
-            let context = CommandContext(input: input, target: object, engine: self)
-            for command in object.commands {
-                if command.matches(context) {
-                    command.perform(in: context)
-                    return
-                }
-            }
-        }
-        
-        output("I don't know how to \(input.raw)!")
     }
     
     func deliver(_ event: Event, to object: Object) -> Bool {
@@ -147,6 +148,23 @@ public class Engine {
         return false
     }
     
+    func handleInput() {
+        let input = driver.getInput()
+        let candidates = inputCandidates()
+        for object in candidates {
+            let context = CommandContext(input: input, target: object, engine: self)
+            for command in object.commands {
+                if command.matches(context) {
+                    command.perform(in: context)
+                    return
+                }
+            }
+        }
+        
+        output("I don't know how to \(input.raw)!")
+    }
+
+    
     func handleEvents() {
         let events: [Event]
         if self.events.count == 0 {
@@ -161,26 +179,29 @@ public class Engine {
         }
     }
     
+    func handleSpeech() {
+        for response in speech {
+            output(response.line)
+            for action in response.actions {
+                action.perform(with: self)
+            }
+        }
+        speech = []
+    }
+    
     public func run() {
         setupObjects()
 
         while running {
             handleEvents()
+            handleSpeech()
             handleInput()
+            tick += 1
         }
         
         output("Bye.")
     }
     
-    func register(_ definition: Definition) {
-        definitions[definition.id] = definition
-        engineChannel.log("registered object \(definition.id)")
-    }
-    
-    func register<T>(_ behaviour: T.Type) where T: Behaviour {
-        behaviours[behaviour.id] = behaviour
-        engineChannel.log("registered behaviour \(behaviour.id)")
-    }
 }
 
 extension Engine: CommandOwner {

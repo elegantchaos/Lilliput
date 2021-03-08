@@ -38,6 +38,11 @@ let package = Package(
             dependencies: ["Coercion", "CollectionExtensions", "Files", "Logger"]),
         .testTarget(
             name: "LilliputTests",
-            dependencies: ["Lilliput", "XCTestExtensions"]),
+            dependencies: ["Lilliput", "XCTestExtensions"],
+            resources: [
+                .copy("Resources/Games")
+            ]
+        ),
+        
     ]
 )

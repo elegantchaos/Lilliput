@@ -10,6 +10,16 @@ public struct Input {
     let command: String
     let arguments: [String]
 
+    public init?(_ string: String) {
+        let trimmed = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let words = trimmed.split(separator: " ")
+        guard words.count > 0 else { return nil }
+        
+        let command = String(words[0])
+        let args = words.dropFirst().map({ String($0) })
+        self.init(raw: string, command: command, arguments: args)
+    }
+    
     public init(raw: String, command: String, arguments: [String]) {
         self.raw = raw
         self.command = command

@@ -86,6 +86,12 @@ public class Object {
         forEachBehaviour { behaviour in
             behaviour.didSetup()
         }
+
+        if let deferredLocation = definition.properties[stringWithKey: "deferredLocation"] {
+            guard let location = engine.objects[deferredLocation] else { engine.error("Missing location for \(self)")}
+            add(to: location)
+        }
+
     }
     
     func remove(from object: Object) {

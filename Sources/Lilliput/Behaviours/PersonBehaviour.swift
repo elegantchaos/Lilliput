@@ -50,10 +50,7 @@ struct PersonBehaviour: Behaviour {
     func performActions(inContext context: Dialog.Context) {
         let engine = object.engine
         if let output = dialogue.speak(inContext: context) {
-            object.engine.output(output.line)
-            for action in output.actions {
-                action.perform(with: engine)
-            }
+            engine.speech.append(output)
         }
     }
 }

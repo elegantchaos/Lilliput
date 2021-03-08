@@ -113,7 +113,7 @@ struct Dialog {
             self.lines = lines
             self.triggers = triggers.map({ Trigger(data: $0) })
             self.actions = actions.map({ Action(data: $0) })
-            self.repeatInterval = 0
+            self.repeatInterval = (data["repeatInterval"] as? Int) ?? 0
         }
         
         func matches(_ context: Context) -> Bool {
