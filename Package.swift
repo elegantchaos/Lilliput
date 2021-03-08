@@ -54,7 +54,7 @@ let package = Package(
         
         .testTarget(
             name: "LilliputTests",
-            dependencies: ["Lilliput", "XCTestExtensions"]
+            dependencies: ["Lilliput", "Examples", "XCTestExtensions"]
         ),
         
     ]

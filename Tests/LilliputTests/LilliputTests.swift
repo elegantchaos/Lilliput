@@ -3,9 +3,10 @@
 //  All code (c) 2021 - present day, Elegant Chaos.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Examples
+import Lilliput
 import XCTest
 import XCTestExtensions
-import Lilliput
 
 @testable import Lilliput
 
@@ -32,9 +33,7 @@ final class LilliputTests: XCTestCase {
     func testExample() {
         let driver = TestDriver()
         let engine = Engine(driver: driver)
-        let resourceBundleURL = Bundle(for: Self.self).url(forResource: "Lilliput_LilliputTests", withExtension: "bundle")!
-        let resourceBundle = Bundle(url: resourceBundleURL)!
-        let url = resourceBundle.url(forResource: "PersonTest", withExtension: nil, subdirectory: "Games")!
+        let url = Examples.urlForGame(named: "PersonTest")!
         engine.load(url: url)
         
         driver.input = ["n"]
