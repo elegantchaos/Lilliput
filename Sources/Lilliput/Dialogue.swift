@@ -11,9 +11,24 @@ let dialogChannel = Channel("Dialogue")
 
 struct Dialogue {
     struct Context {
+        let engine: Engine
         let speaker: Object
         let subject: Object
         let event: Event
+        let sentence: Sentence?
+
+        internal init(speaker: Object, subject: Object, event: Event, sentence: Dialogue.Sentence? = nil) {
+            self.speaker = speaker
+            self.subject = subject
+            self.event = event
+            self.engine = speaker.engine
+            self.sentence = sentence
+        }
+        
+        func context(for sentence: Sentence) -> Context {
+            assert(self.sentence == nil)
+            return Context(speaker: speaker, subject: subject, event: event, sentence: sentence)
+        }
     }
 
     struct Action {
@@ -23,16 +38,6 @@ struct Dialogue {
             if let key = data[stringWithKey: "set"], let value = data["to"], let id = data[stringWithKey: "of"], let object = engine.objects[id] {
                 object.setProperty(withKey: key, to: value)
             }
-        }
-    }
-    
-    struct Output {
-        let line: String
-        let actions: [Action]
-        
-        init(_ line: String, actions: [Action]) {
-            self.line = line
-            self.actions = actions
         }
     }
     
@@ -50,6 +55,40 @@ struct Dialogue {
             self.id = id
             self.text = text
             self.triggers = Triggers(from: data["shows"])
+        }
+        
+        func matches(_ context: Context) -> Bool {
+            if !triggers.matches(context) {
+                dialogChannel.log("reply \(id) failed triggers")
+                return false
+            }
+            
+            dialogChannel.log("reply \(id) matches")
+            return true
+        }
+        
+    }
+    
+    struct Speech {
+        let sentence: Sentence
+        let replies: [Reply]
+        let context: Dialogue.Context
+        
+        func speak() -> Bool {
+            let engine = context.engine
+            engine.output(sentence.output)
+            for action in sentence.actions {
+                action.perform(with: engine)
+            }
+            
+            var n = 1
+            let replies = replies.filter({ $0.matches(context) })
+            for reply in replies {
+                engine.output("\(n): \(reply.text)")
+                n += 1
+            }
+            
+            return n > 1
         }
     }
     
@@ -87,11 +126,11 @@ struct Dialogue {
             }
             
             if !triggers.matches(context) {
-                dialogChannel.log("\(id) failed triggers")
+                dialogChannel.log("sentence \(id) failed triggers")
                 return false
             }
             
-            dialogChannel.log("\(id) matches")
+            dialogChannel.log("sentence \(id) matches")
             return true
         }
 
@@ -123,10 +162,14 @@ struct Dialogue {
         return sentence
     }
     
-    func speak(inContext context: Context) -> Output? {
+    func selectReplies(forSentence sentence: Sentence, inContext context: Context) -> [Reply] {
+        let replies = replies.filter({ $0.matches(context.context(for: sentence)) })
+        return replies
+    }
+
+    func speak(inContext context: Context) -> Speech? {
         guard let sentence = selectSentence(forContext: context) else { return nil }
-        
         context.speaker.append(sentence.id, toPropertyWithKey: "spoken")
-        return Output(sentence.output, actions: sentence.actions)
+        return Speech(sentence: sentence, replies: replies, context: context.context(for: sentence))
     }
 }

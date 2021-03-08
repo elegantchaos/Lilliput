@@ -13,6 +13,7 @@ let engineChannel = Channel("Engine")
 
 extension String {
     static let gameFileExtension = "json"
+    static let replyIDParameter = "id"
 }
 
 public class Engine {
@@ -23,7 +24,7 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
-    var speech: [Dialogue.Output] = []
+    var spoken: [Dialogue.Speech] = []
     var tick = 0
     
     public init(driver: Driver) {
@@ -150,6 +151,20 @@ public class Engine {
     
     func handleInput() {
         let input = driver.getInput()
+        
+        if input.arguments.count == 0, let index = Int(input.command) {
+            var n = 1
+            for speech in spoken {
+                for reply in speech.replies {
+                    if index == n {
+                        post(event: Event(id: .replied, target: speech.context.speaker, parameters: [ .replyIDParameter : reply.id ]))
+                        return
+                    }
+                    n += 1
+                }
+            }
+        }
+        
         let candidates = inputCandidates()
         for object in candidates {
             let context = CommandContext(input: input, target: object, engine: self)
@@ -180,13 +195,18 @@ public class Engine {
     }
     
     func handleSpeech() {
-        for response in speech {
-            output(response.line)
-            for action in response.actions {
-                action.perform(with: self)
-            }
+        var hasReplies = false
+        for speech in spoken {
+            hasReplies = speech.speak() || hasReplies
         }
-        speech = []
+
+        if hasReplies {
+            output("(type a number to respond, or enter a normal command)")
+        }
+    }
+    
+    func clearSpeech() {
+        spoken = []
     }
     
     public func run() {
@@ -196,6 +216,7 @@ public class Engine {
             handleEvents()
             handleSpeech()
             handleInput()
+            clearSpeech()
             tick += 1
         }
         

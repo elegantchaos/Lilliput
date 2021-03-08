@@ -13,6 +13,8 @@ extension String {
     static let skipBriefFlag = "skipBrief"
     static let showContentModeProperty = "showContentWhen"
     static let showContentAlwaysMode = "always"
+    static let containerParameter = "container"
+    static let objectParameter = "object"
 }
 
 public class Object {
@@ -97,16 +99,16 @@ public class Object {
     func remove(from object: Object) {
         object.contents.remove(self)
         location = nil
-        engine.post(event: Event(id: .contentRemoved, target: object, parameters: ["object": self]))
-        engine.post(event: Event(id: .movedFrom, target: self, parameters: ["container": object]))
+        engine.post(event: Event(id: .contentRemoved, target: object, parameters: [.objectParameter: self]))
+        engine.post(event: Event(id: .movedFrom, target: self, parameters: [.containerParameter: object]))
     }
     
     func add(to object: Object, position: Position = .in) {
         object.contents.add(self, position: position)
         location = object
         self.position = position
-        engine.post(event: Event(id: .contentAdded, target: object, parameters: ["object": self]))
-        engine.post(event: Event(id: .movedTo, target: self, parameters: ["container": object]))
+        engine.post(event: Event(id: .contentAdded, target: object, parameters: [.objectParameter: self]))
+        engine.post(event: Event(id: .movedTo, target: self, parameters: [.containerParameter: object]))
     }
     
     func add(observer: Object) {

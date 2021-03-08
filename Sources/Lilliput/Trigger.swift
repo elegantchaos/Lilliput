@@ -26,6 +26,9 @@ struct Trigger {
             let wasPlayerArrived = (context.event.id == "contentAdded") && context.subject.isPlayer
             let inOurLocation = (context.event.target == context.speaker.location)
             return wasPlayerArrived && inOurLocation
+        } else if when == "reply", let id = data["was"] as? String {
+            let wasReply = context.event.id == EventId.replied.rawValue
+            return wasReply && context.event[stringWithKey: .replyIDParameter] == id
         } else if when == "event" {
             return context.event.id
         } else if let id = data["of"] as? String {

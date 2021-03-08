@@ -10,6 +10,7 @@ enum EventId: String {
     case contentRemoved
     case movedFrom
     case movedTo
+    case replied
     
 }
 
@@ -17,7 +18,7 @@ struct Event {
     let id: String
     let target: Object
     let propogates: Bool
-    let parameters: [String:Any]
+    fileprivate let parameters: [String:Any]
 
     init(id: EventId, target: Object, propogates: Bool = false, parameters: [String:Any]) {
         self.init(id: id.rawValue, target: target, propogates: propogates, parameters: parameters)
@@ -28,6 +29,12 @@ struct Event {
         self.target = target
         self.propogates = propogates
         self.parameters = parameters
+    }
+    
+    subscript(stringWithKey key: String) -> String? {
+        get {
+            return parameters[key] as? String
+        }
     }
     
     subscript(objectWithKey key: String) -> Object? {

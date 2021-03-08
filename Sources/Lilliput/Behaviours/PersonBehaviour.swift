@@ -28,12 +28,12 @@ struct PersonBehaviour: Behaviour {
     func handle(_ event: Event) -> Bool {
         switch EventId(rawValue: event.id) {
             case .movedFrom:
-                if event.target == object, let location = event.parameters["container"] as? Object {
+                if event.target == object, let location = event[objectWithKey: .containerParameter] {
                     location.remove(observer: object)
                 }
 
             case .movedTo:
-                if event.target == object, let location = event.parameters["container"] as? Object {
+                if event.target == object, let location = event[objectWithKey: .containerParameter] {
                     location.add(observer: object)
                 }
                 
@@ -50,7 +50,7 @@ struct PersonBehaviour: Behaviour {
     func performActions(inContext context: Dialogue.Context) {
         let engine = object.engine
         if let output = dialogue.speak(inContext: context) {
-            engine.speech.append(output)
+            engine.spoken.append(output)
         }
     }
 }

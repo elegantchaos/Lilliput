@@ -15,7 +15,7 @@ extension String {
 extension Event {
     var isOpenedEvent: Bool {
         guard id == .flagChangedEvent else { return false }
-        return parameters[stringWithKey: .flagParameter] == .openedFlag
+        return self[stringWithKey: .flagParameter] == .openedFlag
     }
 }
 

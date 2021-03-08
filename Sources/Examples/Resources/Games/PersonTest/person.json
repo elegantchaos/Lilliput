@@ -79,11 +79,21 @@
                     "actions": [
                         { "set": "mission", "of": "player", "to": "bray"}
                     ]
+                },
+                
+                "reply1": {
+                    "lines": [
+                        "As I said, Inspector, it’s not within our normal jurisdiction. The village of Featherwell is a couple of hours south of the city.” The Chief Inspector waves a hand somewhat dismissively. “A typical rural village. A few farms, a small pub, and two dozen jumpy locals."
+                    ],
+                    "shows": [
+                        { "when": "reply", "was": "reply1" }
+                    ]
                 }
             },
+            
             "replies": {
                 "reply1": {
-                    "text": "Test",
+                    "text": "Where is Bray Manor, Sir?",
                     "shows": [
                         { "when": "mission", "of": "player", "is": "bray" }
                     ]
