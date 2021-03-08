@@ -14,15 +14,15 @@ struct PersonBehaviour: Behaviour {
     }
 
     let object: Object
-    let dialogue: Dialog
+    let dialogue: Dialogue
     
     init(_ object: Object, storage: Any) {
         self.object = object
-        self.dialogue = storage as! Dialog
+        self.dialogue = storage as! Dialogue
     }
     
     static func storage(for object: Object) -> Any {
-        return Dialog(for: object)
+        return Dialogue(for: object)
     }
     
     func handle(_ event: Event) -> Bool {
@@ -41,13 +41,13 @@ struct PersonBehaviour: Behaviour {
                 break
         }
 
-        performActions(inContext: Dialog.Context(speaker: object, subject: object.engine.player, event: event))
+        performActions(inContext: Dialogue.Context(speaker: object, subject: object.engine.player, event: event))
 
         return false
         
     }
     
-    func performActions(inContext context: Dialog.Context) {
+    func performActions(inContext context: Dialogue.Context) {
         let engine = object.engine
         if let output = dialogue.speak(inContext: context) {
             engine.speech.append(output)

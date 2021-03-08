@@ -21,6 +21,10 @@ let package = Package(
             name: "Lilliput",
             targets: ["Lilliput"]
         ),
+        .library(
+            name: "Examples",
+            targets: ["Lilliput"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.0.4"),
@@ -32,16 +36,25 @@ let package = Package(
     targets: [
         .target(
             name: "lilli",
-            dependencies: ["Lilliput"]),
+            dependencies: ["Lilliput", "Examples"]
+        ),
+        
         .target(
             name: "Lilliput",
-            dependencies: ["Coercion", "CollectionExtensions", "Files", "Logger"]),
-        .testTarget(
-            name: "LilliputTests",
-            dependencies: ["Lilliput", "XCTestExtensions"],
+            dependencies: ["Coercion", "CollectionExtensions", "Files", "Logger"]
+        ),
+        
+        .target(
+            name: "Examples",
+            dependencies: [],
             resources: [
                 .copy("Resources/Games")
             ]
+        ),
+        
+        .testTarget(
+            name: "LilliputTests",
+            dependencies: ["Lilliput", "XCTestExtensions"]
         ),
         
     ]

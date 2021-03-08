@@ -23,7 +23,7 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
-    var speech: [Dialog.Output] = []
+    var speech: [Dialogue.Output] = []
     var tick = 0
     
     public init(driver: Driver) {
