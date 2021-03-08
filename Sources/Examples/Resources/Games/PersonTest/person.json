@@ -95,7 +95,8 @@
                 "reply1": {
                     "text": "Where is Bray Manor, Sir?",
                     "shows": [
-                        { "when": "mission", "of": "player", "is": "bray" }
+                        { "when": "mission", "of": "player", "is": "bray" },
+                        { "when": "sentence", "not": "reply1" }
                     ]
                 }
             }
