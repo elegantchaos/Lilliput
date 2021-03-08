@@ -104,7 +104,7 @@
                         "The old man stifles a laugh as he responds. “I am afraid not, Edmund. The wheels of progress have not yet arrived in Featherwell. You will have to travel there by cab."
                     ],
                     "shows": [
-                        { "when": "reply", "was": "question1a" }
+                        { "when": "reply", "was": "question1b" }
                     ]
                 },
 
@@ -205,21 +205,6 @@
                     "text": "Where is Bray Manor, Sir?",
                     "shows": [
                         { "when": "mission", "of": "player", "is": "bray" },
-                        { "when": "sentence", "not": "answer1" }
-                    ]
-                },
-                
-                "question1a": {
-                    "text": "And what of the manor itself, sir?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer1" }
-                    ]
-                },
-
-                "question1b": {
-                    "text": "Is there no train that could take me there?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer1" }
                     ]
                 },
 
@@ -227,42 +212,6 @@
                     "text": "What can you tell me about the family who are missing?",
                     "shows": [
                         { "when": "mission", "of": "player", "is": "bray" },
-                        { "when": "sentence", "not": "answer2" }
-                    ]
-                },
-
-                "question2a": {
-                    "text": "Who reported the family missing?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer2" }
-                    ]
-                },
-
-                "question2b": {
-                    "text": "What do the local police think happened?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer2" }
-                    ]
-                },
-
-                "question2c": {
-                    "text": "The villagers… What do they say about the matter?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer2" }
-                    ]
-                },
-
-                "question2d3d": {
-                    "text": "Superstition, sir? What do you mean by that?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer2c" }
-                    ]
-                },
-
-                "question2e3e": {
-                    "text": "Can you tell me any more about this creature?",
-                    "shows": [
-                        { "when": "sentence", "was": "answer2d" }
                     ]
                 },
 
@@ -270,28 +219,77 @@
                     "text": "Why are you giving this case to me?",
                     "shows": [
                         { "when": "mission", "of": "player", "is": "bray" },
-                        { "when": "sentence", "not": "answer3" }
+                    ]
+                },
+
+                
+                "question1a": {
+                    "text": "And what of the manor itself, sir?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question1"] }
+                    ]
+                },
+
+                "question1b": {
+                    "text": "Is there no train that could take me there?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question1"] }
+                    ]
+                },
+
+                "question2a": {
+                    "text": "Who reported the family missing?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question2"] }
+                    ]
+                },
+
+                "question2b": {
+                    "text": "What do the local police think happened?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question2"] }
+                    ]
+                },
+
+                "question2c": {
+                    "text": "The villagers… What do they say about the matter?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question2"] }
+                    ]
+                },
+
+                "question2d3d": {
+                    "text": "Superstition, sir? What do you mean by that?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question2c", "question3c"] }
+                    ]
+                },
+
+                "question2e3e": {
+                    "text": "Can you tell me any more about this creature?",
+                    "shows": [
+                        { "when": "asked", "includes": ["question2d", "question3d"] }
                     ]
                 },
 
                 "question3a": {
                     "text": "What about Constable Walmsley?",
                     "shows": [
-                        { "when": "sentence", "was": "answer3" }
+                        { "when": "asked", "includes": ["question3"] }
                     ]
                 },
 
                 "question3b": {
                     "text": "What about Constable Gilchrist?",
                     "shows": [
-                        { "when": "sentence", "was": "answer3" }
+                        { "when": "asked", "includes": ["question3"] }
                     ]
                 },
 
                 "question3c": {
                     "text": "What if I refuse?",
                     "shows": [
-                        { "when": "sentence", "was": "answer3" }
+                        { "when": "asked", "includes": ["question3"] }
                     ]
                 },
 

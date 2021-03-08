@@ -296,7 +296,11 @@ public class Object {
     func getString(withKey key: String) -> String {
         (getProperty(withKey: key) as? String) ?? ""
     }
-    
+
+    func getStrings(withKey key: String) -> [String] {
+        (getProperty(withKey: key) as? [String]) ?? []
+    }
+
     func property(withKey key: String, contains value: String) -> Bool {
         guard let list = getProperty(withKey: key) as? [String] else { return false }
         return list.contains(value)

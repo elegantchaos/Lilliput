@@ -58,6 +58,10 @@ struct Dialogue {
         }
         
         func matches(_ context: Context) -> Bool {
+            if context.subject.property(withKey: "repliedRecently", contains: id) {
+                return false
+            }
+            
             if !triggers.matches(context) {
                 dialogChannel.log("reply \(id) failed triggers")
                 return false

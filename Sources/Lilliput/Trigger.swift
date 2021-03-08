@@ -46,10 +46,22 @@ struct Trigger {
             return context.sentence?.id == id
         } else if let id = data["not"] as? String {
             return context.sentence?.id != id
+        } else if let ids = data["in"] as? [String], let sentenceID = context.sentence?.id {
+            return ids.contains(sentenceID)
         } else {
             return false
         }
     }
+    
+    func testAsked(in context: Dialogue.Context) -> Bool {
+        if let ids = data["includes"] as? [String] {
+            let recent = context.subject.getStrings(withKey: "repliedRecently")
+            return Set(ids).intersection(recent).count > 0
+        }
+         
+        return false
+    }
+    
     
     func testValue(_ actual: Any?, in context: Dialogue.Context) -> Bool {
         if let expected = data["is"] {
@@ -67,6 +79,8 @@ struct Trigger {
             return testPlayerArrived(in: context)
         } else if when == "reply" {
             return testReply(in: context)
+        } else if when == "asked" {
+            return testAsked(in: context)
         } else if when == "sentence" {
             return testSentence(in: context)
         } else if when == "event" {
