@@ -26,9 +26,17 @@ class TakeCommand: TargetedCommand {
         } else if !object.hasFlag(.awareFlag) {
             output = "You can't see \(brief) here."
         } else {
-            object.move(to: context.player)
-            object.setFlag(.takenFlag)
-            output = "You take \(brief)."
+            let player = context.player
+            
+            if player.containedMass + object.definition.mass > player.maximumMass {
+                output = "\(brief.capitalizedFirst) is too heavy."
+            } else if player.containedVolume + object.definition.volume > player.maximumVolume {
+                output = "\(brief.capitalizedFirst) is too large."
+            } else {
+                object.move(to: context.player)
+                object.setFlag(.takenFlag)
+                output = "You take \(brief)."
+            }
         }
         
         context.engine.output(output)

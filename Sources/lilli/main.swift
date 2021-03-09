@@ -9,6 +9,6 @@ import Examples
 
 let driver = BasicDriver()
 let engine = Engine(driver: driver)
-let url = Examples.urlForGame(named: "PersonTest")!
+let url = Examples.urlForGame(named: "WeightTest")!
 engine.load(url: url)
 engine.run()

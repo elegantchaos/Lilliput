@@ -9,15 +9,23 @@ struct CommandContext {
     let input: Input
     let owner: CommandOwner
     let engine: Engine
-    let player: Object
+    let playerBehviour: PlayerBehaviour
     let location: Object
+    
+    var player: Object {
+        playerBehviour.object
+    }
+    
+    var playerStats: PlayerBehaviour.PlayerStats {
+        playerBehviour.stats
+    }
     
     init(input: Input, target: CommandOwner, engine: Engine) {
         self.input = input
         self.owner = target
         self.engine = engine
-        self.player = engine.player
-        self.location = player.location!
+        self.playerBehviour = PlayerBehaviour(engine.player)!
+        self.location = playerBehviour.object.location!
     }
     
     var target: Object {

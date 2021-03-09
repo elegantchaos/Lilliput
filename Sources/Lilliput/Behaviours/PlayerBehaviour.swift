@@ -22,14 +22,22 @@ struct PlayerBehaviour: Behaviour {
         ]
     }
 
+    class PlayerStats {
+        init(for object: Object) {
+            
+        }
+    }
+    
     let object: Object
+    let stats: PlayerStats
     
     init(_ object: Object, storage: Any) {
         self.object = object
+        self.stats = storage as! PlayerStats
     }
     
     static func storage(for object: Object) -> Any {
-        return ()
+        return PlayerStats(for: object)
     }
     
     func handle(_ event: Event) -> Bool {

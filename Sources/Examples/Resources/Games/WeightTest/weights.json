@@ -1,0 +1,58 @@
+{
+    "Room 1": {
+        "traits": ["location"],
+        "descriptions": {
+            "container": "a shabby looking room.",
+            "definite": "room 1",
+            "location": "You are in a shabby looking room."
+        },
+    },
+    
+    "Ball": {
+        "traits": ["movable"],
+        "names": ["ball"],
+        "descriptions": {
+            "definite": "the ball",
+            "indefinite": "a ball",
+            "description": "A small ping-pong ball."
+        },
+        "location": "Room 1",
+        "mass": 0.1,
+        "volume": 1
+    },
+    
+    "Weight": {
+        "traits": ["movable"],
+        "names": ["ball"],
+        "descriptions": {
+            "definite": "the ball",
+            "indefinite": "a ball",
+            "description": "A small ping-pong ball."
+        },
+        "location": "Room 1",
+        "mass": 0.1,
+        "volume": 1
+    },
+    
+    "Elephant": {
+        "traits": ["movable"],
+        "names": ["elephant"],
+        "descriptions": {
+            "definite": "the elephant",
+            "indefinite": "an elephant",
+            "description": "A rather large elephant."
+        },
+        "location": "Room 1",
+        "mass": 100,
+        "volume": 100
+    },
+    
+    "player": {
+        "traits": ["player"],
+        "descriptions": {
+            "definite": "Testy McTestFace",
+            "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
+        },
+        "location": "Room 1",
+    }
+}

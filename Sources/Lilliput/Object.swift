@@ -7,6 +7,11 @@ import Coercion
 import CollectionExtensions
 import Foundation
 
+extension Double {
+    static let defaultMaximumMass = 100.0
+    static let defaultMaximumVolume = 100.0
+}
+
 extension String {
     static let hiddenFlag = "hidden"
     static let showIfEmptyFlag = "showEmpty"
@@ -27,6 +32,10 @@ public class Object {
     var observers: Set<Object> = []
     var overrides: [String:Any] = [:]
     var behaviourStorage: [String:Any] = [:]
+    var containedMass: Double = 0
+    var containedVolume: Double = 0
+    var maximumMass: Double = .defaultMaximumMass
+    var maximumVolume: Double = .defaultMaximumVolume
     
     init(definition: Definition, engine: Engine) {
         self.definition = definition
@@ -46,6 +55,14 @@ public class Object {
     
     var isCarriedByPlayer: Bool {
         location?.isPlayer == true
+    }
+    
+    var mass: Double {
+        definition.mass + containedMass
+    }
+    
+    var volume: Double {
+        definition.volume
     }
     
     func setup() {

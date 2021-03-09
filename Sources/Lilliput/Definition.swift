@@ -38,6 +38,8 @@ public struct Definition {
     let exits: [String:String]
     let traits: [String]
     let dialogue: [String:Any]?
+    let mass: Double
+    let volume: Double
     
     init(id: String, properties: [String:Any]) {
         self.id = id
@@ -48,6 +50,8 @@ public struct Definition {
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
         self.dialogue = properties["dialogue"] as? [String:Any]
+        self.mass = properties[doubleWithKey: "mass"] ?? 0
+        self.volume = properties[doubleWithKey: "volume"] ?? 0
         
         var traits: [String] = (properties["traits"] as? [String]) ?? []
         if let kind = properties[stringWithKey: "type"] {
