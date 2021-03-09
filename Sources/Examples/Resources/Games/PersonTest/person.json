@@ -58,6 +58,16 @@
                     ]
                 },
 
+                "still-here": {
+                    "lines": [
+                        "Chief Inspector Pardoe looks up as you enter the room. “Still here Inspector? You have your assignment and the cab is waiting for you outside.”"
+                    ],
+                    "shows": [
+                        { "when": "playerArrived" },
+                        { "when": "mission", "of": "player", "not": null }
+                    ]
+                },
+
                 "on-case": {
                     "lines": [
                         "Chief Inspector Pardoe looks up from the letter he is writing and frowns. “What are you waiting for, Inspector? You have your assignment and the cab is waiting for you outside.”"
