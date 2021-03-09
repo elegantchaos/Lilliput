@@ -15,6 +15,10 @@ class SitCommand: TargetedCommand {
         super.init(keywords: ["sit"])
     }
     
+    override func matches(_ context: CommandContext) -> Bool {
+        super.matches(context) || context.input.arguments.count == 0
+    }
+    
     override func perform(in context: CommandContext) {
         let object = context.target
         let output: String
