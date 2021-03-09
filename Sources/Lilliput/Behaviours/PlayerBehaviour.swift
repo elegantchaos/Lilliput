@@ -37,8 +37,14 @@ struct PlayerBehaviour: Behaviour {
         switch id {
             case .movedTo:
                 assert(event.target == object)
-                object.location?.setFlag(.visitedFlag)
-                showLocation()
+                if let location = object.location {
+                    location.setFlag(.visitedFlag)
+                    if !location.hasFlag("dontLookWhenArriving") {
+                        showLocation()
+                    }
+                } else {
+                    object.engine.warning("Player has no location!")
+                }
                 
             default:
                 break
