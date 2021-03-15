@@ -6,6 +6,10 @@
 import Foundation
 import Logger
 
+extension String {
+    static let knownWithoutVisitingFlag = "knownWithoutVisiting"
+}
+
 let exitsChannel = Channel("Exits")
 class Exits {
     var exits: [String:Exit]
@@ -33,7 +37,8 @@ class Exits {
         }
         
         let destination = exit.destination
-        if player.hasVisited(location: destination) || destination.hasFlag("knownWithoutVisiting"){
+        // add a more detailed description if we've already been there (or the location is always known)
+        if player.hasVisited(location: destination) || destination.hasFlag(.knownWithoutVisitingFlag){
             let brief = destination.getDefinite()
             description += " to \(brief)"
         }
