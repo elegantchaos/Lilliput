@@ -30,9 +30,9 @@ class LockUnlockCommand: ChangeFlagCommand {
         switch key {
             case "missing":
                 if let object = LockableBehaviour(context.target)?.required {
-                    return "You need \(object.getIndefinite())."
+                    return object.getDescription(for: .unlocks) ?? "You need \(object.getIndefinite())."
                 } else {
-                    return "You need a key."
+                    return "You need a key of some sort."
                 }
                 
             default:

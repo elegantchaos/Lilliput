@@ -42,6 +42,6 @@ struct PortalBehaviour: Behaviour {
             return description
         }
         
-        return "\(object.getDefinite()) is locked."
+        return "\(object.getDefinite().capitalizedFirst) is locked."
     }
 }

@@ -6,9 +6,9 @@
 import Foundation
 
 enum DescriptionContext: String {
-    case none
-    case contentPrefix
     case container
+    case contentEmpty
+    case contentPrefix
     case detailed
     case definite
     case exit
@@ -16,6 +16,7 @@ enum DescriptionContext: String {
     case location
     case locationSuffix = "location.suffix"
     case locked
+    case none
     case outside
-    case contentEmpty
+    case unlocks
 }
