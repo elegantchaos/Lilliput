@@ -51,7 +51,7 @@ public class Object {
 
     var isPlayer: Bool { definition.id == "player" }
     
-    func contains(_ object: Object) -> Bool { contents.contains(object) }
+    func contains(_ object: Object, recursive: Bool = true) -> Bool { contents.contains(object, recursive: recursive) }
     
     var isCarriedByPlayer: Bool {
         location?.isPlayer == true
@@ -236,10 +236,19 @@ public class Object {
         contents.forEach { object, position in
             if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
                 object.setFlag(.awareFlag)
+                
+                // object descriptions for any location
                 var customDescriptions = object.getContextDescriptions(for: context)
-                if context == .location, let id = object.location?.id {
+                
+                if context == .location {
+                    // object descriptions for this specific location
                     customDescriptions.append(contentsOf: object.getContextDescriptions(for: "location.\(id)"))
                 }
+                
+                // location descriptions when this object is present
+                customDescriptions.append(contentsOf: getContextDescriptions(for: "contains.\(object.id)"))
+                
+                
                 if customDescriptions.count > 0 {
                     for description in customDescriptions {
                         output += description

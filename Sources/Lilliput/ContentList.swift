@@ -58,14 +58,16 @@ class ContentList {
         entries.mergeReplacingDuplicates(contents.entries)
     }
     
-    func contains(_ object: Object) -> Bool {
+    func contains(_ object: Object, recursive: Bool = true) -> Bool {
         if entries[object] != nil {
             return true
         }
 
-        for carried in entries {
-            if carried.key.contains(object) {
-                return true
+        if recursive {
+            for carried in entries {
+                if carried.key.contains(object) {
+                    return true
+                }
             }
         }
 

@@ -97,6 +97,7 @@ struct PlayerBehaviour: Behaviour {
         var context = DescriptionContext.location
         var prefix = ""
         var output = ""
+        let engine = object.engine
         var next = object.location
         while let location = next {
             locations.append(location)
@@ -109,8 +110,23 @@ struct PlayerBehaviour: Behaviour {
         }
 
         for location in locations {
-            let description = location.describeContents(context: .location)
-            output += description
+            // description of contents
+            output += location.describeContents(context: .location)
+            
+            // optional extra descriptions when certain objects are missing
+            for string in location.definition.strings {
+                var key = string.key
+                if let range = key.range(of: "missing.", options: .anchored) {
+                    key.removeSubrange(range)
+                    if let object = engine.objects[key] {
+                        if !location.contains(object, recursive: false) {
+                            output += string.value
+                        }
+                    }
+                }
+            }
+            
+            // append exit descriptions
             if let exits = LocationBehaviour(location)?.describeExits() {
                 output += "\n\n\(exits)"
             }
