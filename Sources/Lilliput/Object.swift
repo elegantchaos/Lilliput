@@ -158,15 +158,18 @@ public class Object {
             return behaviour.handle(event)
         }
     }
-    
+
     func getContextDescriptions(for context: DescriptionContext) -> [String] {
         guard context != .none else { return [] }
-        
+        return getContextDescriptions(for: context.rawValue)
+    }
+    
+    func getContextDescriptions(for context: String) -> [String] {
         var descriptions: [String] = []
 
         let isExamined = hasFlag(.examinedFlag)
-        let context = isExamined ? "\(context)-examined" : "\(context)-not-examined"
-        if let description = getDescription(for: context) {
+        let exContext = isExamined ? "\(context)-examined" : "\(context)-not-examined"
+        if let description = getDescription(for: exContext) {
             descriptions.append(description)
         }
 
@@ -232,7 +235,10 @@ public class Object {
         contents.forEach { object, position in
             if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
                 object.setFlag(.awareFlag)
-                let customDescriptions = object.getContextDescriptions(for: context)
+                var customDescriptions = object.getContextDescriptions(for: context)
+                if context == .location, let id = object.location?.id {
+                    customDescriptions.append(contentsOf: object.getContextDescriptions(for: "location.\(id)"))
+                }
                 if customDescriptions.count > 0 {
                     for description in customDescriptions {
                         engine.output(description)
