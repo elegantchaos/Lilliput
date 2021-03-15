@@ -19,7 +19,7 @@ public class BasicDriver: Driver {
     public func getInput() -> Input {
         while true {
             if let line = preamble.first, let input = Input(line) {
-                print("> \(line)")
+                print("\n> \(line)")
                 preamble.remove(at: 0)
                 return input
             }
