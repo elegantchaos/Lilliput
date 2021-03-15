@@ -281,7 +281,7 @@ public class Object {
         }
         
         for object in describeRecursively {
-            let description = describeContents(context: context, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
+            let description = object.describeContents(context: context, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
             output += description
         }
         
