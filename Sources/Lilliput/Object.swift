@@ -268,7 +268,7 @@ public class Object {
         if describeBriefly.count == 0 {
             if showIfEmpty {
                 let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
-                output += description
+                output += "\n\n\(description)"
             }
             
         } else {
@@ -277,7 +277,7 @@ public class Object {
                 items.append(object.getIndefinite())
             }
             let list = items.joined(separator: ", ")
-            output += "\(prefix) \(list)."
+            output += "\n\n\(prefix) \(list)."
         }
         
         for object in describeRecursively {
