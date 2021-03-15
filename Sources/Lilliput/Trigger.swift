@@ -30,9 +30,9 @@ struct Trigger {
     func testReply(in context: Dialogue.Context) -> Bool {
         if context.event.id == EventId.replied.rawValue {
             let replyID = context.event[stringWithKey: .replyIDParameter]
-            if let id = data["was"] as? String {
+            if let id = data[asString: "was"] {
                 return replyID == id
-            } else if let id = data["not"] as? String {
+            } else if let id = data[asString: "not"] {
                 return replyID != id
                 
             }
@@ -42,11 +42,11 @@ struct Trigger {
     }
     
     func testSentence(in context: Dialogue.Context) -> Bool {
-        if let id = data["was"] as? String {
+        if let id = data[asString: "was"] {
             return context.sentence?.id == id
-        } else if let id = data["not"] as? String {
+        } else if let id = data[asString: "not"] {
             return context.sentence?.id != id
-        } else if let ids = data["in"] as? [String], let sentenceID = context.sentence?.id {
+        } else if let ids = data[asString: "in"], let sentenceID = context.sentence?.id {
             return ids.contains(sentenceID)
         } else {
             return false
@@ -85,7 +85,7 @@ struct Trigger {
             return testSentence(in: context)
         } else if when == "event" {
             return testValue(context.event.id, in: context)
-        } else if let id = data["of"] as? String {
+        } else if let id = data[asString: "of"] {
             guard let of = context.subject.engine.objects[id] else { return false }
             let value = of.getProperty(withKey: when)
             return testValue(value, in: context)
@@ -99,6 +99,6 @@ struct Trigger {
     
     init(data: [String:Any]) {
         self.data = data
-        self.when = data[stringWithKey: "when"] ?? ""
+        self.when = data[asString: "when"] ?? ""
     }
 }

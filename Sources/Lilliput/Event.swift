@@ -33,7 +33,7 @@ struct Event {
     
     subscript(stringWithKey key: String) -> String? {
         get {
-            return parameters[key] as? String
+            return parameters[asString: key]
         }
     }
     

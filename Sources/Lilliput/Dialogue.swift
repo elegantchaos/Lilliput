@@ -35,7 +35,7 @@ struct Dialogue {
         let data: [String:Any]
         
         func perform(with engine: Engine) {
-            if let key = data[stringWithKey: "set"], let value = data["to"], let id = data[stringWithKey: "of"], let object = engine.objects[id] {
+            if let key = data[asString: "set"], let value = data["to"], let id = data[asString: "of"], let object = engine.objects[id] {
                 object.setProperty(withKey: key, to: value)
             }
         }
@@ -47,7 +47,7 @@ struct Dialogue {
         let triggers: Triggers
 
         init?(id: String, data: [String:Any]?) {
-            guard let data = data, let text = data["text"] as? String else {
+            guard let data = data, let text = data[asString: "text"] else {
                 dialogChannel.log("Reply \(id) missing data.")
                 return nil
             }

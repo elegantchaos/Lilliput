@@ -28,10 +28,14 @@ class TakeCommand: TargetedCommand {
         } else {
             let player = context.player
             
-            if player.containedMass + object.definition.mass > player.maximumMass {
+            if object.definition.mass > player.maximumMass {
                 output = "\(brief.capitalizedFirst) is too heavy."
-            } else if player.containedVolume + object.definition.volume > player.maximumVolume {
+            } else if object.definition.volume > player.maximumVolume {
                 output = "\(brief.capitalizedFirst) is too large."
+            } else if player.containedMass + object.definition.mass > player.maximumMass {
+                output = "You are carrying too much."
+            } else if player.containedVolume + object.definition.volume > player.maximumVolume {
+                output = "You don't have room for that."
             } else {
                 object.move(to: context.player)
                 object.setFlag(.takenFlag)

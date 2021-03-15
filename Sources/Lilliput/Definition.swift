@@ -50,11 +50,11 @@ public struct Definition {
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
         self.dialogue = properties["dialogue"] as? [String:Any]
-        self.mass = properties[doubleWithKey: "mass"] ?? 0
-        self.volume = properties[doubleWithKey: "volume"] ?? 0
+        self.mass = properties[asDouble: "mass"] ?? 0
+        self.volume = properties[asDouble: "volume"] ?? 0
         
         var traits: [String] = (properties["traits"] as? [String]) ?? []
-        if let kind = properties[stringWithKey: "type"] {
+        if let kind = properties[asString: "type"] {
             traits.append(kind)
         }
         self.traits = traits

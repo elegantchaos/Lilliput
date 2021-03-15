@@ -106,26 +106,31 @@ public class Object {
             behaviour.didSetup()
         }
 
-        if let deferredLocation = definition.properties[stringWithKey: "deferredLocation"] {
+        if let deferredLocation = definition.properties[asString: "deferredLocation"] {
             guard let location = engine.objects[deferredLocation] else { engine.error("Missing location for \(self)")}
             add(to: location)
         }
 
     }
     
-    func remove(from object: Object) {
-        object.contents.remove(self)
+    func remove(from oldLocation: Object) {
+        oldLocation.contents.remove(self)
+        oldLocation.containedMass -= mass
+        oldLocation.containedVolume -= volume
         location = nil
-        engine.post(event: Event(id: .contentRemoved, target: object, parameters: [.objectParameter: self]))
-        engine.post(event: Event(id: .movedFrom, target: self, parameters: [.containerParameter: object]))
+        engine.post(event: Event(id: .contentRemoved, target: oldLocation, parameters: [.objectParameter: self]))
+        engine.post(event: Event(id: .movedFrom, target: self, parameters: [.containerParameter: oldLocation]))
     }
     
-    func add(to object: Object, position: Position = .in) {
-        object.contents.add(self, position: position)
-        location = object
-        self.position = position
-        engine.post(event: Event(id: .contentAdded, target: object, parameters: [.objectParameter: self]))
-        engine.post(event: Event(id: .movedTo, target: self, parameters: [.containerParameter: object]))
+    func add(to newLocation: Object, position newPosition: Position = .in) {
+        newLocation.contents.add(self, position: position)
+        location = newLocation
+        position = newPosition
+        newLocation.containedMass += mass
+        newLocation.containedVolume += volume
+        
+        engine.post(event: Event(id: .contentAdded, target: newLocation, parameters: [.objectParameter: self]))
+        engine.post(event: Event(id: .movedTo, target: self, parameters: [.containerParameter: newLocation]))
     }
     
     func add(observer: Object) {

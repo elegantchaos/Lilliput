@@ -23,14 +23,14 @@
     
     "Weight": {
         "traits": ["movable"],
-        "names": ["ball"],
+        "names": ["weight"],
         "descriptions": {
-            "definite": "the ball",
-            "indefinite": "a ball",
-            "description": "A small ping-pong ball."
+            "definite": "the weight",
+            "indefinite": "a 100kg weight",
+            "description": "A large weight."
         },
         "location": "Room 1",
-        "mass": 0.1,
+        "mass": 100,
         "volume": 1
     },
     
@@ -43,8 +43,8 @@
             "description": "A rather large elephant."
         },
         "location": "Room 1",
-        "mass": 100,
-        "volume": 100
+        "mass": 1000,
+        "volume": 1000
     },
     
     "player": {
