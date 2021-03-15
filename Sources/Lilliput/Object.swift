@@ -67,7 +67,7 @@ public class Object {
     
     func setup() {
         if let spec = definition.location {
-            guard let location = engine.objects[spec.id] else { engine.error("Missing location for \(self)")}
+            guard let location = engine.objects[spec.id] else { engine.error("Missing location '\(spec.id)' for \(self)")}
             add(to: location, position: spec.position)
         }
         

@@ -66,7 +66,7 @@ public class Engine {
         let folder = ThrowingManager.folder(for: url)
         do {
             try folder.forEach { item in
-                if let file = item as? ThrowingFile {
+                if item.name.pathExtension == "json", let file = item as? ThrowingFile {
                     let definitions = DefinitionsFile(file: file)
                     try definitions.load(into: self)
                 }
@@ -77,6 +77,12 @@ public class Engine {
             
     }
 
+    public func readScript(from url: URL) {
+        if let text = ThrowingManager.file(for: url).asText {
+            driver.pushInput(text)
+        }
+    }
+    
     public func output(_ string: String, newParagraph: Bool = true) {
         driver.output(string, newParagraph: newParagraph)
     }

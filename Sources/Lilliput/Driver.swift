@@ -28,6 +28,7 @@ public struct Input {
 }
 
 public protocol Driver {
+    func pushInput(_ string: String)
     func getInput() -> Input
     func output(_ string: String, newParagraph: Bool)
     func warning(_ string: String)
@@ -35,6 +36,9 @@ public protocol Driver {
 }
 
 public extension Driver {
+    func pushInput(_ string: String) {
+    }
+    
     func output(_ string: String) {
         output(string, newParagraph: true)
     }

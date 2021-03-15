@@ -5,13 +5,25 @@
 
 import Foundation
 
-public struct BasicDriver: Driver {
+public class BasicDriver: Driver {
+    var preamble: [String] = []
+
     public init() {
-        
+    }
+    
+    public func pushInput(_ string: String) {
+        let lines = string.split(separator: "\n").map({ String($0) })
+        preamble.append(contentsOf: lines)
     }
     
     public func getInput() -> Input {
         while true {
+            if let line = preamble.first, let input = Input(line) {
+                print("> \(line)")
+                preamble.remove(at: 0)
+                return input
+            }
+            
             print("\n> ", terminator: "")
             if let string = readLine(), let input = Input(string) {
                 return input
