@@ -40,12 +40,14 @@ class ChangeFlagCommand: TargetedCommand {
     
     func outputReport(forKey key: String, in context: CommandContext) {
         let object = context.target
+        let output: String
         if let custom = object.getDescription(for: "\(flag)-\(key)-\(state)") {
-            context.engine.output(custom)
+            output = custom
+        } else {
+            output = defaultReport(forKey: key, in: context)
         }
         
-        let description = defaultReport(forKey: key, in: context)
-        context.engine.output(description)
+        context.engine.output(output)
     }
     
     override func perform(in context: CommandContext) {
