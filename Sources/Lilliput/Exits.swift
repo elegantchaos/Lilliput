@@ -32,8 +32,9 @@ class Exits {
             description += " \(brief)"
         }
         
-        if player.hasVisited(location: exit.destination) {
-            let brief = exit.destination.getDefinite()
+        let destination = exit.destination
+        if player.hasVisited(location: destination) || destination.hasFlag("knownWithoutVisiting"){
+            let brief = destination.getDefinite()
             description += " to \(brief)"
         }
 
