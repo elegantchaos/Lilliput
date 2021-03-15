@@ -126,6 +126,11 @@ struct PlayerBehaviour: Behaviour {
                 }
             }
             
+            // append suffix
+            if let string = location.getDescription(for: .locationSuffix) {
+                output += string
+            }
+            
             // append exit descriptions
             if let exits = LocationBehaviour(location)?.describeExits() {
                 output += "\n\n\(exits)"

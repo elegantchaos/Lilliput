@@ -14,6 +14,7 @@ enum DescriptionContext: String {
     case exit
     case indefinite
     case location
+    case locationSuffix = "location.suffix"
     case locked
     case outside
     case contentEmpty
