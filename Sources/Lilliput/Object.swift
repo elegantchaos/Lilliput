@@ -217,10 +217,11 @@ public class Object {
         return definition.strings[context.rawValue]
     }
     
-    func showContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) {
+    func describeContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) -> String {
         // get a phrase like "You can see", or "It contains" to prefix the contents with
         let prefix = getContentPrefix(for: context)
 
+        var output = ""
         var describeBriefly: [Object] = []
         var describeRecursively: [Object] = []
         let playerLocation = engine.player.location
@@ -241,7 +242,7 @@ public class Object {
                 }
                 if customDescriptions.count > 0 {
                     for description in customDescriptions {
-                        engine.output(description)
+                        output += description
                     }
                     
                 } else if !object.hasFlag(.skipBriefFlag) {
@@ -258,7 +259,7 @@ public class Object {
         if describeBriefly.count == 0 {
             if showIfEmpty {
                 let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
-                engine.output(description)
+                output += description
             }
             
         } else {
@@ -267,12 +268,15 @@ public class Object {
                 items.append(object.getIndefinite())
             }
             let list = items.joined(separator: ", ")
-            engine.output("\(prefix) \(list).")
+            output += "\(prefix) \(list)."
         }
         
         for object in describeRecursively {
-            object.showContents(context: context, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
+            let description = describeContents(context: context, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
+            output += description
         }
+        
+        return output
     }
     
     func hasVisited(location: Object) -> Bool {
@@ -287,30 +291,32 @@ public class Object {
         return key.starts(with: "not-") && !hasFlag(String(key.dropFirst(4)))
     }
     
-    func showDescription(context: DescriptionContext, prefix: String = "") {
+    func getDescription(context: DescriptionContext, prefix: String = "") -> String {
+        
         let description = prefix + getDescriptionWarnIfMissing(for: context)
-        engine.output(description)
+        var output = description
         
         for string in definition.strings {
             if hasFlagMatchingKey(string.key) {
-                engine.output(string.value)
+                output += string.value
             }
         }
+        
+        return output
     }
     
-    func showContentsIfVisible() {
-        if isContentVisible {
-            showContents()
-        }
+    func getContentsIfVisible() -> String {
+        return isContentVisible ? describeContents() : ""
     }
     
     var isContentVisible: Bool {
         OpenableBehaviour(self)?.isContentVisible ?? true
     }
     
-    func showDescriptionAndContents() {
-        showDescription(context: .detailed)
-        showContentsIfVisible()
+    func getDescriptionAndContents() -> String {
+        var output = getDescription(context: .detailed)
+        output += getContentsIfVisible()
+        return output
     }
     
     func getProperty(withKey key: String) -> Any? {

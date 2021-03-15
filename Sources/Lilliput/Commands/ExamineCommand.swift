@@ -28,11 +28,12 @@ class ExamineCommand: TargetedCommand {
     override func perform(in context: CommandContext) {
         if shouldMatchTarget {
             let object = context.target
-            object.showDescriptionAndContents()
+            let description = object.getDescriptionAndContents()
             object.setFlag(.examinedFlag)
             object.setFlag(.awareFlag)
-        } else {
-            PlayerBehaviour(context.player)?.showLocation()
+            context.engine.output(description)
+        } else if let description = PlayerBehaviour(context.player)?.describeLocation() {
+            context.engine.output(description)
         }
     }
 }

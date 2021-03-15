@@ -48,30 +48,13 @@ struct LocationBehaviour: Behaviour {
         return exits
     }
     
-    func getExitDescription(exit: Exit, direction: String) -> String {
-        var description = direction
-        
-        if let portal = exit.portal {
-            let brief = portal.getDescriptionWarnIfMissing(for: .exit)
-            description += " \(brief)"
-        }
-        
-        if object.engine.player.hasVisited(location: exit.destination) {
-            let brief = exit.destination.getDefinite()
-            description += " to \(brief)"
-        }
-
-        return description
-    }
-
-
     var portals: [Object] {
         let portals = storage.exits.exits.values.compactMap({ $0.portal })
         return portals
     }
 
-    func showExits() {
-        storage.exits.show(for: object)
+    func describeExits() -> String {
+        return storage.exits.describe(for: object)
     }
     
     func link(portal object: Object, to destinations: [String]) {

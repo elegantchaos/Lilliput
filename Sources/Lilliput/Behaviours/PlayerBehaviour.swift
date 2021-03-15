@@ -48,7 +48,8 @@ struct PlayerBehaviour: Behaviour {
                 if let location = object.location {
                     location.setFlag(.visitedFlag)
                     if !location.hasFlag("dontLookWhenArriving") {
-                        showLocation()
+                        let description = describeLocation()
+                        object.engine.output(description)
                     }
                 } else {
                     object.engine.warning("Player has no location!")
@@ -91,14 +92,15 @@ struct PlayerBehaviour: Behaviour {
         }
     }
     
-    func showLocation() {
+    func describeLocation() -> String {
         var locations: [Object] = []
         var context = DescriptionContext.location
         var prefix = ""
+        var output = ""
         var next = object.location
         while let location = next {
             locations.append(location)
-            location.showDescription(context: context, prefix: prefix)
+            output += location.getDescription(context: context, prefix: prefix)
             next = location.location
             if next != nil {
                 context = .container
@@ -107,8 +109,15 @@ struct PlayerBehaviour: Behaviour {
         }
 
         for location in locations {
-            location.showContents(context: .location)
-            LocationBehaviour(location)?.showExits()
+            let description = location.describeContents(context: .location)
+            output += description
+            if let exits = LocationBehaviour(location)?.describeExits() {
+                output += "\n\n\(exits)"
+            }
         }
+        
+        return output
     }
+    
+    
 }

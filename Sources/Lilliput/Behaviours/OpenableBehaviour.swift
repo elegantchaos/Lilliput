@@ -40,7 +40,10 @@ struct OpenableBehaviour: Behaviour {
     
     func handle(_ event: Event) -> Bool {
         if event.isOpenedEvent {
-            event.target.showContentsIfVisible()
+            let output = event.target.getContentsIfVisible()
+            if !output.isEmpty {
+                event.target.engine.output(output)
+            }
         }
         
         return false

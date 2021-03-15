@@ -40,7 +40,8 @@ class Exits {
         return description
     }
 
-    func show(for object: Object) {
+    func describe(for object: Object) -> String {
+        var output = ""
         let player = object.engine.player!
         let count = exits.count
         if count > 0 {
@@ -53,8 +54,10 @@ class Exits {
             }
             
             let list = body.joined(separator: ", ")
-            object.engine.output("\(start)\(list).")
+            output += "\(start)\(list)."
         }
+        
+        return output
     }
     
     func link(portal: Object, to destinations: [String]) {
