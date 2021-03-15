@@ -17,7 +17,11 @@ class DropCommand: TargetedCommand {
             if object.isCarriedByPlayer {
                 object.setFlag(.awareFlag)
                 object.move(to: location)
-                context.engine.output("You drop \(brief).")
+                let description =
+                    object.getDescription(for: "drop.\(location.id)") ??
+                    object.getDescription(for: "drop") ??
+                    "You drop \(brief)."
+                context.engine.output(description)
             } else {
                 context.engine.output("You do not have \(brief).")
             }
