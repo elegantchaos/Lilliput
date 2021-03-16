@@ -123,7 +123,7 @@ public class Object {
     }
     
     func add(to newLocation: Object, position newPosition: Position = .in) {
-        newLocation.contents.add(self, position: position)
+        newLocation.contents.add(self, position: newPosition)
         location = newLocation
         position = newPosition
         newLocation.containedMass += mass
