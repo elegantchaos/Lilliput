@@ -48,6 +48,7 @@ public class Engine {
             PersonBehaviour.self,
             PlayableBehaviour.self,
             PlayerBehaviour.self,
+            PushableBehaviour.self,
             PortalBehaviour.self,
             SittableBehaviour.self,
             UsableBehaviour.self,
