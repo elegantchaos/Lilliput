@@ -29,8 +29,8 @@ class LockUnlockCommand: ChangeFlagCommand {
     override func defaultReport(forKey key: String, in context: CommandContext) -> String {
         switch key {
             case "missing":
-                if let object = LockableBehaviour(context.target)?.required {
-                    return object.getDescription(for: .unlocks) ?? "You need \(object.getIndefinite())."
+                if let object = LockableBehaviour(context.target)?.required, let description = object.getDescription(for: .unlocks) {
+                    return description
                 } else {
                     return "You need a key of some sort."
                 }
