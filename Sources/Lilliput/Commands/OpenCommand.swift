@@ -17,6 +17,20 @@ class OpenCommand: ChangeFlagCommand {
     init() {
         super.init(flag: .openedFlag, state: true, mode: .openAction, keywords: ["open"])
     }
+    
+    override func requirementsAreSatisfied(in context: CommandContext) -> Bool {
+        return !context.target.hasFlag(.lockedFlag)
+    }
+    
+    override func defaultReport(forKey key: String, in context: CommandContext) -> String {
+        let object = context.target
+        if object.hasFlag(.lockedFlag) {
+            let brief = object.getDefinite()
+           return "\(brief.capitalizedFirst) is locked."
+        } else {
+            return super.defaultReport(forKey: key, in: context)
+        }
+    }
 }
 
 class CloseCommand: ChangeFlagCommand {
