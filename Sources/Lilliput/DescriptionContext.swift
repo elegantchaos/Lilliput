@@ -18,5 +18,7 @@ enum DescriptionContext: String {
     case locked
     case none
     case outside
+    case play
     case unlocks
+    case use
 }

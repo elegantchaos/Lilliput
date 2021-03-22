@@ -40,15 +40,19 @@ public class Engine {
     }
     
     public func registerStandardBehaviours() {
-        register(LocationBehaviour.self)
-        register(LockableBehaviour.self)
-        register(MovableBehaviour.self)
-        register(OpenableBehaviour.self)
-        register(PersonBehaviour.self)
-        register(PlayerBehaviour.self)
-        register(PortalBehaviour.self)
-        register(SittableBehaviour.self)
-        register(WearableBehaviour.self)
+        register([
+            LocationBehaviour.self,
+            LockableBehaviour.self,
+            MovableBehaviour.self,
+            OpenableBehaviour.self,
+            PersonBehaviour.self,
+            PlayableBehaviour.self,
+            PlayerBehaviour.self,
+            PortalBehaviour.self,
+            SittableBehaviour.self,
+            UsableBehaviour.self,
+            WearableBehaviour.self
+        ])
     }
     
     func register(_ definition: Definition) {
@@ -56,9 +60,11 @@ public class Engine {
         engineChannel.log("registered object \(definition.id)")
     }
     
-    func register<T>(_ behaviour: T.Type) where T: Behaviour {
-        behaviours[behaviour.id] = behaviour
-        engineChannel.log("registered behaviour \(behaviour.id)")
+    func register(_ behaviours: [Behaviour.Type]) {
+        for behaviour in behaviours {
+            self.behaviours[behaviour.id] = behaviour
+            engineChannel.log("registered behaviour \(behaviour.id)")
+        }
     }
     
     public func load(url: URL) {
