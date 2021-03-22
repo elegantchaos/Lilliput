@@ -18,4 +18,9 @@ struct Exit {
         guard let portal = portal else { return true }
         return !portal.hasFlag("locked")
     }
+    
+    var isVisible: Bool {
+        guard let portal = portal else { return true }
+        return !portal.hasFlag("hidden")
+    }
 }

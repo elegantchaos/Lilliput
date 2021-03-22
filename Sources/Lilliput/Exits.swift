@@ -49,16 +49,18 @@ class Exits {
     func describe(for object: Object) -> String {
         var output = ""
         let player = object.engine.player!
-        let count = exits.count
+        var count = 0
+        var body: [String] = []
+        for (direction, exit) in exits {
+            if exit.isVisible {
+                let string = getExitDescription(exit: exit, direction: direction, player: player)
+                body.append(string)
+                count += 1
+            }
+        }
+        
         if count > 0 {
             let start = count == 1 ? "There is a single exit " : "There are exits "
-            
-            var body: [String] = []
-            for exit in exits {
-                let string = getExitDescription(exit: exit.value, direction: exit.key, player: player)
-                body.append(string)
-            }
-            
             let list = body.joined(separator: ", ")
             output += "\(start)\(list)."
         }
