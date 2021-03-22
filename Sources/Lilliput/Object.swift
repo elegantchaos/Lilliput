@@ -282,8 +282,13 @@ public class Object {
             output += "\n\n\(prefix) \(list)."
         }
         
+        let recursiveContext: DescriptionContext
+        switch context {
+            case .location, .contained: recursiveContext = .containedRecursively
+            default: recursiveContext = context
+        }
         for object in describeRecursively {
-            let description = object.describeContents(context: context, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
+            let description = object.describeContents(context: recursiveContext, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
             output += description
         }
         
@@ -317,7 +322,7 @@ public class Object {
     }
     
     func getContentsIfVisible() -> String {
-        return isContentVisible ? describeContents() : ""
+        return isContentVisible ? describeContents(context: .contained) : ""
     }
     
     var isContentVisible: Bool {

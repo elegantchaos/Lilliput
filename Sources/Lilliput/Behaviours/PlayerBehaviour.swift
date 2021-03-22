@@ -113,7 +113,7 @@ struct PlayerBehaviour: Behaviour {
 
         for location in locations {
             // description of contents
-            output += location.describeContents(context: .contained)
+            output += location.describeContents(context: .location)
             
             // optional extra descriptions when certain objects are missing
             for string in location.definition.strings {

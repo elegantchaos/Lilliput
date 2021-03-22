@@ -6,7 +6,8 @@
 import Foundation
 
 enum DescriptionContext: String {
-    case contained                               /// description when being listed as content of something else
+    case contained                              /// description when being listed as content of something else
+    case containedRecursively                   /// description when being listed as content of content
     case container                              /// alternate description when viewed from another container (eg of a room when sitting in a chair)
     case contentEmpty                           /// additional description when something is empty
     case contentPrefix                          /// prefix for the contents of something (eg "The desk contains")
