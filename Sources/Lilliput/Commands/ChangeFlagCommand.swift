@@ -30,9 +30,15 @@ class ChangeFlagCommand: TargetedCommand {
     func defaultReport(forKey key: String, in context: CommandContext) -> String {
         let brief = context.target.getDefinite()
         switch key {
-            case "already": return "\(brief.capitalizedFirst) is already \(mode)ed."
-            case "changed": return "You \(mode) \(brief)."
+            case "already":
+                return "\(brief.capitalizedFirst) is already \(mode)ed."
+                
             case "missing": return "You are missing something."
+
+            case "changed":
+                let custom = context.target.getDescription(for: "\(mode)")
+                return custom ?? "You \(mode) \(brief)."
+                
             default:
                 return "\(key): \(context.target.getDefinite())"
         }
