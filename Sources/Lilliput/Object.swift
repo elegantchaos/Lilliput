@@ -225,6 +225,8 @@ public class Object {
         var describeBriefly: [Object] = []
         var describeRecursively: [Object] = []
         let playerLocation = engine.player.location
+        let container = self
+        let containerID = id
         
         // for each of our contents we:
         // - skip it if it's the player or the player's location
@@ -239,14 +241,14 @@ public class Object {
                 
                 // object descriptions for any location
                 var customDescriptions = object.getContextDescriptions(for: context)
+
+                // extra descriptions for the object, tagged with this context and container
+                // (eg an object's "contained.box" description would be appended
+                //  when the context is "contained" and the container's id is "box")
+                customDescriptions.append(contentsOf: object.getContextDescriptions(for: "\(context).\(containerID)"))
                 
-//                if context == .location {
-//                     object descriptions for this specific location
-                    customDescriptions.append(contentsOf: object.getContextDescriptions(for: "location.\(id)"))
-//                }
-                
-                // location descriptions when this object is present
-                customDescriptions.append(contentsOf: getContextDescriptions(for: "contains.\(object.id)"))
+                // extra descriptions when this container contains the object
+                customDescriptions.append(contentsOf: container.getContextDescriptions(for: "contains.\(object.id)"))
                 
                 
                 if customDescriptions.count > 0 {
