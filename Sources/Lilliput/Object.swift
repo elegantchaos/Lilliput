@@ -370,8 +370,12 @@ public class Object {
             return object
         }
         
-        if let string = value as? String, let object = engine.objects[string] {
-            return object
+        if let string = value as? String {
+            if let object = engine.objects[string] {
+                return object
+            } else {
+                engine.warning("Missing object '\(string)' referenced by property '\(key)' of \(self).")
+            }
         }
         
         return nil
