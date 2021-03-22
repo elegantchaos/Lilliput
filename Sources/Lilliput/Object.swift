@@ -240,10 +240,10 @@ public class Object {
                 // object descriptions for any location
                 var customDescriptions = object.getContextDescriptions(for: context)
                 
-                if context == .location {
-                    // object descriptions for this specific location
+//                if context == .location {
+//                     object descriptions for this specific location
                     customDescriptions.append(contentsOf: object.getContextDescriptions(for: "location.\(id)"))
-                }
+//                }
                 
                 // location descriptions when this object is present
                 customDescriptions.append(contentsOf: getContextDescriptions(for: "contains.\(object.id)"))
