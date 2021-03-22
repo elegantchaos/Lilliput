@@ -17,6 +17,7 @@ struct PlayerBehaviour: Behaviour {
             DebugCommand(),
             ExamineCommand(shouldMatchTarget: false),
             GoCommand(),
+            GoFallbackCommand(),
             InventoryCommand(),
             StandCommand(),
             TeleportCommand()

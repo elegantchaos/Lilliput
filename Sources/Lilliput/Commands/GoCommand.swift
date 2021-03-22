@@ -14,12 +14,12 @@ class GoCommand: Command {
     
     override func matches(_ context: CommandContext) -> Bool {
         let input = context.input
-        let direction = super.matches(context) ? input.arguments[0] : input.command
+        let requestedDirection = super.matches(context) ? input.arguments[0] : input.command
         
         if let location = LocationBehaviour(context.player.location) {
-            for exit in location.allExits {
-                if (exit.key == direction) || exit.key.starts(with: direction) {
-                    matchedExit = exit.value
+            for (direction, exit) in location.allExits {
+                if exit.isVisible && ((direction == requestedDirection) || direction.starts(with: requestedDirection)) {
+                    matchedExit = exit
                     return true
                 }
             }
@@ -41,3 +41,19 @@ class GoCommand: Command {
         }
     }
 }
+
+class GoFallbackCommand: Command {
+    static let commonDirections = ["n", "ne", "e", "se", "s", "sw", "w", "nw", "up", "down", "in", "out"]
+    init() {
+        super.init(keywords: ["go", "g"])
+    }
+
+    override func matches(_ context: CommandContext) -> Bool {
+        return super.matches(context) || Self.commonDirections.contains(context.input.command)
+    }
+
+    override func perform(in context: CommandContext) {
+        context.engine.output("There is no exit in that direction.")
+    }
+}
+
