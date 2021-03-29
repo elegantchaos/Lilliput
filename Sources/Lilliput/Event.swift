@@ -5,13 +5,14 @@
 
 import Foundation
 
-enum EventId: String {
+enum EventID: String {
     case contentAdded
     case contentRemoved
     case movedFrom
     case movedTo
     case replied
-    
+    case sat
+    case used
 }
 
 enum EventResult {
@@ -38,7 +39,7 @@ struct Event {
     let propogates: Bool
     fileprivate let parameters: [String:Any]
 
-    init(id: EventId, target: Object, propogates: Bool = false, parameters: [String:Any]) {
+    init(_ id: EventID, target: Object, propogates: Bool = false, parameters: [String:Any] = [:]) {
         self.init(id: id.rawValue, target: target, propogates: propogates, parameters: parameters)
     }
     
@@ -47,6 +48,10 @@ struct Event {
         self.target = target
         self.propogates = propogates
         self.parameters = parameters
+    }
+    
+    func `is`(_ id: EventID) -> Bool {
+        return self.id == id.rawValue
     }
     
     subscript(stringWithKey key: String) -> String? {

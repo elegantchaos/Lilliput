@@ -175,7 +175,7 @@ public class Engine {
         
         if input.arguments.count == 0, let index = Int(input.command), index > 0, index <= replies.count {
             let reply = replies[index - 1]
-            post(event: Event(id: .replied, target: reply.speaker, parameters: [ .replyIDParameter : reply.id ]))
+            post(event: Event(.replied, target: reply.speaker, parameters: [ .replyIDParameter : reply.id ]))
             output("“\(reply.text)”")
             player.append(reply.id, toPropertyWithKey: "replied")
             player.append(reply.id, toPropertyWithKey: "repliedRecently")

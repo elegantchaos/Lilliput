@@ -107,8 +107,8 @@ public class Object {
         oldLocation.containedMass -= mass
         oldLocation.containedVolume -= volume
         location = nil
-        engine.post(event: Event(id: .contentRemoved, target: oldLocation, parameters: [.objectParameter: self]))
-        engine.post(event: Event(id: .movedFrom, target: self, parameters: [.containerParameter: oldLocation]))
+        engine.post(event: Event(.contentRemoved, target: oldLocation, parameters: [.objectParameter: self]))
+        engine.post(event: Event(.movedFrom, target: self, parameters: [.containerParameter: oldLocation]))
     }
     
     func add(to newLocation: Object, position newPosition: Position = .in) {
@@ -118,8 +118,8 @@ public class Object {
         newLocation.containedMass += mass
         newLocation.containedVolume += volume
         
-        engine.post(event: Event(id: .contentAdded, target: newLocation, parameters: [.objectParameter: self]))
-        engine.post(event: Event(id: .movedTo, target: self, parameters: [.containerParameter: newLocation]))
+        engine.post(event: Event(.contentAdded, target: newLocation, parameters: [.objectParameter: self]))
+        engine.post(event: Event(.movedTo, target: self, parameters: [.containerParameter: newLocation]))
     }
     
     func add(observer: Object) {
@@ -254,7 +254,8 @@ public class Object {
         if describeBriefly.count == 0 {
             if showIfEmpty {
                 let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
-                output += "\n\n\(description)"
+                if !output.isEmpty { output += "\n\n" }
+                output += description
             }
             
         } else {
@@ -263,7 +264,8 @@ public class Object {
                 items.append(object.getIndefinite())
             }
             let list = items.joined(separator: ", ")
-            output += "\n\n\(prefix) \(list)."
+            if !output.isEmpty { output += "\n\n" }
+            output += "\(prefix) \(list)."
         }
         
         let recursiveContext: DescriptionContext
@@ -410,20 +412,27 @@ extension Object: CommandOwner {
 
 extension Object: EventHandler {
     func forEachBehaviourUntilResult(perform: (Behaviour) -> (EventResult)) -> EventResult {
+        var result = EventResult.unhandled
         for id in behaviourStorage.keys {
             let behaviour = engine.behaviours[id]?.init(self, storage: behaviourStorage[id]!)
-            let result = perform(behaviour!)
-            if result != .unhandled {
-                return result
+            result = result.merged(with: perform(behaviour!))
+            if result == .swallowed {
+                break
             }
         }
         
-        return .unhandled
+        return result
     }
 
     func handle(_ event: Event) -> EventResult {
-        return forEachBehaviourUntilResult { behaviour in
+        let result = forEachBehaviourUntilResult { behaviour in
             return behaviour.handle(event)
         }
+        
+        if result != .swallowed {
+            definition.handlers.process(event, receiver: self)
+        }
+        
+        return result
     }
 }

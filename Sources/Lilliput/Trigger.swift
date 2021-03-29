@@ -28,7 +28,7 @@ struct Trigger {
     }
     
     func testReply(in context: Dialogue.Context) -> Bool {
-        if context.event.id == EventId.replied.rawValue {
+        if context.event.id == EventID.replied.rawValue {
             let replyID = context.event[stringWithKey: .replyIDParameter]
             if let id = data[asString: "was"] {
                 return replyID == id

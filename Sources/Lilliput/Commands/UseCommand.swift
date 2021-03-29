@@ -22,5 +22,6 @@ class UseCommand: TargetedCommand {
         if let output = context.target.getDescription(for: useContext) {
             context.engine.output(output)
         }
+        context.engine.post(event: Event(.used, target: context.target))
     }
 }

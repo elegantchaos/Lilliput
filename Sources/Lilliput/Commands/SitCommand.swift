@@ -7,7 +7,6 @@ import Foundation
 
 extension String {
     static let sittingFlag = "sitting"
-    static let satEvent = "sat"
 }
 
 class SitCommand: TargetedCommand {
@@ -37,7 +36,7 @@ class SitCommand: TargetedCommand {
             
             player.setFlag(.sittingFlag)
             player.move(to: object, position: position)
-            context.engine.post(event: Event(id: .satEvent, target: player, propogates: true, parameters: ["on": object]))
+            context.engine.post(event: Event(.sat, target: player, propogates: true, parameters: ["on": object]))
             let brief = object.getDefinite()
             output = "You sit \(position) \(brief)."
         }

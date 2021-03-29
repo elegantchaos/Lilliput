@@ -27,7 +27,7 @@ struct PersonBehaviour: Behaviour {
     
     func handle(_ event: Event) -> EventResult {
         var result = EventResult.unhandled
-        switch EventId(rawValue: event.id) {
+        switch EventID(rawValue: event.id) {
             case .movedFrom:
                 if event.target == object, let location = event[objectWithKey: .containerParameter] {
                     location.remove(observer: object)

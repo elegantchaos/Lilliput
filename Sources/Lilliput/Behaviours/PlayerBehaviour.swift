@@ -43,7 +43,7 @@ struct PlayerBehaviour: Behaviour {
     }
     
     func handle(_ event: Event) -> EventResult {
-        guard let id = EventId(rawValue: event.id) else { return .unhandled }
+        guard let id = EventID(rawValue: event.id) else { return .unhandled }
         switch id {
             case .movedTo:
                 assert(event.target == object)
