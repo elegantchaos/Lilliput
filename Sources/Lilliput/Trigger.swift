@@ -42,12 +42,13 @@ struct Trigger {
     }
     
     func testSentence(in context: Dialogue.Context) -> Bool {
+        let sentence = context.speaker.getString(withKey: "speaking")
         if let id = data[asString: "was"] {
-            return context.sentence?.id == id
+            return sentence == id
         } else if let id = data[asString: "not"] {
-            return context.sentence?.id != id
-        } else if let ids = data[asString: "in"], let sentenceID = context.sentence?.id {
-            return ids.contains(sentenceID)
+            return sentence != id
+        } else if let ids = data[asString: "in"] {
+            return ids.contains(sentence)
         } else {
             return false
         }

@@ -12,12 +12,7 @@ class UseCommand: TargetedCommand {
         self.useContext = context
         super.init(keywords: keywords)
     }
- 
-    override func matches(_ context: CommandContext) -> Bool {
-        guard super.matches(context) else { return false }
-        return context.target.getDescription(for: useContext) != nil
-    }
-    
+
     override func perform(in context: CommandContext) {
         if let output = context.target.getDescription(for: useContext) {
             context.engine.output(output)

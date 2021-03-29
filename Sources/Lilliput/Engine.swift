@@ -30,6 +30,7 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
+    var dialogue: [(Handler.Context,String)] = []
     var spoken: [Dialogue.Speech] = []
     var replies: [ReplySelection] = []
     var tick = 0
@@ -212,12 +213,12 @@ public class Engine {
     }
 
     func handleSpeech() {
-        var n = 1
-        for speech in spoken {
-            for reply in speech.speak() {
-                output("\(n). \(reply.text)", newParagraph: n == 1)
-                replies.append(ReplySelection(id: reply.id, text: reply.text, speaker: speech.context.speaker))
-                n += 1
+        for (context,sentenceID) in dialogue {
+            if let person = PersonBehaviour(context.receiver) {
+                let dialog = person.dialogue
+                if let sentence = dialog.sentence(withID: sentenceID) {
+                    handle(sentence: sentence, person: person, event: context.event)
+                }
             }
         }
         
@@ -226,7 +227,21 @@ public class Engine {
         }
     }
     
+    func handle(sentence: Dialogue.Sentence, person: PersonBehaviour, event: Event) {
+        person.object.append(sentence.id, toPropertyWithKey: "spoken")
+        person.object.setProperty(withKey: "speaking", to: sentence.id)
+        let speech = Dialogue.Speech(sentence: sentence, replies: person.dialogue.replies, context: Dialogue.Context(speaker: person.object, subject: player, event: event))
+
+        for reply in speech.speak() {
+            let n = replies.count + 1
+            output("\(n). \(reply.text)", newParagraph: n == 1)
+            replies.append(ReplySelection(id: reply.id, text: reply.text, speaker: speech.context.speaker))
+        }
+
+    }
+    
     func clearSpeech() {
+        dialogue = []
         spoken = []
         replies = []
     }
@@ -237,7 +252,13 @@ public class Engine {
         while running {
             handleEvents()
             handleSpeech()
-            handleInput()
+            
+            // handling events or speech may have generated more events...
+            // we only stop for input when we've handled them all
+            if events.count == 0 {
+                handleInput()
+            }
+            
             clearSpeech()
             tick += 1
         }

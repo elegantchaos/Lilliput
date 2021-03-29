@@ -10,7 +10,7 @@ struct Handlers {
     let handlers: [Handler]
     
     init(from definitions: Any?) {
-        if let definitions = definitions as? [[String:String]] {
+        if let definitions = definitions as? [[String:Any]] {
             handlers = definitions.compactMap({ Handler($0) })
         } else {
             handlers = []
@@ -18,7 +18,7 @@ struct Handlers {
     }
     
     func process(_ event: Event, receiver: Object) {
-        let context = Handler.Context(receiver: receiver, event: event)
+        let context = Handler.Context(event: event, receiver: receiver)
         for handler in handlers {
             if handler.matches(context: context) {
                 handler.run(in: context)
@@ -29,8 +29,17 @@ struct Handlers {
 
 struct Handler {
     struct Context {
-        let receiver: Object
         let event: Event
+        let receiver: Object
+        let engine: Engine
+        let player: Object
+        
+        init(event: Event, receiver: Object) {
+            self.event = event
+            self.receiver = receiver
+            self.player = receiver.engine.player
+            self.engine = receiver.engine
+        }
     }
 
     struct Trigger {
@@ -50,9 +59,11 @@ struct Handler {
         }
         
         func testPlayerArrived(in context: Context) -> Bool {
-            let wasPlayerArrived = (context.event.is(.contentAdded)) && (context.event[objectWithKey: .objectParameter]?.isPlayer ?? false)
-            let inOurLocation = (context.event.target == context.receiver.location)
-            return wasPlayerArrived && inOurLocation
+            guard context.event.is(.contentAdded) else { return false }
+            guard context.event.target == context.receiver.location else { return false }
+            guard let arrival = context.event[objectWithKey: .objectParameter] else { return false }
+
+            return arrival.isPlayer
         }
         
         func testReply(in context: Context) -> Bool {
@@ -81,14 +92,14 @@ struct Handler {
 //            }
 //        }
         
-//        func testAsked(in context: Context) -> Bool {
-//            if let ids = data["includes"] as? [String] {
-//                let recent = context.subject.getStrings(withKey: "repliedRecently")
-//                return Set(ids).intersection(recent).count > 0
-//            }
-//
-//            return false
-//        }
+        func testAsked(in context: Context) -> Bool {
+            if let ids = data["includes"] as? [String] {
+                let recent = context.player.getStrings(withKey: "repliedRecently")
+                return Set(ids).intersection(recent).count > 0
+            }
+
+            return false
+        }
         
         
         func testValue(_ actual: Any?, in context: Context) -> Bool {
@@ -107,8 +118,8 @@ struct Handler {
                 return testPlayerArrived(in: context)
             } else if when == "reply" {
                 return testReply(in: context)
-//            } else if when == "asked" {
-//                return testAsked(in: context)
+            } else if when == "asked" {
+                return testAsked(in: context)
 //            } else if when == "sentence" {
 //                return testSentence(in: context)
             } else if when == "event" {
@@ -139,6 +150,19 @@ struct Handler {
         }
         
         func run(in context: Context) {
+            if let output = data[asString: "output"] {
+                context.engine.output(output)
+            } else if let location = data[asString: "move"] {
+                if let location = context.engine.objects[location] {
+                    context.player.move(to: location)
+                }
+            } else if let dialog = data[asString: "speak"] {
+                context.engine.dialogue.append((context, dialog))
+            } else if let key = data[asString: "set"], let value = data["to"], let id = data[asString: "of"], let object = context.engine.objects[id] {
+                object.setProperty(withKey: key, to: value)
+            }
+
+            
         }
     }
 

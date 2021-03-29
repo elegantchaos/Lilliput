@@ -15,20 +15,20 @@ struct Dialogue {
         let speaker: Object
         let subject: Object
         let event: Event
-        let sentence: Sentence?
+//        let sentence: Sentence?
 
         internal init(speaker: Object, subject: Object, event: Event, sentence: Dialogue.Sentence? = nil) {
             self.speaker = speaker
             self.subject = subject
             self.event = event
             self.engine = speaker.engine
-            self.sentence = sentence
+//            self.sentence = sentence
         }
         
-        func context(for sentence: Sentence) -> Context {
-            assert(self.sentence == nil)
-            return Context(speaker: speaker, subject: subject, event: event, sentence: sentence)
-        }
+//        func context(for sentence: Sentence) -> Context {
+////            assert(self.sentence == nil)
+//            return Context(speaker: speaker, subject: subject, event: event, sentence: sentence)
+//        }
     }
 
     struct Action {
@@ -153,20 +153,25 @@ struct Dialogue {
         }
     }
     
+    func sentence(withID id: String) -> Sentence? {
+        for sentence in sentences {
+            if sentence.id == id {
+                return sentence
+            }
+        }
+        return nil
+    }
+    
     func selectSentence(forContext context: Context) -> Sentence? {
         let options = sentences.filter({ $0.matches(context) })
         let sentence = options.randomElement()
         return sentence
     }
-    
-    func selectReplies(forSentence sentence: Sentence, inContext context: Context) -> [Reply] {
-        let replies = replies.filter({ $0.matches(context.context(for: sentence)) })
-        return replies
-    }
 
     func speak(inContext context: Context) -> Speech? {
         guard let sentence = selectSentence(forContext: context) else { return nil }
         context.speaker.append(sentence.id, toPropertyWithKey: "spoken")
-        return Speech(sentence: sentence, replies: replies, context: context.context(for: sentence))
+        context.speaker.setProperty(withKey: "speaking", to: sentence.id)
+        return Speech(sentence: sentence, replies: replies, context: context)
     }
 }

@@ -46,7 +46,7 @@ public struct Definition {
         self.id = id
         self.properties = properties
         
-        self.handlers = Handlers(from: properties["triggers"])
+        self.handlers = Handlers(from: properties["handlers"])
         self.location = LocationPair(from: properties["location"])
         self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
         self.names = (properties["names"] as? [String]) ?? []
