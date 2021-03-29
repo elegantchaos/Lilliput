@@ -38,15 +38,16 @@ struct OpenableBehaviour: Behaviour {
         return ()
     }
     
-    func handle(_ event: Event) -> Bool {
+    func handle(_ event: Event) -> EventResult {
         if event.isOpenedEvent {
             let output = event.target.getContentsIfVisible()
             if !output.isEmpty {
                 event.target.engine.output(output)
             }
+            return .handled
         }
         
-        return false
+        return .unhandled
     }
 
     var isContentVisible: Bool {

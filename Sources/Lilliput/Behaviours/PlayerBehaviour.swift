@@ -42,8 +42,8 @@ struct PlayerBehaviour: Behaviour {
         return PlayerStats(for: object)
     }
     
-    func handle(_ event: Event) -> Bool {
-        guard let id = EventId(rawValue: event.id) else { return false }
+    func handle(_ event: Event) -> EventResult {
+        guard let id = EventId(rawValue: event.id) else { return .unhandled }
         switch id {
             case .movedTo:
                 assert(event.target == object)
@@ -56,12 +56,11 @@ struct PlayerBehaviour: Behaviour {
                 } else {
                     object.engine.warning("Player has no location!")
                 }
+                return .handled
                 
             default:
-                break
+                return .unhandled
         }
-
-        return false
     }
 
     func showInventory() {

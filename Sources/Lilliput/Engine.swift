@@ -146,27 +146,28 @@ public class Engine {
         return candidates
     }
     
-    func deliver(_ event: Event, to object: Object) -> Bool {
+    func deliver(_ event: Event, to object: Object) -> EventResult {
         eventChannel.log("\(object) received \(event)")
 
-        if object.handle(event) {
+        var result = object.handle(event)
+        if result == .swallowed {
             eventChannel.log("\(object) swallowed \(event)")
-            return true
+            return .swallowed
         }
         
         if object.observers.count > 0 {
             let nonPropogatingEvent = event.nonPropogating
             for observer in object.observers {
                 observerChannel.log("delivered to \(observer) \(nonPropogatingEvent)")
-                _ = deliver(nonPropogatingEvent, to: observer)
+                result = result.merged(with: deliver(nonPropogatingEvent, to: observer))
             }
         }
         
         if event.propogates, let parent = object.location {
-            return deliver(event, to: parent)
+            result = result.merged(with: deliver(event, to: parent))
         }
         
-        return false
+        return result
     }
     
     func handleInput() {

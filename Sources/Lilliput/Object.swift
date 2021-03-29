@@ -90,17 +90,6 @@ public class Object {
     }
 
 
-    func forEachBehaviourUntilTrue(perform: (Behaviour) -> (Bool)) -> Bool {
-        for id in behaviourStorage.keys {
-            let behaviour = engine.behaviours[id]?.init(self, storage: behaviourStorage[id]!)
-            if perform(behaviour!) {
-                return true
-            }
-        }
-        
-        return false
-    }
-
     func didSetup() {
         forEachBehaviour { behaviour in
             behaviour.didSetup()
@@ -153,11 +142,6 @@ public class Object {
         }
     }
     
-    func handle(_ event: Event) -> Bool {
-        return forEachBehaviourUntilTrue { behaviour in
-            return behaviour.handle(event)
-        }
-    }
 
     func getContextDescriptions(for context: DescriptionContext) -> [String] {
         guard context != .none else { return [] }
@@ -422,4 +406,24 @@ extension Object: CustomStringConvertible {
 }
 
 extension Object: CommandOwner {
+}
+
+extension Object: EventHandler {
+    func forEachBehaviourUntilResult(perform: (Behaviour) -> (EventResult)) -> EventResult {
+        for id in behaviourStorage.keys {
+            let behaviour = engine.behaviours[id]?.init(self, storage: behaviourStorage[id]!)
+            let result = perform(behaviour!)
+            if result != .unhandled {
+                return result
+            }
+        }
+        
+        return .unhandled
+    }
+
+    func handle(_ event: Event) -> EventResult {
+        return forEachBehaviourUntilResult { behaviour in
+            return behaviour.handle(event)
+        }
+    }
 }

@@ -14,6 +14,24 @@ enum EventId: String {
     
 }
 
+enum EventResult {
+    case unhandled
+    case handled
+    case swallowed
+    
+    func merged(with other: EventResult) -> Self {
+        if (self == .swallowed) || (other == .swallowed) {
+            return .swallowed
+        }
+        
+        return (self == .unhandled) ? other : self
+    }
+}
+
+protocol EventHandler {
+    func handle(_ event: Event) -> EventResult
+}
+
 struct Event {
     let id: String
     let target: Object

@@ -25,16 +25,19 @@ struct PersonBehaviour: Behaviour {
         return Dialogue(for: object)
     }
     
-    func handle(_ event: Event) -> Bool {
+    func handle(_ event: Event) -> EventResult {
+        var result = EventResult.unhandled
         switch EventId(rawValue: event.id) {
             case .movedFrom:
                 if event.target == object, let location = event[objectWithKey: .containerParameter] {
                     location.remove(observer: object)
+                    result = .handled
                 }
 
             case .movedTo:
                 if event.target == object, let location = event[objectWithKey: .containerParameter] {
                     location.add(observer: object)
+                    result = .handled
                 }
                 
             default:
@@ -43,7 +46,7 @@ struct PersonBehaviour: Behaviour {
 
         performActions(inContext: Dialogue.Context(speaker: object, subject: object.engine.player, event: event))
 
-        return false
+        return result
         
     }
     

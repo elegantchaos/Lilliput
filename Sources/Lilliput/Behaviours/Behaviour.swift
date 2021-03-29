@@ -5,7 +5,7 @@
 
 import Foundation
 
-protocol Behaviour {
+protocol Behaviour: EventHandler {
     typealias ID = String
 
     static var id: ID { get }
@@ -18,7 +18,6 @@ protocol Behaviour {
     init(_ object: Object, storage: Any)
 
     func didSetup()
-    func handle(_ event: Event) -> Bool
     func restore(from data: PersistenceData)
 }
 
@@ -44,8 +43,8 @@ extension Behaviour {
     func didSetup() {
     }
     
-    func handle(_ event: Event) -> Bool {
-        return false
+    func handle(_ event: Event) -> EventResult {
+        return .unhandled
     }
     
     func restore(from data: PersistenceData) {
