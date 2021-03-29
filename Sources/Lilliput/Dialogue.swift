@@ -15,32 +15,15 @@ struct Dialogue {
         let speaker: Object
         let subject: Object
         let event: Event
-//        let sentence: Sentence?
 
         internal init(speaker: Object, subject: Object, event: Event, sentence: Dialogue.Sentence? = nil) {
             self.speaker = speaker
             self.subject = subject
             self.event = event
             self.engine = speaker.engine
-//            self.sentence = sentence
         }
-        
-//        func context(for sentence: Sentence) -> Context {
-////            assert(self.sentence == nil)
-//            return Context(speaker: speaker, subject: subject, event: event, sentence: sentence)
-//        }
     }
 
-    struct Action {
-        let data: [String:Any]
-        
-        func perform(with engine: Engine) {
-            if let key = data[asString: "set"], let value = data["to"], let id = data[asString: "of"], let object = engine.objects[id] {
-                object.setProperty(withKey: key, to: value)
-            }
-        }
-    }
-    
     struct Reply {
         let id: String
         let text: String
@@ -81,9 +64,6 @@ struct Dialogue {
         func speak() -> [Reply] {
             let engine = context.engine
             engine.output(sentence.output)
-            for action in sentence.actions {
-                action.perform(with: engine)
-            }
             
             return replies.filter({ $0.matches(context) }).sorted(by: \.id)
         }
@@ -92,38 +72,40 @@ struct Dialogue {
     struct Sentence {
         let id: String
         let lines: [String]
-        let triggers: Triggers
-        let actions: [Action]
         let repeatInterval: Int
         
-        init?(id: String, data: [String:Any]?) {
-            guard let data = data else {
-                dialogChannel.log("Sentence \(id) has no data.")
-                return nil
-            }
-            
-            guard let lines = data["lines"] as? [String] else {
-                dialogChannel.log("Sentence \(id) has no lines.")
-                return nil
-            }
-
-            let actions = (data["actions"] as? [[String:Any]]) ?? []
-
+        init?(id: String, data: Any?) {
             self.id = id
-            self.lines = lines
-            self.triggers = Triggers(from: data["shows"])
-            self.actions = actions.map({ Action(data: $0) })
-            self.repeatInterval = (data["repeatInterval"] as? Int) ?? 1
+
+
+            if let line = data as? String {
+                self.lines = [line]
+                self.repeatInterval = 1
+            } else {
+                guard let data = data as? [String:Any] else {
+                    dialogChannel.log("Sentence \(id) has no data.")
+                    return nil
+                }
+                
+                guard let lines = data["lines"] else {
+                    dialogChannel.log("Sentence \(id) has no lines.")
+                    return nil
+                }
+
+                if let lines = lines as? [String] {
+                    self.lines = lines
+                } else {
+                    dialogChannel.log("Lines are wrong format: \(lines)")
+                    return nil
+                }
+                    
+                self.repeatInterval = (data["repeatInterval"] as? Int) ?? 1
+            }
         }
         
         func matches(_ context: Context) -> Bool {
             if (repeatInterval == 0) && context.speaker.property(withKey: "spoken", contains: id) {
                 dialogChannel.log("\(id) already spoken")
-                return false
-            }
-            
-            if !triggers.matches(context) {
-                dialogChannel.log("sentence \(id) failed triggers")
                 return false
             }
             
@@ -141,7 +123,7 @@ struct Dialogue {
     
     init(for object: Object) {
         if let defs = object.definition.dialogue?["sentences"] as? [String:Any] {
-            sentences = defs.compactMap({ Sentence(id: $0.key, data: $0.value as? [String:Any]) })
+            sentences = defs.compactMap({ Sentence(id: $0.key, data: $0.value) })
         } else {
             sentences = []
         }
