@@ -40,11 +40,13 @@ public struct Definition {
     let dialogue: [String:Any]?
     let mass: Double
     let volume: Double
+    let handlers: Handlers
     
     init(id: String, properties: [String:Any]) {
         self.id = id
         self.properties = properties
         
+        self.handlers = Handlers(from: properties["triggers"])
         self.location = LocationPair(from: properties["location"])
         self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
         self.names = (properties["names"] as? [String]) ?? []
@@ -58,6 +60,7 @@ public struct Definition {
             traits.append(kind)
         }
         self.traits = traits
+        
     }
     
     func hasFlag(_ key: String) -> Bool {
