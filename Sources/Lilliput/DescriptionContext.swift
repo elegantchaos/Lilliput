@@ -18,6 +18,7 @@ enum DescriptionContext: String {
     case exit                                   /// description of a portal used when listing exits
     case indefinite                             /// brief description with indefinite article (eg "a pen")
     case location                               /// description of a location
+    case locationContent                        /// description of a location's content
     case locationSuffix = "location.suffix"
     case locked                                 /// description when locked
     case none

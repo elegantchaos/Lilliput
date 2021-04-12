@@ -19,7 +19,9 @@ extension String {
     static let showContentModeProperty = "showContentWhen"
     static let showContentAlwaysMode = "always"
     static let containerParameter = "container"
+    static let fromParameter = "from"
     static let objectParameter = "object"
+    static let toParameter = "to"
 }
 
 public class Object {
@@ -68,7 +70,7 @@ public class Object {
     func setup() {
         if let spec = definition.location {
             guard let location = engine.objects[spec.id] else { engine.error("Missing location '\(spec.id)' for \(self)")}
-            add(to: location, position: spec.position)
+            move(to: location, position: spec.position)
         }
         
         for id in definition.traits {
@@ -97,29 +99,36 @@ public class Object {
 
         if let deferredLocation = definition.properties[asString: "deferredLocation"] {
             guard let location = engine.objects[deferredLocation] else { engine.error("Missing location for \(self)")}
-            add(to: location)
+            move(to: location)
         }
 
     }
     
-    func remove(from oldLocation: Object) {
+    func remove(from oldLocation: Object, to newLocation: Object? = nil) {
         oldLocation.contents.remove(self)
         oldLocation.containedMass -= mass
         oldLocation.containedVolume -= volume
         location = nil
-        engine.post(event: Event(.contentRemoved, target: oldLocation, parameters: [.objectParameter: self]))
-        engine.post(event: Event(.movedFrom, target: self, parameters: [.containerParameter: oldLocation]))
+        
+        var parameters: [String:Any] = [.objectParameter: self]
+        if let to = newLocation {
+            parameters[.toParameter] = to
+        }
+        engine.post(event: Event(.contentRemoved, target: oldLocation, parameters: parameters))
     }
     
-    func add(to newLocation: Object, position newPosition: Position = .in) {
+    func add(to newLocation: Object, position newPosition: Position = .in, from oldLocation: Object? = nil) {
         newLocation.contents.add(self, position: newPosition)
         location = newLocation
         position = newPosition
         newLocation.containedMass += mass
         newLocation.containedVolume += volume
         
-        engine.post(event: Event(.contentAdded, target: newLocation, parameters: [.objectParameter: self]))
-        engine.post(event: Event(.movedTo, target: self, parameters: [.containerParameter: newLocation]))
+        var parameters: [String:Any] = [.objectParameter: self]
+        if let from = oldLocation {
+            parameters[.fromParameter] = from
+        }
+        engine.post(event: Event(.contentAdded, target: newLocation, parameters: parameters))
     }
     
     func add(observer: Object) {
@@ -133,12 +142,21 @@ public class Object {
     }
     
     func move(to newLocation: Object, position newPosition: Position = .in, quiet: Bool = false) {
-        if (location != newLocation) || (position != newPosition) {
-            if let location = location {
-                remove(from: location)
+        let oldLocation = location
+        if (oldLocation != newLocation) || (position != newPosition) {
+            var parameters: [String:Any] = [
+                .toParameter: newLocation,
+                "quiet": quiet
+            ]
+            
+            if let location = oldLocation {
+                remove(from: location, to: newLocation)
+                parameters[.fromParameter] = location
             }
             
-            add(to: newLocation, position: newPosition)
+            add(to: newLocation, position: newPosition, from: oldLocation)
+            engine.post(event: Event(.moved, target: self, parameters: parameters))
+            setProperty(withKey: .locationKey, to: newLocation.id)
         }
     }
     
@@ -190,7 +208,7 @@ public class Object {
             return prefix
         }
         
-        return (context == .location) ? "You can see" : "It contains"
+        return (context == .locationContent) ? " You can see" : " It contains"
     }
     
     func getDescription(for context: String) -> String? {
@@ -281,10 +299,15 @@ public class Object {
         return output
     }
     
-    func hasVisited(location: Object) -> Bool {
+    func hasVisited(_ location: Object) -> Bool {
         return location.hasFlag(.visitedFlag)
     }
-        
+
+    func playerIsAwareOf(_ object: Object) -> Bool {
+        print("\(object) \(object.hasFlag(.awareFlag))")
+        return object.hasFlag(.awareFlag)
+    }
+
     func hasFlagMatchingKey(_ key: String) -> Bool {
         if hasFlag(key) {
             return true

@@ -8,8 +8,7 @@ import Foundation
 enum EventID: String {
     case contentAdded
     case contentRemoved
-    case movedFrom
-    case movedTo
+    case moved
     case replied
     case sat
     case used
@@ -65,7 +64,19 @@ struct Event {
             return parameters[key] as? Object
         }
     }
-    
+
+    subscript(boolWithKey key: String) -> Bool {
+        get {
+            return parameters[asBool: key] ?? false
+        }
+    }
+
+    subscript(rawWithKey key: String) -> Any? {
+        get {
+            return parameters[key]
+        }
+    }
+
     var nonPropogating: Event {
         if !propogates {
             return self

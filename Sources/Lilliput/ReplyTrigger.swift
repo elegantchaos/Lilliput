@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct Trigger {
+struct ReplyTrigger {
     let when: String
     let data: [String:Any]
     

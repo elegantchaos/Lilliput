@@ -28,16 +28,17 @@ struct PersonBehaviour: Behaviour {
     func handle(_ event: Event) -> EventResult {
         var result = EventResult.unhandled
         switch EventID(rawValue: event.id) {
-            case .movedFrom:
-                if event.target == object, let location = event[objectWithKey: .containerParameter] {
-                    location.remove(observer: object)
-                    result = .handled
-                }
-
-            case .movedTo:
-                if event.target == object, let location = event[objectWithKey: .containerParameter] {
-                    location.add(observer: object)
-                    result = .handled
+            case .moved:
+                if event.target == object {
+                    if let location = event[objectWithKey: .fromParameter] {
+                        location.remove(observer: object)
+                        result = .handled
+                    }
+                    
+                    if let location = event[objectWithKey: .toParameter] {
+                        location.add(observer: object)
+                        result = .handled
+                    }
                 }
                 
             default:

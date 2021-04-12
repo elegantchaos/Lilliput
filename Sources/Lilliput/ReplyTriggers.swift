@@ -5,12 +5,13 @@
 
 import Foundation
 
-struct Triggers {
-    let triggers: [Trigger]
+struct ReplyTriggers {
+    let triggers: [ReplyTrigger] // TODO: use normal triggers
+
     
     init(from data: Any?) {
         let records = (data as? [[String:Any]]) ?? []
-        triggers = records.map({ Trigger(data: $0) })
+        triggers = records.map({ ReplyTrigger(data: $0) })
     }
     
     func matches(_ context: Dialogue.Context) -> Bool {

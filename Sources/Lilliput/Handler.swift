@@ -51,19 +51,32 @@ struct Handler {
                 return true
             }
 
-            if let s1 = of as? String, let s2 = expected as? String {
-                return s1 == s2
+            if let expectedString = expected as? String {
+                if let object = of as? Object {
+                    return object.id == expectedString
+                }
+                
+                if let string = of as? String {
+                    return string == expectedString
+                }
+
             }
             
             return false
         }
         
-        func testPlayerArrived(in context: Context) -> Bool {
+        func testPlayerArrived(in context: Context, from: Object?) -> Bool {
             guard context.event.is(.contentAdded) else { return false }
-            guard context.event.target == context.receiver.location else { return false }
+            guard (context.event.target == context.receiver) || (context.event.target == context.receiver.location) else { return false }
+            
             guard let arrival = context.event[objectWithKey: .objectParameter] else { return false }
+            guard arrival.isPlayer else { return false }
 
-            return arrival.isPlayer
+            if let from = from, context.event[objectWithKey: .fromParameter] != from {
+                return false
+            }
+            
+            return true
         }
         
         func testReply(in context: Context) -> Bool {
@@ -79,18 +92,6 @@ struct Handler {
              
             return false
         }
-        
-//        func testSentence(in context: Context) -> Bool {
-//            if let id = data[asString: "was"] {
-//                return context.sentence?.id == id
-//            } else if let id = data[asString: "not"] {
-//                return context.sentence?.id != id
-//            } else if let ids = data[asString: "in"], let sentenceID = context.sentence?.id {
-//                return ids.contains(sentenceID)
-//            } else {
-//                return false
-//            }
-//        }
         
         func testAsked(in context: Context) -> Bool {
             if let ids = data["includes"] as? [String] {
@@ -113,21 +114,29 @@ struct Handler {
             }
         }
         
+        func testProperty(key: String, of owner: String, in context: Context) -> Bool {
+            let value: Any?
+            if owner == "event" {
+                value = context.event[rawWithKey: key]
+            } else {
+                guard let of = context.receiver.engine.objects[owner] else { return false }
+                value = of.getProperty(withKey: key)
+            }
+            
+            return testValue(value, in: context)
+        }
         func matches(_ context: Context) -> Bool {
             if when == "playerArrived" {
-                return testPlayerArrived(in: context)
+                let from = data[asString: .fromParameter].flatMap { context.receiver.engine.objects[$0] }
+                return testPlayerArrived(in: context, from: from)
             } else if when == "reply" {
                 return testReply(in: context)
             } else if when == "asked" {
                 return testAsked(in: context)
-//            } else if when == "sentence" {
-//                return testSentence(in: context)
             } else if when == "event" {
                 return testValue(context.event.id, in: context)
-            } else if let id = data[asString: "of"] {
-                guard let of = context.receiver.engine.objects[id] else { return false }
-                let value = of.getProperty(withKey: when)
-                return testValue(value, in: context)
+            } else if let owner = data[asString: "of"] {
+                return testProperty(key: when, of: owner, in: context)
             } else {
                 context.event.target.engine.warning("Missing match type for \(self) in \(data)")
 
@@ -151,19 +160,38 @@ struct Handler {
         
         func run(in context: Context) {
             if let output = data[asString: "output"] {
-                context.engine.output(output)
+                handleOutput(output, in: context)
             } else if let location = data[asString: "move"] {
-                if let location = context.engine.objects[location] {
-                    context.player.move(to: location)
-                }
+                handleMove(to: location, in: context)
             } else if let dialog = data[asString: "speak"] {
-                context.engine.dialogue.append((context, dialog))
+                handleSpeak(dialog, in: context)
             } else if let key = data[asString: "set"], let value = data["to"], let id = data[asString: "of"], let object = context.engine.objects[id] {
                 object.setProperty(withKey: key, to: value)
             }
 
             
         }
+        
+        func handleOutput(_ output: String, in context: Context) {
+            context.engine.output(output)
+        }
+        
+        func handleMove(to location: String, in context: Context) {
+            if let location = context.engine.objects[location] {
+                if let inVehicle = data[asBool: "inVehicle"], inVehicle, let vehicle = context.player.location {
+                    vehicle.move(to: location)
+                }
+                context.player.move(to: location, quiet: true)
+            } else {
+                context.engine.warning("Missing location for move command: \(location)")
+            }
+
+        }
+        
+        func handleSpeak(_ text: String, in context: Context) {
+            context.engine.dialogue.append((context, text))
+        }
+        
     }
 
 

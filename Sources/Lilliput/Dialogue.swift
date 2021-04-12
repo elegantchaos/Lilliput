@@ -27,7 +27,7 @@ struct Dialogue {
     struct Reply {
         let id: String
         let text: String
-        let triggers: Triggers
+        let triggers: ReplyTriggers
 
         init?(id: String, data: [String:Any]?) {
             guard let data = data, let text = data[asString: "text"] else {
@@ -37,7 +37,7 @@ struct Dialogue {
             
             self.id = id
             self.text = text
-            self.triggers = Triggers(from: data["shows"])
+            self.triggers = ReplyTriggers(from: data["shows"])
         }
         
         func matches(_ context: Context) -> Bool {

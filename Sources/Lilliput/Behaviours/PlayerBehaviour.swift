@@ -45,11 +45,12 @@ struct PlayerBehaviour: Behaviour {
     func handle(_ event: Event) -> EventResult {
         guard let id = EventID(rawValue: event.id) else { return .unhandled }
         switch id {
-            case .movedTo:
+            case .moved:
                 assert(event.target == object)
-                if let location = object.location {
+                if let location = event[objectWithKey: .toParameter] {
                     location.setFlag(.visitedFlag)
-                    if !location.hasFlag("dontLookWhenArriving") {
+                    location.setFlag(.awareFlag)
+                    if !location.hasFlag("dontLookWhenArriving") && !event[boolWithKey: "quiet"] {
                         let description = describeLocation()
                         object.engine.output(description)
                     }
@@ -110,9 +111,14 @@ struct PlayerBehaviour: Behaviour {
             }
         }
 
+        context = .locationContent
         for location in locations {
             // description of contents
-            output += location.describeContents(context: .location)
+            let description = location.describeContents(context: context)
+            if !description.isEmpty {
+                output += "\n\n\(description)"
+            }
+            context = .containedRecursively
             
             // optional extra descriptions when certain objects are missing
             for string in location.definition.strings {
