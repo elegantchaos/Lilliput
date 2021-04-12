@@ -34,6 +34,7 @@ public class Engine {
     var spoken: [Dialogue.Speech] = []
     var replies: [ReplySelection] = []
     var tick = 0
+    var stopWords: [String.SubSequence] = []
     
     public init(driver: Driver) {
         self.driver = driver
@@ -77,6 +78,10 @@ public class Engine {
                 if item.name.pathExtension == "json", let file = item as? ThrowingFile {
                     let definitions = DefinitionsFile(file: file)
                     try definitions.load(into: self)
+                } else if item.name.pathExtension == "stop", let file = item as? ThrowingFile {
+                    if let text = file.asText {
+                        stopWords = text.split(separator: "\n")
+                    }
                 }
             }
         } catch {
@@ -172,7 +177,7 @@ public class Engine {
     }
     
     func handleInput() {
-        let input = driver.getInput()
+        let input = driver.getInput(stopWords: stopWords)
         
         if input.arguments.count == 0, let index = Int(input.command), index > 0, index <= replies.count {
             let reply = replies[index - 1]

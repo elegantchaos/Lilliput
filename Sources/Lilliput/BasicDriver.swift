@@ -16,16 +16,16 @@ public class BasicDriver: Driver {
         preamble.append(contentsOf: lines)
     }
     
-    public func getInput() -> Input {
+    public func getInput(stopWords: [String.SubSequence]) -> Input {
         while true {
-            if let line = preamble.first, let input = Input(line) {
+            if let line = preamble.first, let input = Input(line, stopWords: stopWords) {
                 print("\n> \(line)")
                 preamble.remove(at: 0)
                 return input
             }
             
             print("\n> ", terminator: "")
-            if let string = readLine(), let input = Input(string) {
+            if let string = readLine(), let input = Input(string, stopWords: stopWords) {
                 return input
             }
         }

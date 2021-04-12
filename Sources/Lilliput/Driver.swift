@@ -10,9 +10,9 @@ public struct Input {
     let command: String
     let arguments: [String]
 
-    public init?(_ string: String) {
+    public init?(_ string: String, stopWords: [String.SubSequence]) {
         let trimmed = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        let words = trimmed.split(separator: " ")
+        let words = trimmed.split(separator: " ").filter({ !stopWords.contains($0) })
         guard words.count > 0 else { return nil }
         
         let command = String(words[0])
@@ -29,7 +29,7 @@ public struct Input {
 
 public protocol Driver {
     func pushInput(_ string: String)
-    func getInput() -> Input
+    func getInput(stopWords: [String.SubSequence]) -> Input
     func output(_ string: String, newParagraph: Bool)
     func warning(_ string: String)
     func error(_ string: String)
