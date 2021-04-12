@@ -304,7 +304,6 @@ public class Object {
     }
 
     func playerIsAwareOf(_ object: Object) -> Bool {
-        print("\(object) \(object.hasFlag(.awareFlag))")
         return object.hasFlag(.awareFlag)
     }
 
