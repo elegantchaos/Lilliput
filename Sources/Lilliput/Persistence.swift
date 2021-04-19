@@ -9,9 +9,10 @@ import Foundation
 typealias PersistenceData = [String:Any]
 
 extension String {
-    static let propertiesKey = "properties"
-    static let locationKey = "location"
     static let behavioursKey = "behaviours"
+    static let locationKey = "location"
+    static let positionKey = "position"
+    static let propertiesKey = "properties"
 }
 
 extension Engine {
@@ -51,6 +52,7 @@ extension Engine {
     }
 
     func restore(from data: PersistenceData) {
+        resetObjects()
         for item in data {
             if let object = objects[item.key] {
                 let objectData = (item.value as? PersistenceData) ?? [:]
@@ -66,14 +68,18 @@ extension Object {
     
     var persistenceData: PersistenceData {
         var data: PersistenceData = [:]
-        
-        data[unlessEmpty: .propertiesKey] = overrides
-
-        if let location = location {
-            if (location.id != definition.location?.id) || (position != definition.location?.position) {
-                data[.locationKey] = location.persistenceData
-            }
+        if (locationPair != definition.location) {
+            var locationRecord: [String:String] = [:]
+            locationRecord[unlessEmpty: .locationKey] = location?.id
+            locationRecord[unlessEmpty: .positionKey] = position.rawValue
+            data[.locationKey] = locationRecord
+            print("Location data \(locationRecord) saved for \(id)")
         }
+
+        var properties = overrides
+        properties.removeValue(forKey: .locationKey)
+        properties.removeValue(forKey: .positionKey)
+        data[unlessEmpty: .propertiesKey] = properties
 
         var behaviourData: PersistenceData = [:]
         forEachBehaviour { behaviour in
@@ -81,13 +87,18 @@ extension Object {
         }
         data[unlessEmpty: .behavioursKey] = behaviourData
 
+        print("Saved properties for \(id): \(data)")
+
         return data
     }
     
     func restore(from data: PersistenceData) {
-        if let location = LocationPair(from: data[.locationKey]) ?? definition.location {
-            guard let location = engine.objects[location.id] else { engine.error("Missing location for \(self)")}
-            move(to: location, position: location.position)
+        if let locationSpec = LocationPair(from: data[.locationKey]) {
+            guard let location = engine.objects[locationSpec.id] else {
+                engine.error("Missing location for \(self)")
+            }
+            
+            move(to: location, position: locationSpec.position, quiet: true)
         }
         
         overrides = (data[.propertiesKey] as? [String:Any]) ?? [:]
