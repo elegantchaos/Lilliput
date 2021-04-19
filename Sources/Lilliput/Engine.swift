@@ -140,6 +140,21 @@ public class Engine {
         
     }
     
+    func resetObjects() {
+        let objects = self.objects.values
+        for object in objects {
+            object.reset()
+        }
+        
+        for object in objects {
+            object.setup()
+        }
+        
+        for object in objects {
+            object.didSetup()
+        }
+    }
+    
     func inputCandidates() -> [CommandOwner] {
         var candidates: [CommandOwner] = []
         
@@ -277,6 +292,7 @@ extension Engine: CommandOwner {
     var commands: [Command] {
         return [
             QuitCommand(),
+            ResetCommand(),
             RestoreCommand(),
             SaveCommand(),
         ]
