@@ -21,6 +21,19 @@
         },
     },
 
+    "Box": {
+        "traits": ["movable"],
+        "descriptions": {
+            "definite": "the box",
+            "detailed": "A small, sealed box.",
+            "indefinite": "a box",
+        },
+        "location": "Room 1",
+        "names": [
+            "box",
+        ],
+    },
+    
     "Chair": {
         "traits": ["movable", "sittable", "location"],
         "descriptions": {

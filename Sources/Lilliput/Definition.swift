@@ -9,12 +9,17 @@ struct LocationPair {
     let id: String
     let position: Position
     
+    init(location: String, position: Position) {
+        self.id = location
+        self.position = position
+    }
+    
     init?(from spec: Any?) {
         guard let spec = spec else { return nil }
         
-        if let locAndPos = spec as? [String], locAndPos.count > 1 {
-            id = locAndPos[0]
-            position = Position(rawValue: locAndPos[1]) ?? .in
+        if let dictionary = spec as? [String:String], let idString = dictionary[.locationKey], let posString = dictionary[.positionKey], let pos = Position(rawValue: posString) {
+            id = idString
+            position = pos
         } else if let string = spec as? String {
             id = string
             position = .in
@@ -28,6 +33,19 @@ struct LocationPair {
         return [id, position.rawValue]
     }
 }
+
+extension LocationPair: Comparable {
+    static func < (lhs: LocationPair, rhs: LocationPair) -> Bool {
+        if lhs.id == rhs.id {
+            return lhs.position < rhs.position
+        } else {
+            return lhs.id < rhs.id
+        }
+    }
+    
+    
+}
+
 
 public struct Definition {
     let id: String

@@ -5,10 +5,16 @@
 
 import Foundation
 
-enum Position: String {
+enum Position: String, Equatable {
     case `in`
     case on
     case worn
+}
+
+extension Position: Comparable {
+    static func < (lhs: Position, rhs: Position) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
 }
 
 class ContentList {
@@ -75,10 +81,12 @@ class ContentList {
     }
     
     func forEach(recursive: Bool = false, perform: (Object, Position) -> ()) {
-        for entry in entries {
-            perform(entry.key, entry.value)
+        let sorted = entries.keys.sorted(by: \.id)
+        for object in sorted {
+            let position = entries[object]!
+            perform(object, position)
             if recursive {
-                entry.key.contents.forEach(recursive: recursive, perform: perform)
+                object.contents.forEach(recursive: recursive, perform: perform)
             }
         }
     }

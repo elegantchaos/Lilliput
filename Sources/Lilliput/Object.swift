@@ -42,9 +42,13 @@ public class Object {
     init(definition: Definition, engine: Engine) {
         self.definition = definition
         self.engine = engine
-        self.commands = [ExamineCommand()]
+        self.commands = Self.initialCommands
         self.contents = ContentList()
         self.position = .in
+    }
+    
+    static var initialCommands: [Command] {
+        [ExamineCommand()]
     }
     
     var id: String { definition.id }
@@ -67,9 +71,28 @@ public class Object {
         definition.volume
     }
     
+    var locationPair: LocationPair? {
+        guard let location = location else { return nil }
+        return LocationPair(location: location.id, position: position)
+    }
+    
+    func reset() {
+        location = nil
+        position = .in
+        commands = Self.initialCommands
+        contents = ContentList()
+        overrides = [:]
+        behaviourStorage = [:]
+        containedMass = 0
+        containedVolume = 0
+    }
+    
     func setup() {
         if let spec = definition.location {
-            guard let location = engine.objects[spec.id] else { engine.error("Missing location '\(spec.id)' for \(self)")}
+            guard let location = engine.objects[spec.id] else {
+                engine.error("Missing location '\(spec.id)' for \(self)")
+            }
+
             move(to: location, position: spec.position)
         }
         
@@ -116,7 +139,10 @@ public class Object {
         }
 
         if let deferredLocation = definition.properties[asString: "deferredLocation"] {
-            guard let location = engine.objects[deferredLocation] else { engine.error("Missing location for \(self)")}
+            guard let location = engine.objects[deferredLocation] else {
+                engine.error("Missing location for \(self)")
+            }
+            
             move(to: location)
         }
 
