@@ -10,7 +10,7 @@ import PackageDescription
 let package = Package(
     name: "Lilliput",
     platforms: [
-        .macOS(.v11), .iOS(.v14), .tvOS(.v14), .watchOS(.v7)
+        .macOS(.v10_15), .iOS(.v14), .tvOS(.v14), .watchOS(.v7)
     ],
     products: [
         .executable(

@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/elegantchaos/Coercion.git",
         "state": {
           "branch": null,
-          "revision": "b459678c9455627a217d45a0c81081f3886bc965",
-          "version": "1.0.4"
+          "revision": "f5ae9b7b191d9c042047e08e880e80ce676de230",
+          "version": "1.1.2"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/elegantchaos/CollectionExtensions.git",
         "state": {
           "branch": null,
-          "revision": "d03df03b3f61a3db72793088325321351d4c07bf",
-          "version": "1.1.2"
+          "revision": "203421ff555981e6e9545e3a0d62a82b3c896deb",
+          "version": "1.1.4"
         }
       },
       {
