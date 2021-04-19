@@ -5,6 +5,9 @@
 
 import Files
 import Foundation
+import Logger
+
+let persistenceChannel = Channel("Persistence")
 
 typealias PersistenceData = [String:Any]
 
@@ -73,7 +76,7 @@ extension Object {
             locationRecord[unlessEmpty: .locationKey] = location?.id
             locationRecord[unlessEmpty: .positionKey] = position.rawValue
             data[.locationKey] = locationRecord
-            print("Location data \(locationRecord) saved for \(id)")
+            persistenceChannel.log("Location data \(locationRecord) saved for \(id)")
         }
 
         var properties = overrides
@@ -87,7 +90,7 @@ extension Object {
         }
         data[unlessEmpty: .behavioursKey] = behaviourData
 
-        print("Saved properties for \(id): \(data)")
+        persistenceChannel.log("Saved properties for \(id): \(data)")
 
         return data
     }
@@ -98,6 +101,7 @@ extension Object {
                 engine.error("Missing location for \(self)")
             }
             
+            persistenceChannel.log("Restoring location \(location) \(position) for \(id)")
             move(to: location, position: locationSpec.position, quiet: true)
         }
         
