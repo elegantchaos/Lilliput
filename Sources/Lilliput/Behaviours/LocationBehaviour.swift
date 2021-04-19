@@ -30,9 +30,10 @@ struct LocationBehaviour: Behaviour {
     var inputCandidates: [CommandOwner] {
         var candidates: [CommandOwner] = []
 
-        candidates.append(contentsOf: object.contents.allObjects)
+        let root = object.root
+        candidates.append(contentsOf: root.contents.allObjects)
         candidates.append(contentsOf: portals)
-        candidates.append(object)
+        candidates.append(root)
         
         return candidates
     }
