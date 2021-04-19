@@ -76,6 +76,14 @@ public class Object {
         return LocationPair(location: location.id, position: position)
     }
     
+    var root: Object {
+        var object = self
+        while let parent = object.location {
+            object = parent
+        }
+        return object
+    }
+
     func reset() {
         location = nil
         position = .in
