@@ -6,7 +6,7 @@
             "detailed": "A sturdy looking chair.",
             "indefinite": "a chair",
             "location": "You are sitting on a sturdy looking chair. It's not very comfortable.",
-            "outside": "From the chair you can see "
+            "outside": " From the chair you can see "
         },
         "location": "Room 1",
         "names": [
@@ -15,6 +15,19 @@
         ],
         "openLocation": true,
         "sitMode": "on",
+    },
+    
+    "Box": {
+        "traits": ["movable"],
+        "descriptions": {
+            "definite": "the box",
+            "detailed": "A small, sealed box.",
+            "indefinite": "a box",
+        },
+        "location": "Room 1",
+        "names": [
+            "box",
+        ],
     },
     
     "Room 1": {
