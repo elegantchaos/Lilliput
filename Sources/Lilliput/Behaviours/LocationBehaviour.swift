@@ -62,3 +62,9 @@ struct LocationBehaviour: Behaviour {
     }
  
 }
+
+extension LocationBehaviour.Storage: CustomStringConvertible {
+    var description: String {
+        "exits: \(exits)"
+    }
+}

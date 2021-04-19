@@ -83,7 +83,25 @@ public class Object {
         }
     }
     
+    func dump() {
+        print("\n--------------------")
+        print("object: \(id)")
+        if let location = location {
+            print("location: \(position) \(location.id)")
+        }
+        print("contents: \(contents)")
+        if observers.count > 0 {
+            print("observed by: \(observers)")
+        }
+        print("properties: \(overrides)")
+        print("behaviours: \(behaviourStorage)")
+        print("mass: contained \(containedMass) max \(maximumMass)")
+        print("volume: contained \(containedVolume) max \(maximumVolume)")
+        print("commands: \(commands.map({ $0.keywords[0] }))")
+        print("--------------------")
 
+    }
+    
     func forEachBehaviour(perform: (Behaviour) -> ()) {
         for id in behaviourStorage.keys {
             let behaviour = engine.behaviours[id]?.init(self, storage: behaviourStorage[id]!)

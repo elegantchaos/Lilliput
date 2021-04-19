@@ -20,6 +20,9 @@ class DebugCommand: Command {
             case "log":
                 performLog(in: context)
                 
+            case "dump":
+                performDump(in: context)
+                
             default:
                 context.engine.output("Unknown debug command: \(subcommand).")
                 break
@@ -45,5 +48,9 @@ class DebugCommand: Command {
             }
         }
     }
-    
+
+    func performDump(in context: CommandContext) {
+        context.player.dump()
+        context.player.location?.dump()
+    }
 }

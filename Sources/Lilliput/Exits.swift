@@ -77,3 +77,14 @@ class Exits {
 
     }
 }
+
+extension Exits: CustomStringConvertible {
+    var description: String {
+        var items: [String] = []
+        for item in exits {
+            items.append("\(item.key) to \(item.value.destination)")
+        }
+        return items.joined(separator: ", ")
+    }
+}
+
