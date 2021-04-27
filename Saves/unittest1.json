@@ -1,0 +1,46 @@
+{
+  "Box" : {
+    "location" : {
+      "location" : "player",
+      "position" : "in"
+    },
+    "properties" : {
+      "aware" : true,
+      "taken" : true
+    }
+  },
+  "Chair" : {
+    "properties" : {
+      "aware" : true
+    }
+  },
+  "npc" : {
+    "properties" : {
+      "aware" : true,
+      "speaking" : "answer2c",
+      "spoken" : [
+        "answer1a",
+        "answer1",
+        "answer2c"
+      ]
+    }
+  },
+  "player" : {
+    "location" : {
+      "location" : "Room 2",
+      "position" : "in"
+    }
+  },
+  "Room 1" : {
+    "properties" : {
+      "aware" : true,
+      "visited" : true
+    }
+  },
+  "Room 2" : {
+    "properties" : {
+      "aware" : true,
+      "visited" : true
+    }
+  }
+}
