@@ -5,10 +5,10 @@
 
 import Foundation
 import Lilliput
-import Examples
+import LilliputExamples
 
 let driver = BasicDriver()
 let engine = Engine(driver: driver)
-let url = Examples.urlForGame(named: "WeightTest")!
+let url = LilliputExamples.urlForGame(named: "WeightTest")!
 engine.load(url: url)
 engine.run()

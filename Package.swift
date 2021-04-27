@@ -22,8 +22,8 @@ let package = Package(
             targets: ["Lilliput"]
         ),
         .library(
-            name: "Examples",
-            targets: ["Lilliput"]
+            name: "LilliputExamples",
+            targets: ["LilliputExamples"]
         ),
     ],
     dependencies: [
@@ -36,7 +36,7 @@ let package = Package(
     targets: [
         .target(
             name: "lilli",
-            dependencies: ["Lilliput", "Examples"]
+            dependencies: ["Lilliput", "LilliputExamples"]
         ),
         
         .target(
@@ -45,7 +45,7 @@ let package = Package(
         ),
         
         .target(
-            name: "Examples",
+            name: "LilliputExamples",
             dependencies: [],
             resources: [
                 .copy("Resources/Games")
@@ -54,7 +54,7 @@ let package = Package(
         
         .testTarget(
             name: "LilliputTests",
-            dependencies: ["Lilliput", "Examples", "XCTestExtensions"]
+            dependencies: ["Lilliput", "LilliputExamples", "XCTestExtensions"]
         ),
         
     ]

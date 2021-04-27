@@ -3,8 +3,8 @@
 //  All code (c) 2021 - present day, Elegant Chaos.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-import Examples
 import Lilliput
+import LilliputExamples
 import XCTest
 import XCTestExtensions
 
@@ -47,7 +47,7 @@ final class LilliputTests: XCTestCase {
     func testSimple() {
         let driver = TestDriver()
         let engine = Engine(driver: driver)
-        let url = Examples.urlForGame(named: "PersonTest")!
+        let url = LilliputExamples.urlForGame(named: "PersonTest")!
         engine.load(url: url)
         
         driver.input = ["n"]
@@ -61,7 +61,7 @@ final class LilliputTests: XCTestCase {
     func testSitting() {
         let driver = TestDriver()
         let engine = Engine(driver: driver)
-        let url = Examples.urlForGame(named: "ChairTest")!
+        let url = LilliputExamples.urlForGame(named: "ChairTest")!
         engine.load(url: url)
         
         driver.input = ["sit chair", "take box", "stand", "sit", "north"]
@@ -76,7 +76,7 @@ final class LilliputTests: XCTestCase {
         func save() -> [String] {
             let driver = TestDriver()
             let engine = Engine(driver: driver)
-            let url = Examples.urlForGame(named: "PersonTest")!
+            let url = LilliputExamples.urlForGame(named: "PersonTest")!
             engine.load(url: url)
             
             driver.input = ["take box", "n", "save unittest1"]
@@ -89,7 +89,7 @@ final class LilliputTests: XCTestCase {
         func restore() -> [String] {
             let driver = TestDriver()
             let engine = Engine(driver: driver)
-            let url = Examples.urlForGame(named: "PersonTest")!
+            let url = LilliputExamples.urlForGame(named: "PersonTest")!
             engine.load(url: url)
             
             driver.input = ["restore unittest1", "i", "s"]
