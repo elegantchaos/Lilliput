@@ -85,7 +85,7 @@ public class Engine {
                 }
             }
         } catch {
-                driver.error("\(error)")
+            driver.output("\(error)", type: .error)
         }
             
     }
@@ -96,16 +96,16 @@ public class Engine {
         }
     }
     
-    public func output(_ string: String, newParagraph: Bool = true) {
-        driver.output(string, newParagraph: newParagraph)
+    public func output(_ string: String, type: OutputType = .normal) {
+        driver.output(string, type: type)
     }
     
     public func warning(_ string: String) {
-        driver.warning(string)
+        driver.output(string, type: .warning)
     }
     
     public func error(_ string: String) -> Never {
-        driver.error(string)
+        driver.output(string, type: .error)
         exit(1)
     }
     
@@ -194,7 +194,7 @@ public class Engine {
     func handleInput() {
         let input = driver.getInput(stopWords: stopWords)
         
-        if input.arguments.count == 0, let index = Int(input.command), index > 0, index <= replies.count {
+        if let index = Int(input.raw), index > 0, index <= replies.count {
             let reply = replies[index - 1]
             post(event: Event(.replied, target: reply.speaker, parameters: [ .replyIDParameter : reply.id ]))
             output("“\(reply.text)”")
@@ -254,7 +254,7 @@ public class Engine {
 
         for reply in speech.speak() {
             let n = replies.count + 1
-            output("\(n). \(reply.text)")
+            output("\(n). \(reply.text)", type: .option)
             replies.append(ReplySelection(id: reply.id, text: reply.text, speaker: speech.context.speaker))
         }
 

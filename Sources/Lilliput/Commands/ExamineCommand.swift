@@ -22,7 +22,7 @@ class ExamineCommand: TargetedCommand {
             return true
         }
         
-        return (!shouldMatchTarget && keywordMatches(context: context) && context.input.arguments.count == 0)
+        return (!shouldMatchTarget && keywordMatches(context: context) && arguments.count == 0)
     }
     
     override func perform(in context: CommandContext) {

@@ -12,7 +12,7 @@ class DebugCommand: Command {
     }
     
     override func perform(in context: CommandContext) {
-        guard let subcommand = context.input.arguments.first else {
+        guard let subcommand = arguments.first else {
             return
         }
         
@@ -31,7 +31,6 @@ class DebugCommand: Command {
     
     func performLog(in context: CommandContext) {
         let manager = Channel.defaultManager
-        let arguments = context.input.arguments
         let engine = context.engine
         
         if (arguments.count > 1) && (arguments[1] == "list") {

@@ -15,7 +15,7 @@ class SitCommand: TargetedCommand {
     }
     
     override func matches(_ context: CommandContext) -> Bool {
-        super.matches(context) || (keywords.contains(context.input.command) && (context.input.arguments.count == 0))
+        super.matches(context) || (keywords.contains(context.input.command) && (arguments.count == 0))
     }
     
     override func perform(in context: CommandContext) {

@@ -7,7 +7,7 @@ import Foundation
 
 class TargetedCommand: Command {
     func inputMatchesTarget(in context: CommandContext) -> Bool {
-        guard context.input.arguments.count > 0 else { return false }
+        guard arguments.count > 0 else { return false }
         
         var target = arguments.joined(separator: " ")
         if target == "self" {

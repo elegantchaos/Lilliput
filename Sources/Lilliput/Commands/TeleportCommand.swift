@@ -17,7 +17,7 @@ class TeleportCommand: Command {
         
 
         if
-            let object = context.engine.objects[context.input.arguments[0]], let _ = LocationBehaviour(object) {
+            let object = context.engine.objects[arguments[0]], let _ = LocationBehaviour(object) {
                 matchedLocation = object
                 return true
         }

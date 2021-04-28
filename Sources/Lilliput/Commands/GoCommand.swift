@@ -14,7 +14,7 @@ class GoCommand: Command {
     
     override func matches(_ context: CommandContext) -> Bool {
         let input = context.input
-        let requestedDirection = super.matches(context) ? input.arguments[0] : input.command
+        let requestedDirection = super.matches(context) ? arguments[0] : input.command
         
         if let location = LocationBehaviour(context.player.location) {
             for (direction, exit) in location.allExits {

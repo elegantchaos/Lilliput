@@ -7,6 +7,7 @@ import Foundation
 
 public class BasicDriver: Driver {
     var preamble: [String] = []
+    var lastType: OutputType = .normal
 
     public init() {
     }
@@ -31,31 +32,42 @@ public class BasicDriver: Driver {
         }
     }
     
-    public func output(_ string: String, newParagraph: Bool) {
+    public func output(_ string: String, type: OutputType) {
         let columns = 80
-        
-        if newParagraph {
-            print("")
+
+        var separator: String
+        switch type {
+            case .warning: separator = "\nWARNING: "
+            case .error: separator = "\nERROR: "
+            case .debug: separator = "\nDEBUG: "
+            case .normal: separator = "\n"
+            case .option: separator = (lastType == .option) ? "" : "\n"
+            default: separator = ""
         }
-        
+
         let lines = string.split(separator: "\n", omittingEmptySubsequences: false)
         for line in lines {
             var words = line.split(separator: " ")
-            var buffer = ""
+            var buffer: String = ""
+
             while words.count > 0 {
                 let word = words[0]
                 words.remove(at: 0)
                 if buffer.count + word.count > columns {
                     print(buffer)
                     buffer = ""
+                    separator = ""
                 }
-                if buffer.count > 0 {
-                    buffer += " "
-                }
+
+                buffer += separator
+                separator = " "
 
                 buffer += word
             }
             print(buffer)
+            separator = ""
         }
+        
+        lastType = type
     }
 }

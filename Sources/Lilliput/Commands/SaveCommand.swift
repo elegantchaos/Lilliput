@@ -11,7 +11,7 @@ class SaveCommand: Command {
     }
     
     override func perform(in context: CommandContext) {
-        let name = context.input.arguments.first ?? "default"
+        let name = arguments.first ?? "default"
         context.engine.save(to: name)
     }
 }
