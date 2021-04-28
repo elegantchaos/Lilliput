@@ -7,7 +7,7 @@ import Foundation
 
 class StandCommand: Command {
     init() {
-        super.init(keywords: ["stand"])
+        super.init(keywords: ["get up", "stand up", "stand"])
     }
     
     override func perform(in context: CommandContext) {
