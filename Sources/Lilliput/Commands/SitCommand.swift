@@ -11,7 +11,7 @@ extension String {
 
 class SitCommand: TargetedCommand {
     init() {
-        super.init(keywords: ["sit"])
+        super.init(keywords: ["sit on", "sit down", "sit"])
     }
     
     override func matches(_ context: CommandContext) -> Bool {
