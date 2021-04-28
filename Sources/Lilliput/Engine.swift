@@ -254,7 +254,7 @@ public class Engine {
 
         for reply in speech.speak() {
             let n = replies.count + 1
-            output("\(n). \(reply.text)", newParagraph: n == 1)
+            output("\(n). \(reply.text)")
             replies.append(ReplySelection(id: reply.id, text: reply.text, speaker: speech.context.speaker))
         }
 
