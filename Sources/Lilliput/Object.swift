@@ -382,7 +382,7 @@ public class Object {
     }
     
     func getContentsIfVisible() -> String {
-        return isContentVisible ? describeContents(context: .contained, showIfEmpty: hasFlag(.showIfEmptyFlag)) : ""
+        return isContentVisible ? describeContents(context: .contained) : ""
     }
     
     var isContentVisible: Bool {
