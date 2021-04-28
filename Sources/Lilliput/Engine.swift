@@ -193,6 +193,8 @@ public class Engine {
     
     func handleInput() {
         let input = driver.getInput(stopWords: stopWords)
+        output(input.raw, type: .rawInput)
+        output(input.cleaned, type: .input)
         
         if let index = Int(input.raw), index > 0, index <= replies.count {
             let reply = replies[index - 1]

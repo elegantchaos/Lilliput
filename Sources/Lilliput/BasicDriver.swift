@@ -33,18 +33,23 @@ public class BasicDriver: Driver {
     }
     
     public func output(_ string: String, type: OutputType) {
-        let columns = 80
+        
 
         var separator: String
         switch type {
+            case .input, .rawInput: return // no need to echo the input
+            
             case .warning: separator = "\nWARNING: "
             case .error: separator = "\nERROR: "
             case .debug: separator = "\nDEBUG: "
+
             case .normal: separator = "\n"
+            case .append: separator = ""
+
             case .option: separator = (lastType == .option) ? "" : "\n"
-            default: separator = ""
         }
 
+        let columns = 80
         let lines = string.split(separator: "\n", omittingEmptySubsequences: false)
         for line in lines {
             var words = line.split(separator: " ")
