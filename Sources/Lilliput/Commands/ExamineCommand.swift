@@ -14,7 +14,7 @@ class ExamineCommand: TargetedCommand {
     
     init(shouldMatchTarget: Bool = true) {
         self.shouldMatchTarget = shouldMatchTarget
-        super.init(keywords: ["examine", "look at", "look", "search", "l", "ex"])
+        super.init(keywords: ["examine", "look at", "look in", "look out of", "look through", "look", "search", "l", "ex"])
     }
     
     override func matches(_ context: CommandContext) -> Bool {
