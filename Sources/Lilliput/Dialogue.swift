@@ -63,7 +63,10 @@ struct Dialogue {
         
         func speak() -> [Reply] {
             let engine = context.engine
-            engine.output(sentence.output)
+            let paragraphs = sentence.output.split(separator: "\n")
+            for para in paragraphs {
+                engine.output(String(para), type: .dialogue)
+            }
             
             return replies.filter({ $0.matches(context) }).sorted(by: \.id)
         }

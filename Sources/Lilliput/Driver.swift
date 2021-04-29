@@ -37,6 +37,7 @@ public enum OutputType {
     case normal
     case append
     case option
+    case dialogue
     case warning
     case error
 }

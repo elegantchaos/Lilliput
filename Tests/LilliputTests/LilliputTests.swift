@@ -25,10 +25,15 @@ class TestDriver: Driver {
         return Input(string, stopWords: [])!
     }
     
-    func output(_ string: String, newParagraph: Bool) {
+    func output(_ string: String, type: OutputType) {
+        switch type {
+            case .input, .rawInput: return
+            default:
+                break
+        }
         output.append(string)
         full.append(string)
-        if newParagraph {
+        if type != .append {
             output.append("\n\n")
             full.append("\n\n")
         }

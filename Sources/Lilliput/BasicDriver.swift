@@ -43,7 +43,7 @@ public class BasicDriver: Driver {
             case .error: separator = "\nERROR: "
             case .debug: separator = "\nDEBUG: "
 
-            case .normal: separator = "\n"
+            case .normal, .dialogue: separator = "\n"
             case .append: separator = ""
 
             case .option: separator = (lastType == .option) ? "" : "\n"
