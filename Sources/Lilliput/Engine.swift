@@ -216,7 +216,7 @@ public class Engine {
             }
         }
         
-        output("I don't know how to \(input.raw)!")
+        output("That didn't really help.")
     }
 
     
