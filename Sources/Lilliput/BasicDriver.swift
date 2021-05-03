@@ -18,6 +18,11 @@ public class BasicDriver: Driver {
     }
     
     public func getInput(stopWords: [String.SubSequence]) -> Input {
+        if lastType == .debug {
+            print("------------------------------------------\n")
+            lastType = .rawInput
+        }
+
         while true {
             if let line = preamble.first, let input = Input(line, stopWords: stopWords) {
                 print("\n> \(line)")
@@ -36,12 +41,34 @@ public class BasicDriver: Driver {
         
 
         var separator: String
+        var prefix = ""
+
+        switch lastType {
+            case .debug:
+                if type != .debug {
+                    print("------------------------------------------\n")
+                }
+            default:
+                break
+        }
+        
         switch type {
             case .input, .rawInput: return // no need to echo the input
             
-            case .warning: separator = "\nWARNING: "
-            case .error: separator = "\nERROR: "
-            case .debug: separator = "\nDEBUG: "
+            case .warning:
+                separator = ""
+                prefix = "WARNING: "
+                
+            case .error:
+                separator = ""
+                prefix = "ERROR: "
+                
+            case .debug:
+                separator = ""
+                prefix = ""
+                if lastType != .debug {
+                    print("\n-----------------------------------[DEBUG]")
+                }
 
             case .normal, .dialogue, .prompt: separator = "\n"
             case .append: separator = ""
@@ -59,7 +86,7 @@ public class BasicDriver: Driver {
                 let word = words[0]
                 words.remove(at: 0)
                 if buffer.count + word.count > columns {
-                    print(buffer)
+                    print("\(prefix)\(buffer)")
                     buffer = ""
                     separator = ""
                 }
@@ -69,7 +96,7 @@ public class BasicDriver: Driver {
 
                 buffer += word
             }
-            print(buffer)
+            print("\(prefix)\(buffer)")
             separator = ""
         }
         

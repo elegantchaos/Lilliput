@@ -111,6 +111,10 @@ public class Engine {
         exit(1)
     }
     
+    public func debug(_ string: String) {
+        driver.output(string, type: .debug)
+    }
+    
     func post(event: Event) {
         events.append(event)
     }
