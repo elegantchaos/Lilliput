@@ -45,6 +45,7 @@ public class Engine {
         register([
             LocationBehaviour.self,
             LockableBehaviour.self,
+            LoadableBehaviour.self,
             MovableBehaviour.self,
             OpenableBehaviour.self,
             PersonBehaviour.self,

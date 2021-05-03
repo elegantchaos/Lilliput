@@ -5,18 +5,8 @@
 
 import Foundation
 
-class UseCommand: TargetedCommand {
-    let useContext: DescriptionContext
-    
-    init(context: DescriptionContext = .use, keywords: [String] = ["use"]) {
-        self.useContext = context
-        super.init(keywords: keywords)
-    }
-
-    override func perform(in context: CommandContext) {
-        if let output = context.target.getDescription(for: useContext) {
-            context.engine.output(output)
-        }
-        context.engine.post(event: Event(.used, target: context.target))
+class UseCommand: GenerateEventCommand {
+    init() {
+        super.init(context: .use, eventID: .used, keywords: ["use"])
     }
 }

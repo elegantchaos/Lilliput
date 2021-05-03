@@ -161,8 +161,8 @@ struct Handler {
         func run(in context: Context) {
             if let output = data[asString: "output"] {
                 handleOutput(output, in: context)
-            } else if let location = data[asString: "move"] {
-                handleMove(to: location, in: context)
+            } else if let target = data[asString: "move"] {
+                handleMove(target: target, in: context)
             } else if let dialog = data[asString: "speak"] {
                 handleSpeak(dialog, in: context)
             } else if let key = data[asString: "set"], let value = data["to"], let id = data[asString: "of"], let object = context.engine.objects[id] {
@@ -176,14 +176,36 @@ struct Handler {
             context.engine.output(output)
         }
         
-        func handleMove(to location: String, in context: Context) {
-            if let location = context.engine.objects[location] {
-                if let inVehicle = data[asBool: "inVehicle"], inVehicle, let vehicle = context.player.location {
-                    vehicle.move(to: location)
-                }
-                context.player.move(to: location, quiet: true)
+        func handleMove(target: String, in context: Context) {
+            let object: Object?
+            let locationName: String
+
+            if let destination = data[asString: "to"] {
+                // we were supplied a target and a destination
+                object = context.engine.objects[target]
+                locationName = destination
             } else {
-                context.engine.warning("Missing location for move command: \(location)")
+                // we were just supplied a destination
+                // so the target defaults to the player
+                object = context.player
+                locationName = target
+            }
+            
+            guard let location = context.engine.objects[locationName] else {
+                context.engine.warning("Missing location for move command: \(locationName)")
+                return
+            }
+            
+            guard let object = object else {
+                context.engine.warning("Missing object for move command: \(target)")
+                return
+            }
+            
+            if let inVehicle = data[asBool: "inVehicle"], inVehicle, let vehicle = object.location {
+                vehicle.move(to: location)
+                object.move(to: location)
+            } else {
+                object.move(to: location, quiet: true)
             }
 
         }

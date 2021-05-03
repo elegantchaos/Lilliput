@@ -17,6 +17,7 @@ enum DescriptionContext: String {
     case excessVolume                           /// player is carrying too much volume
     case exit                                   /// description of a portal used when listing exits
     case indefinite                             /// brief description with indefinite article (eg "a pen")
+    case load                                   /// shown when the object is loaded
     case location                               /// description of a location
     case locationContent                        /// description of a location's content
     case locationSuffix = "location.suffix"
