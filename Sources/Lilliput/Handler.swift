@@ -203,19 +203,19 @@ struct Handler {
             context.engine.output(output)
         }
         
-        func handleMove(target: String, in context: Context) {
-            let object: Object?
+        func handleMove(target targetName: String, in context: Context) {
+            let target: Object?
             let locationName: String
 
             if let destination = data[asString: "to"] {
                 // we were supplied a target and a destination
-                object = context.engine.objects[target]
+                target = context.engine.objects[targetName]
                 locationName = destination
             } else {
                 // we were just supplied a destination
                 // so the target defaults to the player
-                object = context.player
-                locationName = target
+                target = context.player
+                locationName = targetName
             }
             
             guard let location = context.engine.objects[locationName] else {
@@ -223,8 +223,8 @@ struct Handler {
                 return
             }
             
-            guard let object = object else {
-                context.engine.warning("Missing object for move command: \(target)")
+            guard let object = target else {
+                context.engine.warning("Missing target for move command: \(targetName)")
                 return
             }
             
