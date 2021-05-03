@@ -13,6 +13,7 @@ enum EventID: String {
     case played
     case replied
     case sat
+    case shot
     case used
 }
 

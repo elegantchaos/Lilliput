@@ -26,6 +26,7 @@ enum DescriptionContext: String {
     case outside                                /// prefix for describing view from a location (eg when sitting in a chair)
     case play                                   /// shown when the object is played
     case push                                   /// shown when the object is pushed
+    case shoot                                  /// shown when the object is shot
     case tooHeavy                               /// object is too heavy to carry
     case tooLarge                               /// object is too large
     case unlocks                                /// description of a thing needed to unlock something
