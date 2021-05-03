@@ -125,6 +125,27 @@ struct Handler {
             
             return testValue(value, in: context)
         }
+
+        func testOr(triggers: [Handler.Trigger], in context: Context) -> Bool {
+            for trigger in triggers {
+                if trigger.matches(context) {
+                    return true
+                }
+            }
+            
+            return false
+        }
+
+        func testAnd(triggers: [Handler.Trigger], in context: Context) -> Bool {
+            for trigger in triggers {
+                if !trigger.matches(context) {
+                    return false
+                }
+            }
+            
+            return true
+        }
+        
         func matches(_ context: Context) -> Bool {
             if when == "playerArrived" {
                 let from = data[asString: .fromParameter].flatMap { context.receiver.engine.objects[$0] }
@@ -135,6 +156,12 @@ struct Handler {
                 return testAsked(in: context)
             } else if when == "event" {
                 return testValue(context.event.id, in: context)
+            } else if when == "any", let of = data["of"] as? [[String:Any]] {
+                let triggers = of.map({ Trigger(data: $0) })
+                return testOr(triggers: triggers, in: context)
+            } else if when == "all", let of = data["of"] as? [[String:Any]] {
+                let triggers = of.map({ Trigger(data: $0) })
+                return testAnd(triggers: triggers, in: context)
             } else if let owner = data[asString: "of"] {
                 return testProperty(key: when, of: owner, in: context)
             } else {
