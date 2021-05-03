@@ -245,7 +245,7 @@ public class Engine {
         }
         
         if replies.count > 0 {
-            output("(type a number to respond, or a normal command to end the conversation)")
+            output("(type a number to respond, or a normal command to end the conversation)", type: .prompt)
         }
     }
     

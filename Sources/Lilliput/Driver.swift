@@ -39,6 +39,7 @@ public enum OutputType {
     case option
     case dialogue
     case warning
+    case prompt
     case error
 }
 
