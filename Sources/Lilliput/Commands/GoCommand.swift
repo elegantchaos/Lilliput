@@ -14,7 +14,12 @@ class GoCommand: Command {
     
     override func matches(_ context: CommandContext) -> Bool {
         let input = context.input
-        let requestedDirection = super.matches(context) ? arguments[0] : input.command
+        let explicitGo = super.matches(context)
+        if explicitGo && arguments.count < 1 {
+            return false // the user typed 'go' but gave no exit name
+        }
+        
+        let requestedDirection = explicitGo ? arguments[0] : input.command
         
         if let location = LocationBehaviour(context.player.location) {
             for (direction, exit) in location.allExits {
@@ -53,7 +58,11 @@ class GoFallbackCommand: Command {
     }
 
     override func perform(in context: CommandContext) {
-        context.engine.output("There is no exit in that direction.")
+        if arguments.count == 0 {
+            context.engine.output("Go where exactly?")
+        } else {
+            context.engine.output("There is no exit in that direction.")
+        }
     }
 }
 
