@@ -14,15 +14,12 @@ struct PersonBehaviour: Behaviour {
     }
 
     let object: Object
-    let dialogue: Dialogue
     
     init(_ object: Object, storage: Any) {
         self.object = object
-        self.dialogue = storage as! Dialogue
     }
     
-    static func storage(for object: Object) -> Any {
-        return Dialogue(for: object)
+    static func storage(for object: Object) -> Void {
     }
     
     func handle(_ event: Event) -> EventResult {
@@ -49,10 +46,10 @@ struct PersonBehaviour: Behaviour {
         
     }
     
-    func performActions(inContext context: EventContext) {
-        let engine = object.engine
-        if let output = dialogue.speak(inContext: context) {
-            engine.spoken.append(output)
-        }
-    }
+//    func performActions(inContext context: EventContext) {
+//        let engine = object.engine
+//        if let output = dialogue.speak(inContext: context) {
+//            engine.spoken.append(output)
+//        }
+//    }
 }

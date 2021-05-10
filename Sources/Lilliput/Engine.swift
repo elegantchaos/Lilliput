@@ -32,6 +32,7 @@ public class Engine {
     var dialogue: [(EventContext,String)] = []
     var spoken: [Dialogue.Speech] = []
     var replies: [ReplySelection] = []
+    var handlersRan = 0
     var tick = 0
     var stopWords: [String.SubSequence] = []
     
@@ -174,6 +175,7 @@ public class Engine {
     
     func deliver(_ event: Event, to object: Object) -> EventResult {
         eventChannel.log("\(object) received \(event)")
+//        print("\(object) received \(event)")
 
         var result = object.handle(event)
         if result == .swallowed {
@@ -243,14 +245,16 @@ public class Engine {
 
     func handleSpeech() {
         for (context,sentenceID) in dialogue {
-            if let person = PersonBehaviour(context.receiver) {
-                let dialog = person.dialogue
+            let receiver = context.receiver
+            if let dialog = receiver.definition.dialogue {
                 if let sentence = dialog.sentence(withID: sentenceID) {
-                    handle(sentence: sentence, person: person, event: context.event)
+                    handle(sentence: sentence, receiver: receiver, replies: dialog.replies, context: context)
                 }
             }
         }
-        
+    }
+    
+    func printReplies() {
         let count = replies.count
         if count > 0 {
             replies = replies.sorted(by: \.reply.index).reversed()
@@ -263,14 +267,13 @@ public class Engine {
         }
     }
     
-    func handle(sentence: Dialogue.Sentence, person: PersonBehaviour, event: Event) {
-        person.object.append(sentence.id, toPropertyWithKey: "spoken")
-        person.object.setProperty(withKey: "speaking", to: sentence.id)
-        let context = EventContext(event: event, receiver: person.object)
-        let speech = Dialogue.Speech(sentence: sentence, replies: person.dialogue.replies, context: context)
+    func handle(sentence: Dialogue.Sentence, receiver: Object, replies dialogReplies: [Dialogue.Reply], context: EventContext) {
+        receiver.append(sentence.id, toPropertyWithKey: "spoken")
+        receiver.setProperty(withKey: "speaking", to: sentence.id)
+        let speech = Dialogue.Speech(sentence: sentence, replies: dialogReplies, context: context)
 
         for reply in speech.speak() {
-            replies.append(ReplySelection(reply: reply, target: person.object))
+            replies.append(ReplySelection(reply: reply, target: receiver))
         }
 
     }
@@ -278,23 +281,27 @@ public class Engine {
     func clearSpeech() {
         dialogue = []
         spoken = []
-        replies = []
     }
     
     public func run() {
         setupObjects()
 
         while running {
+            handlersRan = 0
+            
             handleEvents()
             handleSpeech()
             
             // handling events or speech may have generated more events...
-            // we only stop for input when we've handled them all
-            if events.count == 0 {
+            // we only stop for input when we've handled them all and no handlers fired
+            if (events.count == 0) { // && ((handlersRan == 0) || replies.count > 0)
+                printReplies()
                 handleInput()
+                replies = []
             }
-            
+
             clearSpeech()
+
             tick += 1
         }
         

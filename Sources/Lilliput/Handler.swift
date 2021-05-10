@@ -21,7 +21,9 @@ struct Handlers {
     func process(in context: EventContext) {
         for handler in handlers {
             if handler.matches(context: context) {
+//                print("handler \(handler.triggers) matched")
                 handler.run(in: context)
+                context.engine.handlersRan += 1
             }
         }
     }
@@ -94,16 +96,23 @@ struct Handler {
         }
         
         func testSentence(in context: EventContext) -> Bool {
-            let sentence = context.event.target.getString(withKey: "speaking")
-            if let id = data[asString: "was"] {
-                return sentence == id
-            } else if let id = data[asString: "not"] {
-                return sentence != id
-            } else if let ids = data[asString: "in"] {
-                return ids.contains(sentence)
-            } else {
-                return false
+            if context.event.id == EventID.said.rawValue {
+                let sentenceID = context.event[stringWithKey: "sentence"]
+                if let id = data[asString: "was"] {
+                    return sentenceID == id
+                }
             }
+//            let sentence = context.event.target.getString(withKey: "speaking")
+//            if let id = data[asString: "was"] {
+//                return sentence == id
+//            } else if let id = data[asString: "not"] {
+//                return sentence != id
+//            } else if let ids = data[asString: "in"] {
+//                return ids.contains(sentence)
+//            } else {
+//                return false
+//            }
+            return false
         }
 
         func testValue(_ actual: Any?, in context: EventContext) -> Bool {
@@ -276,6 +285,7 @@ struct Handler {
     
     func run(in context: EventContext) {
         for action in actions {
+//            print("handler ran \(action)")
             action.run(in: context)
         }
     }

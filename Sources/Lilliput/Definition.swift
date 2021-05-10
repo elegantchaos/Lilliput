@@ -55,7 +55,7 @@ public struct Definition {
     let names: [String]
     let exits: [String:String]
     let traits: [String]
-    let dialogue: [String:Any]?
+    let dialogue: Dialogue?
     let mass: Double
     let volume: Double
     let handlers: Handlers
@@ -63,13 +63,13 @@ public struct Definition {
     init(id: String, properties: [String:Any]) {
         self.id = id
         self.properties = properties
-        
+
+        self.dialogue = Dialogue(from: properties["dialogue"] as? [String:Any])
         self.handlers = Handlers(from: properties["handlers"])
         self.location = LocationPair(from: properties["location"])
         self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
-        self.dialogue = properties["dialogue"] as? [String:Any]
         self.mass = properties[asDouble: "mass"] ?? 0
         self.volume = properties[asDouble: "volume"] ?? 0
         

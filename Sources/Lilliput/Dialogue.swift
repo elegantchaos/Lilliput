@@ -65,7 +65,7 @@ struct Dialogue {
             for para in paragraphs {
                 engine.output(String(para), type: .dialogue)
             }
-            
+            engine.post(event: Event(.said, target: context.receiver, parameters: ["sentence": sentence.id]))
             return replies.filter({ $0.matches(context) }).sorted(by: \.id)
         }
     }
@@ -121,15 +121,16 @@ struct Dialogue {
 
     let sentences: [Sentence]
     let replies: [Reply]
-    
-    init(for object: Object) {
-        if let defs = object.definition.dialogue?["sentences"] as? [String:Any] {
+    let handlers: Handlers
+
+    init?(from data: [String:Any]?) {
+        if let defs = data?["sentences"] as? [String:Any] {
             sentences = defs.compactMap({ Sentence(id: $0.key, data: $0.value) })
         } else {
-            sentences = []
+            return nil
         }
         
-        if let defs = object.definition.dialogue?["replies"] as? [[String:Any]] {
+        if let defs = data?["replies"] as? [[String:Any]] {
             var index = 0
             replies = defs.compactMap({
                 let reply = Reply(data: $0, index: index)
@@ -139,6 +140,25 @@ struct Dialogue {
         } else {
             replies = []
         }
+        
+        var handlers: [[String:Any]] = []
+        if let triggers = data?["triggers"] as? [String:Any] {
+            for (sentence, trigger) in triggers {
+                var triggers = trigger as? [Any]
+                if triggers == nil, let trigger = trigger as? [String:Any] {
+                    triggers = [trigger]
+                }
+                
+                if let triggers = triggers {
+                    let handler: [String:Any] = [
+                        "actions": [["speak" : sentence]],
+                        "triggers": triggers
+                    ]
+                    handlers.append(handler)
+                }
+            }
+        }
+        self.handlers = Handlers(from: handlers)
     }
     
     func sentence(withID id: String) -> Sentence? {
