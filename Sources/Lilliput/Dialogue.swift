@@ -26,16 +26,23 @@ struct Dialogue {
 
     struct Reply {
         let id: String
+        let index: Int
         let text: String
         let triggers: ReplyTriggers
 
-        init?(id: String, data: [String:Any]?) {
-            guard let data = data, let text = data[asString: "text"] else {
-                dialogChannel.log("Reply \(id) missing data.")
+        init?(data: [String:Any]?, index: Int) {
+            guard let data = data, let id = data[asString: "id"] else {
+                dialogChannel.log("Reply \(index) missing data / id.")
+                return nil
+            }
+            
+            guard let text = data[asString: "text"] else {
+                dialogChannel.log("Reply \(id) missing text.")
                 return nil
             }
             
             self.id = id
+            self.index = index
             self.text = text
             self.triggers = ReplyTriggers(from: data["shows"])
         }
@@ -131,8 +138,13 @@ struct Dialogue {
             sentences = []
         }
         
-        if let defs = object.definition.dialogue?["replies"] as? [String:Any] {
-            replies = defs.compactMap({ Reply(id: $0.key, data: $0.value as? [String:Any]) })
+        if let defs = object.definition.dialogue?["replies"] as? [[String:Any]] {
+            var index = 0
+            replies = defs.compactMap({
+                let reply = Reply(data: $0, index: index)
+                index = index + 1
+                return reply
+            })
         } else {
             replies = []
         }

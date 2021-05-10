@@ -18,8 +18,7 @@ extension String {
 
 public class Engine {
     struct ReplySelection {
-        let id: String
-        let text: String
+        let reply: Dialogue.Reply
         let speaker: Object
     }
     
@@ -204,10 +203,12 @@ public class Engine {
         
         if let index = Int(input.raw), index > 0, index <= replies.count {
             let reply = replies[index - 1]
-            post(event: Event(.replied, target: reply.speaker, parameters: [ .replyIDParameter : reply.id ]))
-            output("“\(reply.text)”")
-            player.append(reply.id, toPropertyWithKey: "replied")
-            player.append(reply.id, toPropertyWithKey: "repliedRecently")
+            let id = reply.reply.id
+            let text = reply.reply.text
+            post(event: Event(.replied, target: reply.speaker, parameters: [ .replyIDParameter : id ]))
+            output("“\(text)”", type: .reply)
+            player.append(id, toPropertyWithKey: "replied")
+            player.append(id, toPropertyWithKey: "repliedRecently")
             return
         }
         
@@ -250,7 +251,14 @@ public class Engine {
             }
         }
         
-        if replies.count > 0 {
+        let count = replies.count
+        if count > 0 {
+            replies = replies.sorted(by: \.reply.index).reversed()
+            var n = 1
+            for reply in replies {
+                output("\(n). \(reply.reply.text)", type: .option)
+                n = n + 1
+            }
             output("type a number to respond, or a normal command to end the conversation", type: .prompt)
         }
     }
@@ -261,9 +269,7 @@ public class Engine {
         let speech = Dialogue.Speech(sentence: sentence, replies: person.dialogue.replies, context: Dialogue.Context(speaker: person.object, subject: player, event: event))
 
         for reply in speech.speak() {
-            let n = replies.count + 1
-            output("\(n). \(reply.text)", type: .option)
-            replies.append(ReplySelection(id: reply.id, text: reply.text, speaker: speech.context.speaker))
+            replies.append(ReplySelection(reply: reply, speaker: speech.context.speaker))
         }
 
     }
