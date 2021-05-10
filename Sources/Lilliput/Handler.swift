@@ -3,6 +3,7 @@
 //  All code (c) 2021 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Coercion
 import Foundation
 
 struct Handlers {
@@ -56,10 +57,15 @@ struct Handler {
                     return object.id == expectedString
                 }
                 
-                if let string = of as? String {
-                    return string == expectedString
+                if let value = of as? StringConvertible {
+                    return value.asString == expectedString
                 }
-
+            }
+            
+            if let expectedBool = expected as? Bool {
+                if let value = of as? BoolConvertible {
+                    return value.asBool == expectedBool
+                }
             }
             
             return false
