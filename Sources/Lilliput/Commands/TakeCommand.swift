@@ -40,6 +40,7 @@ class TakeCommand: TargetedCommand {
                 object.move(to: context.player)
                 object.setFlag(.takenFlag)
                 output = "You take \(brief)."
+                context.engine.post(event: Event(.taken, target: context.target))
             }
         }
         

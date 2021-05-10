@@ -32,7 +32,8 @@ class ExamineCommand: TargetedCommand {
             object.setFlag(.examinedFlag)
             object.setFlag(.awareFlag)
             context.engine.output(description)
-        } else if let description = PlayerBehaviour(context.player)?.describeLocation() {
+            context.engine.post(event: Event(.examined, target: context.target))
+   } else if let description = PlayerBehaviour(context.player)?.describeLocation() {
             context.engine.output(description)
         }
     }
