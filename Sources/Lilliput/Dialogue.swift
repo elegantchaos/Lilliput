@@ -9,21 +9,13 @@ import Logger
 
 let dialogChannel = Channel("Dialogue")
 
-struct Dialogue {
-    struct Context {
-        let engine: Engine
-        let speaker: Object
-        let subject: Object
-        let event: Event
-
-        internal init(speaker: Object, subject: Object, event: Event, sentence: Dialogue.Sentence? = nil) {
-            self.speaker = speaker
-            self.subject = subject
-            self.event = event
-            self.engine = speaker.engine
-        }
+extension Handler.Context {
+    var speaker: Object {
+        event.target
     }
+}
 
+struct Dialogue {
     struct Reply {
         let id: String
         let index: Int
@@ -47,8 +39,8 @@ struct Dialogue {
             self.triggers = ReplyTriggers(from: data["shows"])
         }
         
-        func matches(_ context: Context) -> Bool {
-            if context.subject.property(withKey: "repliedRecently", contains: id) {
+        func matches(_ context: Handler.Context) -> Bool {
+            if context.player.property(withKey: "repliedRecently", contains: id) {
                 return false
             }
             
@@ -66,7 +58,7 @@ struct Dialogue {
     struct Speech {
         let sentence: Sentence
         let replies: [Reply]
-        let context: Dialogue.Context
+        let context: Handler.Context
         
         func speak() -> [Reply] {
             let engine = context.engine
@@ -113,8 +105,8 @@ struct Dialogue {
             }
         }
         
-        func matches(_ context: Context) -> Bool {
-            if (repeatInterval == 0) && context.speaker.property(withKey: "spoken", contains: id) {
+        func matches(_ context: Handler.Context) -> Bool {
+            if (repeatInterval == 0) && context.receiver.property(withKey: "spoken", contains: id) {
                 dialogChannel.log("\(id) already spoken")
                 return false
             }
@@ -159,16 +151,17 @@ struct Dialogue {
         return nil
     }
     
-    func selectSentence(forContext context: Context) -> Sentence? {
+    func selectSentence(forContext context: Handler.Context) -> Sentence? {
         let options = sentences.filter({ $0.matches(context) })
         let sentence = options.randomElement()
         return sentence
     }
 
-    func speak(inContext context: Context) -> Speech? {
+    func speak(inContext context: Handler.Context) -> Speech? {
         guard let sentence = selectSentence(forContext: context) else { return nil }
-        context.speaker.append(sentence.id, toPropertyWithKey: "spoken")
-        context.speaker.setProperty(withKey: "speaking", to: sentence.id)
+        let speaker = context.speaker
+        speaker.append(sentence.id, toPropertyWithKey: "spoken")
+        speaker.setProperty(withKey: "speaking", to: sentence.id)
         return Speech(sentence: sentence, replies: replies, context: context)
     }
 }

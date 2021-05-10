@@ -6,15 +6,15 @@
 import Foundation
 
 struct ReplyTriggers {
-    let triggers: [ReplyTrigger] // TODO: use normal triggers
+    let triggers: [Handler.Trigger]
 
     
     init(from data: Any?) {
         let records = (data as? [[String:Any]]) ?? []
-        triggers = records.map({ ReplyTrigger(data: $0) })
+        triggers = records.map({ Handler.Trigger(data: $0) })
     }
     
-    func matches(_ context: Dialogue.Context) -> Bool {
+    func matches(_ context: Handler.Context) -> Bool {
         for trigger in triggers {
             if !trigger.matches(context) {
                 dialogChannel.log("failed trigger \(trigger)")

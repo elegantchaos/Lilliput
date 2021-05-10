@@ -19,7 +19,7 @@ extension String {
 public class Engine {
     struct ReplySelection {
         let reply: Dialogue.Reply
-        let speaker: Object
+        let target: Object
     }
     
     let driver: Driver
@@ -205,7 +205,7 @@ public class Engine {
             let reply = replies[index - 1]
             let id = reply.reply.id
             let text = reply.reply.text
-            post(event: Event(.replied, target: reply.speaker, parameters: [ .replyIDParameter : id ]))
+            post(event: Event(.replied, target: reply.target, parameters: [ .replyIDParameter : id ]))
             output("“\(text)”", type: .reply)
             player.append(id, toPropertyWithKey: "replied")
             player.append(id, toPropertyWithKey: "repliedRecently")
@@ -266,10 +266,11 @@ public class Engine {
     func handle(sentence: Dialogue.Sentence, person: PersonBehaviour, event: Event) {
         person.object.append(sentence.id, toPropertyWithKey: "spoken")
         person.object.setProperty(withKey: "speaking", to: sentence.id)
-        let speech = Dialogue.Speech(sentence: sentence, replies: person.dialogue.replies, context: Dialogue.Context(speaker: person.object, subject: player, event: event))
+        let context = Handler.Context(event: event, receiver: person.object)
+        let speech = Dialogue.Speech(sentence: sentence, replies: person.dialogue.replies, context: context)
 
         for reply in speech.speak() {
-            replies.append(ReplySelection(reply: reply, speaker: speech.context.speaker))
+            replies.append(ReplySelection(reply: reply, target: person.object))
         }
 
     }

@@ -108,7 +108,19 @@ struct Handler {
             return false
         }
         
-        
+        func testSentence(in context: Context) -> Bool {
+            let sentence = context.speaker.getString(withKey: "speaking")
+            if let id = data[asString: "was"] {
+                return sentence == id
+            } else if let id = data[asString: "not"] {
+                return sentence != id
+            } else if let ids = data[asString: "in"] {
+                return ids.contains(sentence)
+            } else {
+                return false
+            }
+        }
+
         func testValue(_ actual: Any?, in context: Context) -> Bool {
             if let expected = data["is"] {
                 return testMatch(of: actual, with: expected)
@@ -160,6 +172,8 @@ struct Handler {
                 return testReply(in: context)
             } else if when == "asked" {
                 return testAsked(in: context)
+            } else if when == "sentence" {
+                return testSentence(in: context)
             } else if when == "event" {
                 return testValue(context.event.id, in: context)
             } else if when == "any", let of = data["of"] as? [[String:Any]] {
