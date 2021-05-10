@@ -502,7 +502,8 @@ extension Object: EventHandler {
         }
         
         if result != .swallowed {
-            definition.handlers.process(event, receiver: self)
+            let context = EventContext(event: event, receiver: self)
+            definition.handlers.process(in: context)
         }
         
         return result

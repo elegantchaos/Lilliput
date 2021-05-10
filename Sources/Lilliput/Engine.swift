@@ -29,7 +29,7 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
-    var dialogue: [(Handler.Context,String)] = []
+    var dialogue: [(EventContext,String)] = []
     var spoken: [Dialogue.Speech] = []
     var replies: [ReplySelection] = []
     var tick = 0
@@ -266,7 +266,7 @@ public class Engine {
     func handle(sentence: Dialogue.Sentence, person: PersonBehaviour, event: Event) {
         person.object.append(sentence.id, toPropertyWithKey: "spoken")
         person.object.setProperty(withKey: "speaking", to: sentence.id)
-        let context = Handler.Context(event: event, receiver: person.object)
+        let context = EventContext(event: event, receiver: person.object)
         let speech = Dialogue.Speech(sentence: sentence, replies: person.dialogue.replies, context: context)
 
         for reply in speech.speak() {

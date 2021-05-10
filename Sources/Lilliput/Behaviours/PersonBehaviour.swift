@@ -44,15 +44,12 @@ struct PersonBehaviour: Behaviour {
             default:
                 break
         }
-//
-//        let context = Handler.Context(event: event, receiver: object)
-//        performActions(inContext: context)
 
         return result
         
     }
     
-    func performActions(inContext context: Handler.Context) {
+    func performActions(inContext context: EventContext) {
         let engine = object.engine
         if let output = dialogue.speak(inContext: context) {
             engine.spoken.append(output)

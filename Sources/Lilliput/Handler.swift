@@ -18,8 +18,7 @@ struct Handlers {
         }
     }
     
-    func process(_ event: Event, receiver: Object) {
-        let context = Handler.Context(event: event, receiver: receiver)
+    func process(in context: EventContext) {
         for handler in handlers {
             if handler.matches(context: context) {
                 handler.run(in: context)
@@ -29,20 +28,6 @@ struct Handlers {
 }
 
 struct Handler {
-    struct Context {
-        let event: Event
-        let receiver: Object
-        let engine: Engine
-        let player: Object
-        
-        init(event: Event, receiver: Object) {
-            self.event = event
-            self.receiver = receiver
-            self.player = receiver.engine.player
-            self.engine = receiver.engine
-        }
-    }
-
     struct Trigger {
         let when: String
         let data: [String:Any]
@@ -71,7 +56,7 @@ struct Handler {
             return false
         }
         
-        func testPlayerArrived(in context: Context, from: Object?) -> Bool {
+        func testPlayerArrived(in context: EventContext, from: Object?) -> Bool {
             guard context.event.is(.contentAdded) else { return false }
             guard (context.event.target == context.receiver) || (context.event.target == context.receiver.location) else { return false }
             
@@ -85,7 +70,7 @@ struct Handler {
             return true
         }
         
-        func testReply(in context: Context) -> Bool {
+        func testReply(in context: EventContext) -> Bool {
             if context.event.id == EventID.replied.rawValue {
                 let replyID = context.event[stringWithKey: .replyIDParameter]
                 if let id = data[asString: "was"] {
@@ -99,7 +84,7 @@ struct Handler {
             return false
         }
         
-        func testAsked(in context: Context) -> Bool {
+        func testAsked(in context: EventContext) -> Bool {
             if let ids = data["includes"] as? [String] {
                 let recent = context.player.getStrings(withKey: "repliedRecently")
                 return Set(ids).intersection(recent).count > 0
@@ -108,8 +93,8 @@ struct Handler {
             return false
         }
         
-        func testSentence(in context: Context) -> Bool {
-            let sentence = context.speaker.getString(withKey: "speaking")
+        func testSentence(in context: EventContext) -> Bool {
+            let sentence = context.event.target.getString(withKey: "speaking")
             if let id = data[asString: "was"] {
                 return sentence == id
             } else if let id = data[asString: "not"] {
@@ -121,7 +106,7 @@ struct Handler {
             }
         }
 
-        func testValue(_ actual: Any?, in context: Context) -> Bool {
+        func testValue(_ actual: Any?, in context: EventContext) -> Bool {
             if let expected = data["is"] {
                 return testMatch(of: actual, with: expected)
             } else if let expected = data["not"] {
@@ -132,7 +117,7 @@ struct Handler {
             }
         }
         
-        func testProperty(key: String, of owner: String, in context: Context) -> Bool {
+        func testProperty(key: String, of owner: String, in context: EventContext) -> Bool {
             let value: Any?
             if owner == "event" {
                 value = context.event[rawWithKey: key]
@@ -144,7 +129,7 @@ struct Handler {
             return testValue(value, in: context)
         }
 
-        func testOr(triggers: [Handler.Trigger], in context: Context) -> Bool {
+        func testOr(triggers: [Handler.Trigger], in context: EventContext) -> Bool {
             for trigger in triggers {
                 if trigger.matches(context) {
                     return true
@@ -154,7 +139,7 @@ struct Handler {
             return false
         }
 
-        func testAnd(triggers: [Handler.Trigger], in context: Context) -> Bool {
+        func testAnd(triggers: [Handler.Trigger], in context: EventContext) -> Bool {
             for trigger in triggers {
                 if !trigger.matches(context) {
                     return false
@@ -164,7 +149,7 @@ struct Handler {
             return true
         }
         
-        func matches(_ context: Context) -> Bool {
+        func matches(_ context: EventContext) -> Bool {
             if when == "playerArrived" {
                 let from = data[asString: .fromParameter].flatMap { context.receiver.engine.objects[$0] }
                 return testPlayerArrived(in: context, from: from)
@@ -205,7 +190,7 @@ struct Handler {
             self.data = data
         }
         
-        func run(in context: Context) {
+        func run(in context: EventContext) {
             if let output = data[asString: "output"] {
                 handleOutput(output, in: context)
             } else if let target = data[asString: "move"] {
@@ -219,11 +204,11 @@ struct Handler {
             
         }
         
-        func handleOutput(_ output: String, in context: Context) {
+        func handleOutput(_ output: String, in context: EventContext) {
             context.engine.output(output)
         }
         
-        func handleMove(target targetName: String, in context: Context) {
+        func handleMove(target targetName: String, in context: EventContext) {
             let target: Object?
             let locationName: String
 
@@ -257,7 +242,7 @@ struct Handler {
 
         }
         
-        func handleSpeak(_ text: String, in context: Context) {
+        func handleSpeak(_ text: String, in context: EventContext) {
             context.engine.dialogue.append((context, text))
         }
         
@@ -279,7 +264,7 @@ struct Handler {
         self.actions = actions.map({ Action(data: $0) })
     }
     
-    func matches(context: Context) -> Bool {
+    func matches(context: EventContext) -> Bool {
         for trigger in triggers {
             if !trigger.matches(context) {
                 return false
@@ -289,7 +274,7 @@ struct Handler {
         return true
     }
     
-    func run(in context: Context) {
+    func run(in context: EventContext) {
         for action in actions {
             action.run(in: context)
         }
