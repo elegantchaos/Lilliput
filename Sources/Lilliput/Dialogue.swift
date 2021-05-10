@@ -14,7 +14,7 @@ struct Dialogue {
         let id: String
         let index: Int
         let text: String
-        let triggers: ReplyTriggers
+        let trigger: Handler.Trigger
 
         init?(data: [String:Any]?, index: Int) {
             guard let data = data, let id = data[asString: "id"] else {
@@ -27,10 +27,15 @@ struct Dialogue {
                 return nil
             }
             
+            guard let trigger = data["shows"] as? [String:Any] else {
+                dialogChannel.log("Reply \(id) missing trigger.")
+                return nil
+            }
+            
             self.id = id
             self.index = index
             self.text = text
-            self.triggers = ReplyTriggers(from: data["shows"])
+            self.trigger = Handler.Trigger(data: trigger)
         }
         
         func matches(_ context: EventContext) -> Bool {
@@ -38,7 +43,7 @@ struct Dialogue {
                 return false
             }
             
-            if !triggers.matches(context) {
+            if !trigger.matches(context) {
                 dialogChannel.log("reply \(id) failed triggers")
                 return false
             }
