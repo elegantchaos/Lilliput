@@ -9,6 +9,15 @@ import LilliputExamples
 
 let driver = BasicDriver()
 let engine = Engine(driver: driver)
-let url = LilliputExamples.urlForGame(named: "WeightTest")!
+let url = LilliputExamples.urlForGame(named: "PersonTest")!
 engine.load(url: url)
+
+if CommandLine.arguments.count > 1 {
+    let script = CommandLine.arguments[1]
+    if let url = LilliputExamples.script(named: script), FileManager.default.fileExists(atURL: url) {
+        engine.readScript(from: url)
+    }
+}
+
+
 engine.run()
