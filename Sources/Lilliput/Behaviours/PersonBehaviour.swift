@@ -38,6 +38,7 @@ struct PersonBehaviour: Behaviour {
                     }
                 }
                 
+
             default:
                 break
         }

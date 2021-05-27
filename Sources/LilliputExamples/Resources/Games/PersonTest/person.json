@@ -75,7 +75,7 @@
                 },
             ],
             "triggers": {
-                "greeting": { "when": "event", "is": "conversationStarted" },
+                "greeting": { "when": "event", "is": "startedTalking" },
                 "response1": { "when": "reply", "was": "question1" },
                 "response2": { "when": "reply", "was": "question2" }
             }

@@ -467,8 +467,8 @@ public class Object {
         for person in newPeople {
             assert(!person.speakingTo.contains(self))
             person.speakingTo.insert(self)
-            engine.post(event: Event(.conversationStarted, target: person, parameters: ["with": self]))
-            engine.post(event: Event(.conversationStarted, target: self, parameters: ["with": person]))
+            engine.post(event: Event(.startedTalking, target: person, parameters: [.toParameter: self]))
+            engine.post(event: Event(.startedTalking, target: self, parameters: [.toParameter: person]))
         }
     }
 
@@ -478,8 +478,8 @@ public class Object {
         for person in participants {
             assert(person.speakingTo.contains(self))
             person.speakingTo.remove(self)
-            engine.post(event: Event(.conversationEnded, target: person, parameters: ["with": self]))
-            engine.post(event: Event(.conversationEnded, target: self, parameters: ["with": person]))
+            engine.post(event: Event(.stoppedTalking, target: person, parameters: [.toParameter: self]))
+            engine.post(event: Event(.stoppedTalking, target: self, parameters: [.toParameter: person]))
         }
         engine.updateSpeakers()
     }
@@ -522,15 +522,41 @@ extension Object: EventHandler {
     }
 
     func handle(_ event: Event) -> EventResult {
-        let result = forEachBehaviourUntilResult { behaviour in
+        var result = forEachBehaviourUntilResult { behaviour in
             return behaviour.handle(event)
         }
         
         if result != .swallowed {
             let context = EventContext(event: event, receiver: self)
-            definition.handlers.process(in: context)
+            definition.handlers.process(in: context) // TODO: update result?
         }
         
+        if result != .swallowed {
+            result = defaultHandle(event)
+        }
+
+        return result
+    }
+    
+    func defaultHandle(_ event: Event) -> EventResult {
+        var result = EventResult.unhandled
+        switch EventID(rawValue: event.id) {
+        case .startedTalking:
+            if let person = event[objectWithKey: .toParameter] {
+                print("\(self) started talking to \(person)")
+                result = .handled
+            }
+            
+        case .stoppedTalking:
+            if let person = event[objectWithKey: .toParameter] {
+                print("\(self) stopped talking to \(person)")
+                result = .handled
+            }
+            
+            default:
+                break
+        }
+
         return result
     }
 }

@@ -104,37 +104,6 @@ public class Engine {
     public func updateSpeakers() {
         speakers = speakers.filter({ $0.speakingTo.count > 0 })
     }
-
-    //    public func conversations(involving: Set<Object>) -> [Conversation] {
-//        var result: [Conversation] = []
-//        for conversation in conversations {
-//            if conversation.participants.intersection(involving).count > 0 {
-//                result.append(conversation)
-//            }
-//        }
-//
-//        return result
-//    }
-//
-//    public func mergeConversations(involving participants: Set<Object>) {
-//        var retainedConversations: [Conversation] = []
-//        var mergedParticipants: Set<Object> = []
-//        for conversation in conversations {
-//            if conversation.participants.intersection(participants).isEmpty {
-//                retainedConversations.append(conversation)
-//            } else {
-//                mergedParticipants.formUnion(conversation.participants)
-//            }
-//        }
-//        retainedConversations.append(Conversation(participants: mergedParticipants))
-//        self.conversations = retainedConversations
-//    }
-//
-//    public func startConversation(between participants: Set<Object>) {
-//        let conversation = Conversation(participants: participants)
-//        conversations.append(conversation)
-//        mergeConversations(involving: participants)
-//    }
     
     public func output(_ string: String, type: OutputType = .normal) {
         driver.output(string, type: type)
