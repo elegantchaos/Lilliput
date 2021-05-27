@@ -72,22 +72,18 @@ struct Action {
     }
     
     func handleSpeak(_ text: String, in context: EventContext) {
-//        context.engine.dialogue.append((context, text))
+        let speaker = context.receiver
+        if let sentence = speaker.definition.dialogue?.sentence(withID: text) {
+            context.engine.output(sentence.output)
+        }
     }
  
     func handleStartTalking(to subject: Object, in context: EventContext) {
-        let engine = context.engine
-        let participants = Set([context.player, context.receiver])
-        if let conversation = engine.conversation(involving: participants) {
-            engine.warning("Conversation already exists involving \(participants): \(conversation)")
-        } else {
-            engine.startConversation(between: participants)
-        }
-        
+        context.receiver.joinConversation(with: [context.player])
     }
 
     func handleStopTalking(to subject: Object, in context: EventContext) {
-        
+        context.receiver.leaveConversation(with: [context.player])
     }
 
 }

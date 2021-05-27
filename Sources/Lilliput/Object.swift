@@ -32,6 +32,7 @@ public class Object {
     var contents: ContentList
     var commands: [Command]
     var observers: Set<Object> = []
+    var speakingTo: Set<Object> = []
     var overrides: [String:Any] = [:]
     var behaviourStorage: [String:Any] = [:]
     var containedMass: Double = 0
@@ -458,6 +459,30 @@ public class Object {
         (getProperty(withKey: key) as? Bool) == true
     }
     
+    func joinConversation(with participants: Set<Object>) {
+        let wasSpeakingTo = speakingTo
+        speakingTo = wasSpeakingTo.union(participants)
+        engine.updateSpeakers(toInclude: speakingTo.union([self]))
+        let newPeople = speakingTo.subtracting(wasSpeakingTo)
+        for person in newPeople {
+            assert(!person.speakingTo.contains(self))
+            person.speakingTo.insert(self)
+            engine.post(event: Event(.conversationStarted, target: person, parameters: ["with": self]))
+            engine.post(event: Event(.conversationStarted, target: self, parameters: ["with": person]))
+        }
+    }
+
+    func leaveConversation(with participants: Set<Object>) {
+        let newSpeakingTo = speakingTo.subtracting(participants)
+        speakingTo = newSpeakingTo
+        for person in participants {
+            assert(person.speakingTo.contains(self))
+            person.speakingTo.remove(self)
+            engine.post(event: Event(.conversationEnded, target: person, parameters: ["with": self]))
+            engine.post(event: Event(.conversationEnded, target: self, parameters: ["with": person]))
+        }
+        engine.updateSpeakers()
+    }
 }
 
 extension Object: Equatable {

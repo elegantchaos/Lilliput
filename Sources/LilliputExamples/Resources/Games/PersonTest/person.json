@@ -63,17 +63,21 @@
         
         "dialogue": {
             "sentences": {
-                "greeting": "Hello"
+                "greeting": "Norman says “Hello”.",
+                "response1": "Norman says “You asked question 1”.",
+                "response2": "Norman says “You asked question 2”."
             },
             "replies": [
                 {
-                    "id": "brayWhyMe",
+                    "id": "question1",
                     "text": "Why are you giving this case to me?",
                     "shows": { "when": "mission", "of": "player", "is": "bray" },
                 },
             ],
             "triggers": {
-                "greeting": { "when": "event", "is": "conversationStarted" }
+                "greeting": { "when": "event", "is": "conversationStarted" },
+                "response1": { "when": "reply", "was": "question1" },
+                "response2": { "when": "reply", "was": "question2" }
             }
         },
 

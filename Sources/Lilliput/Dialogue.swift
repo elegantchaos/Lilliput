@@ -119,16 +119,20 @@ struct Dialogue {
         }
     }
 
-    let sentences: [Sentence]
+    let sentences: [String:Sentence]
     let replies: [Reply]
     let triggers: [String:Any]
 
     init?(from data: [String:Any]?) {
-        if let defs = data?["sentences"] as? [String:Any] {
-            sentences = defs.compactMap({ Sentence(id: $0.key, data: $0.value) })
-        } else {
-            return nil
+        guard let defs = data?["sentences"] as? [String:Any] else { return nil }
+        
+        var sentences: [String:Sentence] = [:]
+        for def in defs {
+            if let sentence = Sentence(id: def.key, data: def.value) {
+                sentences[sentence.id] = sentence
+            }
         }
+        self.sentences = sentences
         
         if let defs = data?["replies"] as? [[String:Any]] {
             var index = 0
@@ -145,27 +149,22 @@ struct Dialogue {
     }
     
     func sentence(withID id: String) -> Sentence? {
-        for sentence in sentences {
-            if sentence.id == id {
-                return sentence
-            }
-        }
-        return nil
+        sentences[id]
     }
     
-    func selectSentence(forContext context: EventContext) -> Sentence? {
-        let options = sentences.filter({ $0.matches(context) })
-        let sentence = options.randomElement()
-        return sentence
-    }
+//    func selectSentence(forContext context: EventContext) -> Sentence? {
+//        let options = sentences.filter({ $0.matches(context) })
+//        let sentence = options.randomElement()
+//        return sentence
+//    }
 
-    func speak(inContext context: EventContext) -> Speech? {
-        guard let sentence = selectSentence(forContext: context) else { return nil }
-        let speaker = context.event.target
-        speaker.append(sentence.id, toPropertyWithKey: "spoken")
-        speaker.setProperty(withKey: "speaking", to: sentence.id)
-        return Speech(sentence: sentence, replies: replies, context: context)
-    }
+//    func speak(inContext context: EventContext) -> Speech? {
+//        guard let sentence = selectSentence(forContext: context) else { return nil }
+//        let speaker = context.event.target
+//        speaker.append(sentence.id, toPropertyWithKey: "spoken")
+//        speaker.setProperty(withKey: "speaking", to: sentence.id)
+//        return Speech(sentence: sentence, replies: replies, context: context)
+//    }
     
     /// Returns a set of handlers generated from the triggers.
     /// The action for these handlers is always to speak a one of the sentences.

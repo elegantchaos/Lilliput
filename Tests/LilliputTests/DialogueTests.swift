@@ -17,20 +17,19 @@ final class DialogueTests: XCTestCase {
         let url = LilliputExamples.urlForGame(named: "PersonTest")!
         engine.load(url: url)
 
-        if let url = LilliputExamples.script(named: "dialogTest1") {
+        if let url = LilliputExamples.script(named: "DialogTest1") {
             engine.readScript(from: url)
         }
 
+        driver.checks[1] = { output in XCTAssertEqual(engine.speakers.count, 0) }
+        driver.checks[3] = { output in XCTAssertEqual(engine.speakers.count, 2) }
+
         engine.run()
         driver.finish()
-
-        let expected = ["""
-            You are in room 2.
-            
-            There is a single exit south.
-            """
-        ]
-        XCTAssertEqual(driver.output, expected)
+        
+        print(driver.full.joined(separator: "\n"))
+        
+        XCTAssertEqual(engine.speakers.count, 0)
     }
 
 }

@@ -58,11 +58,11 @@ class DebugCommand: Command {
     
     func performConversations(in context: CommandContext) {
         let engine = context.engine
-        let conversations = engine.conversations.map({ String(describing: $0) })
+        let conversations = engine.speakers.map({ String(describing: $0) })
         if conversations.count == 0 {
             engine.output("No conversations.")
         } else {
-            engine.output(conversations.joined(separator: ", "))
+            engine.output("Speakers: \(conversations.joined(separator: ", "))")
         }
     }
 }

@@ -29,7 +29,8 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
-    var conversations: [Conversation] = []
+//    var conversations: [Conversation] = []
+    var speakers: Set<Object> = []
     var handlersRan = 0
     var tick = 0
     var stopWords: [String.SubSequence] = []
@@ -96,23 +97,44 @@ public class Engine {
         }
     }
     
-    public func conversation(involving: Set<Object>) -> Conversation? {
-        for conversation in conversations {
-            if conversation.participants.intersection(involving) == involving {
-                return conversation
-            }
-        }
-        
-        return nil
+    public func updateSpeakers(toInclude speakers: Set<Object>) {
+        self.speakers.formUnion(speakers)
     }
     
-    public func startConversation(between participants: Set<Object>) {
-        let conversation = Conversation(participants: participants)
-        conversations.append(conversation)
-        for person in participants {
-            post(event: Event(.conversationStarted, target: person, parameters: ["conversation": conversation]))
-        }
+    public func updateSpeakers() {
+        speakers = speakers.filter({ $0.speakingTo.count > 0 })
     }
+
+    //    public func conversations(involving: Set<Object>) -> [Conversation] {
+//        var result: [Conversation] = []
+//        for conversation in conversations {
+//            if conversation.participants.intersection(involving).count > 0 {
+//                result.append(conversation)
+//            }
+//        }
+//
+//        return result
+//    }
+//
+//    public func mergeConversations(involving participants: Set<Object>) {
+//        var retainedConversations: [Conversation] = []
+//        var mergedParticipants: Set<Object> = []
+//        for conversation in conversations {
+//            if conversation.participants.intersection(participants).isEmpty {
+//                retainedConversations.append(conversation)
+//            } else {
+//                mergedParticipants.formUnion(conversation.participants)
+//            }
+//        }
+//        retainedConversations.append(Conversation(participants: mergedParticipants))
+//        self.conversations = retainedConversations
+//    }
+//
+//    public func startConversation(between participants: Set<Object>) {
+//        let conversation = Conversation(participants: participants)
+//        conversations.append(conversation)
+//        mergeConversations(involving: participants)
+//    }
     
     public func output(_ string: String, type: OutputType = .normal) {
         driver.output(string, type: type)
