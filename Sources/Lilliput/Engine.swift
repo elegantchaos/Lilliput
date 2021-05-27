@@ -107,7 +107,11 @@ public class Engine {
     }
     
     public func startConversation(between participants: Set<Object>) {
-        conversations.append(Conversation(participants: participants))
+        let conversation = Conversation(participants: participants)
+        conversations.append(conversation)
+        for person in participants {
+            post(event: Event(.conversationStarted, target: person, parameters: ["conversation": conversation]))
+        }
     }
     
     public func output(_ string: String, type: OutputType = .normal) {
