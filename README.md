@@ -142,13 +142,30 @@ A portal can define a set of requirements that must be met before the exit(s) ca
 
 Game objects can include other "people" (they don't actually have to be people, they might be machines or other entities that the player can interact with).
 
-Any person object can define a set of dialog.
+The engine keeps track of a list of active conversations. 
 
-This comprises of one or more sentences that will be triggered in response to events and other conditions.
+Each conversation consists of a list of participants (right now, this is always just the player and one other, but in theory a conversation could be multi-way or not include the player).
 
-When the player is present in the same location as an object with dialog, the conditions are evaluated, and the first matching sentence is output.
+A conversation can be initiated by the player (using a verb like `talk` or `say`), or by an NPC in response to an event (the player entering a room, sitting in a chair, etc).
 
-Sentences can also define responses, which are presented as a list of options to the user. The user can pick a response to continue the conversation (or ignore them all and type another command to just continue with the game).
+During a conversation, the NPC "says" things using the normal event handling mechanism. The NPC will have one or more handlers that will look for a set of triggers, and will perform a set of actions, including one that causes the NPC to "say" dialogue.
+
+When there are no more events left to handle, the main game loop will run through all objects in the player's location that are in an active conversation, and poll them for possible responses. These are sentences that are offered to the player for them to say. Each NPC can contribute as many responses as they want; each possible response will have a set of triggers to determine whether it's valid for the current context. These will often include whether the player has already said them, and what the NPC last said.
+
+The player will then input a command, which may be one of the responses, or something unrelated.
+
+If the player picked a response, this will be posted as an event, potentially triggering further dialogue.
+
+A conversation with an NPC will end when: the NPC terminates it in response to an event, the player explicitly terminates it using a verb (not sure what at this point!), the player implicitly terminating it by leaving the current location.
+
+Game loop:
+
+- process events until there's nothing left (some events can cause others, so this can iterate for a bit)
+- run through each participant in an active conversation, collecting responses
+- present responses options to user
+- get input
+- if input is a response, post an event for it
+- repeat...
 
 
 
