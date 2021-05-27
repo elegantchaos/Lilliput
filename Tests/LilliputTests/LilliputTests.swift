@@ -49,19 +49,6 @@ class TestDriver: Driver {
 }
 
 final class LilliputTests: XCTestCase {
-    func testSimple() {
-        let driver = TestDriver()
-        let engine = Engine(driver: driver)
-        let url = LilliputExamples.urlForGame(named: "PersonTest")!
-        engine.load(url: url)
-        
-        driver.input = ["n"]
-        engine.run()
-        driver.finish()
-
-        let expected = ["You are in room 1.\n\n You can see a box, a chair, Norman Percival.\n\nThere is a single exit north.", "\n\n", "You are in room 2.\n\nThere is a single exit south to room 1.", "\n\n", "Bye.", "\n\n"]
-        XCTAssertEqual(driver.output, expected)
-    }
 
     func testSitting() {
         let driver = TestDriver()
