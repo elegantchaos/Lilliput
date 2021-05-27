@@ -29,9 +29,7 @@ public class Engine {
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
-    var dialogue: [(EventContext,String)] = []
-    var spoken: [Dialogue.Speech] = []
-    var replies: [ReplySelection] = []
+    var conversations: [Conversation] = []
     var handlersRan = 0
     var tick = 0
     var stopWords: [String.SubSequence] = []
@@ -96,6 +94,20 @@ public class Engine {
         if let text = ThrowingManager.file(for: url).asText {
             driver.pushInput(text)
         }
+    }
+    
+    public func conversation(involving: Set<Object>) -> Conversation? {
+        for conversation in conversations {
+            if conversation.participants.intersection(involving) == involving {
+                return conversation
+            }
+        }
+        
+        return nil
+    }
+    
+    public func startConversation(between participants: Set<Object>) {
+        conversations.append(Conversation(participants: participants))
     }
     
     public func output(_ string: String, type: OutputType = .normal) {
@@ -203,16 +215,16 @@ public class Engine {
         output(input.raw, type: .rawInput)
         output(input.cleaned, type: .input)
         
-        if let index = Int(input.raw), index > 0, index <= replies.count {
-            let reply = replies[index - 1]
-            let id = reply.reply.id
-            let text = reply.reply.text
-            post(event: Event(.replied, target: reply.target, parameters: [ .replyIDParameter : id ]))
-            output("“\(text)”", type: .reply)
-            player.append(id, toPropertyWithKey: "replied")
-            player.append(id, toPropertyWithKey: "repliedRecently")
-            return
-        }
+//        if let index = Int(input.raw), index > 0, index <= replies.count {
+//            let reply = replies[index - 1]
+//            let id = reply.reply.id
+//            let text = reply.reply.text
+//            post(event: Event(.replied, target: reply.target, parameters: [ .replyIDParameter : id ]))
+//            output("“\(text)”", type: .reply)
+//            player.append(id, toPropertyWithKey: "replied")
+//            player.append(id, toPropertyWithKey: "repliedRecently")
+//            return
+//        }
         
         let candidates = inputCandidates()
         for object in candidates {
@@ -245,27 +257,27 @@ public class Engine {
     }
 
     func handleSpeech() {
-        for (context,sentenceID) in dialogue {
-            let receiver = context.receiver
-            if let dialog = receiver.definition.dialogue {
-                if let sentence = dialog.sentence(withID: sentenceID) {
-                    handle(sentence: sentence, receiver: receiver, replies: dialog.replies, context: context)
-                }
-            }
-        }
+//        for (context,sentenceID) in dialogue {
+//            let receiver = context.receiver
+//            if let dialog = receiver.definition.dialogue {
+//                if let sentence = dialog.sentence(withID: sentenceID) {
+//                    handle(sentence: sentence, receiver: receiver, replies: dialog.replies, context: context)
+//                }
+//            }
+//        }
     }
     
     func printReplies() {
-        let count = replies.count
-        if count > 0 {
-            replies = replies.sorted(by: \.reply.index).reversed()
-            var n = 1
-            for reply in replies {
-                output("\(n). \(reply.reply.text)", type: .option)
-                n = n + 1
-            }
-            output("type a number to respond, or a normal command to end the conversation", type: .prompt)
-        }
+//        let count = replies.count
+//        if count > 0 {
+//            replies = replies.sorted(by: \.reply.index).reversed()
+//            var n = 1
+//            for reply in replies {
+//                output("\(n). \(reply.reply.text)", type: .option)
+//                n = n + 1
+//            }
+//            output("type a number to respond, or a normal command to end the conversation", type: .prompt)
+//        }
     }
     
     func handle(sentence: Dialogue.Sentence, receiver: Object, replies dialogReplies: [Dialogue.Reply], context: EventContext) {
@@ -273,15 +285,15 @@ public class Engine {
         receiver.setProperty(withKey: "speaking", to: sentence.id)
         let speech = Dialogue.Speech(sentence: sentence, replies: dialogReplies, context: context)
 
-        for reply in speech.speak() {
-            replies.append(ReplySelection(reply: reply, target: receiver))
-        }
+//        for reply in speech.speak() {
+//            replies.append(ReplySelection(reply: reply, target: receiver))
+//        }
 
     }
     
     func clearSpeech() {
-        dialogue = []
-        spoken = []
+//        dialogue = []
+//        spoken = []
     }
     
     public func run() {
@@ -296,7 +308,7 @@ public class Engine {
             if (events.count == 0) {
                 printReplies()
                 handleInput()
-                replies = []
+//                replies = []
             }
 
             clearSpeech()
