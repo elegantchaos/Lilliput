@@ -23,6 +23,9 @@ class DebugCommand: Command {
             case "dump":
                 performDump(in: context)
                 
+            case "conversations":
+                performConversations(in: context)
+                
             default:
                 context.engine.output("Unknown debug command: \(subcommand).")
                 break
@@ -51,5 +54,15 @@ class DebugCommand: Command {
     func performDump(in context: CommandContext) {
         context.player.dump()
         context.player.location?.dump()
+    }
+    
+    func performConversations(in context: CommandContext) {
+        let engine = context.engine
+        let conversations = engine.conversations.map({ String(describing: $0) })
+        if conversations.count == 0 {
+            engine.output("No conversations.")
+        } else {
+            engine.output(conversations.joined(separator: ", "))
+        }
     }
 }
