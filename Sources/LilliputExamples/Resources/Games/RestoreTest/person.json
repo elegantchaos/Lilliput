@@ -39,7 +39,20 @@
         "sitMode": "on",
     },
    
-    "npc": {
+   "Box": {
+           "traits": ["movable"],
+           "descriptions": {
+               "definite": "the box",
+               "detailed": "A small, sealed box.",
+               "indefinite": "a box",
+           },
+           "location": "Room 1",
+           "names": [
+               "box",
+           ],
+       },
+
+   "npc": {
         "traits": ["person"],
         "location": "Room 1",
 
@@ -53,13 +66,6 @@
             "detailed": "Normal Percival Charlesworth Esquire.",
             "indefinite": "Norman Percival"
         },
-        
-        "handlers": [
-            {
-                "actions": [{ "startTalking": "player" }],
-                "triggers": [{ "when": "playerArrived" }]
-            }
-        ],
         
         "dialogue": {
             "sentences": {
@@ -85,6 +91,6 @@
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },
-        "location": "Room 2",
+        "location": "Room 1",
     }
 }

@@ -48,7 +48,8 @@ let package = Package(
             name: "LilliputExamples",
             dependencies: [],
             resources: [
-                .copy("Resources/Games")
+                .copy("Resources/Games"),
+                .copy("Resources/Commands"),
             ]
         ),
         

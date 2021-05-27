@@ -14,12 +14,23 @@ class TestDriver: Driver {
     
     let showOutput = false
     var input: [String] = []
+    var count = 0
     var output: [String] = []
     var full: [String] = []
+    var checks: [Int:(String) -> Void] = [:]
+    
+    func pushInput(_ string: String) {
+        let lines = string.split(separator: "\n").map({ String($0) })
+        input.append(contentsOf: lines)
+    }
     
     func getInput(stopWords: [String.SubSequence]) -> Input {
-        guard let string = input.first else { return Input("quit", stopWords: stopWords)! }
         
+        guard let string = input.first else { return Input("quit", stopWords: stopWords)! }
+
+        checks[count]?(string)
+        count += 1
+
         input.remove(at: 0)
         full.append("> \(string)\n\n")
         return Input(string, stopWords: [])!
@@ -28,6 +39,10 @@ class TestDriver: Driver {
     func output(_ string: String, type: OutputType) {
         switch type {
             case .input, .rawInput: return
+            case .error:
+                print(string)
+                XCTFail("Engine threw error: \(string)")
+
             default:
                 break
         }
@@ -40,6 +55,7 @@ class TestDriver: Driver {
     }
     
     func finish() {
+        checks[count]?("")
         if showOutput {
             print(output)
             print(full.joined())
@@ -68,7 +84,7 @@ final class LilliputTests: XCTestCase {
         func save() -> [String] {
             let driver = TestDriver()
             let engine = Engine(driver: driver)
-            let url = LilliputExamples.urlForGame(named: "PersonTest")!
+            let url = LilliputExamples.urlForGame(named: "RestoreTest")!
             engine.load(url: url)
             
             driver.input = ["take box", "n", "save unittest1"]
@@ -81,7 +97,7 @@ final class LilliputTests: XCTestCase {
         func restore() -> [String] {
             let driver = TestDriver()
             let engine = Engine(driver: driver)
-            let url = LilliputExamples.urlForGame(named: "PersonTest")!
+            let url = LilliputExamples.urlForGame(named: "RestoreTest")!
             engine.load(url: url)
             
             driver.input = ["restore unittest1", "i", "s"]
