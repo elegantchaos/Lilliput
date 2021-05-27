@@ -121,7 +121,7 @@ struct Dialogue {
 
     let sentences: [Sentence]
     let replies: [Reply]
-    let handlers: Handlers
+    let triggers: [String:Any]
 
     init?(from data: [String:Any]?) {
         if let defs = data?["sentences"] as? [String:Any] {
@@ -141,24 +141,7 @@ struct Dialogue {
             replies = []
         }
         
-        var handlers: [[String:Any]] = []
-        if let triggers = data?["triggers"] as? [String:Any] {
-            for (sentence, trigger) in triggers {
-                var triggers = trigger as? [Any]
-                if triggers == nil, let trigger = trigger as? [String:Any] {
-                    triggers = [trigger]
-                }
-                
-                if let triggers = triggers {
-                    let handler: [String:Any] = [
-                        "actions": [["speak" : sentence]],
-                        "triggers": triggers
-                    ]
-                    handlers.append(handler)
-                }
-            }
-        }
-        self.handlers = Handlers(from: handlers)
+        self.triggers = (data?["triggers"] as? [String:Any]) ?? [:]
     }
     
     func sentence(withID id: String) -> Sentence? {
@@ -182,5 +165,30 @@ struct Dialogue {
         speaker.append(sentence.id, toPropertyWithKey: "spoken")
         speaker.setProperty(withKey: "speaking", to: sentence.id)
         return Speech(sentence: sentence, replies: replies, context: context)
+    }
+    
+    /// Returns a set of handlers generated from the triggers.
+    /// The action for these handlers is always to speak a one of the sentences.
+    var handlers: [Handler] {
+        var handlers: [Handler] = []
+        for (sentence, trigger) in triggers {
+            var triggers = trigger as? [Any]
+            if triggers == nil, let trigger = trigger as? [String:Any] {
+                triggers = [trigger]
+            }
+            
+            if let triggers = triggers {
+                let handler: [String:Any] = [
+                    "actions": [["speak" : sentence]],
+                    "triggers": triggers
+                ]
+                
+                if let handler = Handler(handler) {
+                    handlers.append(handler)
+                }
+            }
+        }
+
+        return handlers
     }
 }

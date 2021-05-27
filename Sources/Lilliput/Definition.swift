@@ -65,7 +65,7 @@ public struct Definition {
         self.properties = properties
 
         self.dialogue = Dialogue(from: properties["dialogue"] as? [String:Any])
-        self.handlers = Handlers(from: properties["handlers"])
+        self.handlers = Handlers(from: properties["handlers"], dialogue: dialogue)
         self.location = LocationPair(from: properties["location"])
         self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
         self.names = (properties["names"] as? [String]) ?? []

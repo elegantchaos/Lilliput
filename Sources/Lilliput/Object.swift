@@ -504,9 +504,6 @@ extension Object: EventHandler {
         if result != .swallowed {
             let context = EventContext(event: event, receiver: self)
             definition.handlers.process(in: context)
-            if let handlers = definition.dialogue?.handlers {
-                handlers.process(in: context)
-            }
         }
         
         return result

@@ -10,11 +10,16 @@ struct Handlers {
     
     let handlers: [Handler]
     
-    init(from definitions: Any?) {
+    init(from definitions: Any?, dialogue: Dialogue?) {
         if let definitions = definitions as? [[String:Any]] {
-            handlers = definitions.compactMap({ Handler($0) })
+            var handlers = definitions.compactMap({ Handler($0) })
+            if let dialogueHandlers = dialogue?.handlers {
+                handlers.append(contentsOf: dialogueHandlers)
+            }
+
+            self.handlers = handlers
         } else {
-            handlers = []
+            self.handlers = []
         }
     }
     
