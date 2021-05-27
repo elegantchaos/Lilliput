@@ -231,11 +231,12 @@ public class Engine {
     
     func handleEvents() {
         let events: [Event]
-        if self.events.count == 0 {
+        if (self.events.count == 0) && (self.handlersRan == 0) {
             events = [Event(id: "idle", target: player, propogates: true)]
         } else {
             events = self.events
             self.events = []
+            self.handlersRan = 0
         }
         
         for event in events {
@@ -287,14 +288,12 @@ public class Engine {
         setupObjects()
 
         while running {
-            handlersRan = 0
-            
             handleEvents()
             handleSpeech()
             
             // handling events or speech may have generated more events...
             // we only stop for input when we've handled them all and no handlers fired
-            if (events.count == 0) { // && ((handlersRan == 0) || replies.count > 0)
+            if (events.count == 0) {
                 printReplies()
                 handleInput()
                 replies = []
