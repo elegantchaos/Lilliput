@@ -70,10 +70,10 @@ public class BasicDriver: Driver {
                     print("\n-----------------------------------[DEBUG]")
                 }
 
-            case .normal, .dialogue, .reply, .prompt: separator = "\n"
+            case .normal, .dialogue, .responseChosen, .prompt: separator = "\n"
             case .append: separator = ""
 
-            case .option: separator = (lastType == .option) ? "" : "\n"
+            case .response: separator = (lastType == .response) ? "" : "\n"
         }
 
         let columns = 80

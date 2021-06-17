@@ -64,25 +64,25 @@
         "dialogue": {
             "sentences": {
                 "greeting": "Norman says “Hello”.",
-                "response1": "Norman says “You asked question 1”.",
-                "response2": "Norman says “You asked question 2”."
+                "response1": "Norman says “You asked the first question”.",
+                "response2": "Norman says “You asked the second question”."
             },
             "replies": [
                 {
                     "id": "question1",
-                    "text": "Ask Question 1",
+                    "text": "Ask a question",
                     "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
                 },
                 {
                     "id": "question2",
-                    "text": "Ask Question 2",
+                    "text": "Ask another question",
                     "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
                 },
             ],
             "triggers": {
                 "greeting": { "when": "event", "is": "startedTalking" },
-                "response1": { "when": "reply", "was": "question1" },
-                "response2": { "when": "reply", "was": "question2" }
+                "response1": { "when": "spoken", "of": "player", "contains": "question1" },
+                "response2": { "when": "spoken", "of": "player", "contains": "question2" }
             }
         },
 

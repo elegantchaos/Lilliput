@@ -210,14 +210,19 @@ public class Engine {
         output(input.raw, type: .rawInput)
         output(input.cleaned, type: .input)
         
-        if let index = Int(input.raw), index > 0, index <= responses.count {
-            let response = responses[index - 1]
-            let id = response.reply.id
-            let text = response.reply.text
-            post(event: Event(.replied, target: response.target, parameters: [ .replyIDParameter : id ]))
-            output("“\(text)”", type: .reply)
-            player.append(id, toPropertyWithKey: .spokenKey)
-            player.setProperty(withKey: .speakingKey, to: id)
+        if let index = Int(input.raw) {
+            if index > 0, index <= responses.count {
+                let response = responses[index - 1]
+                let id = response.reply.id
+                let text = response.reply.text
+                post(event: Event(.replied, target: response.target, parameters: [ .replyIDParameter : id ]))
+                output("“\(text)”", type: .responseChosen)
+                player.append(id, toPropertyWithKey: .spokenKey)
+                player.setProperty(withKey: .speakingKey, to: id)
+            } else {
+                output("There is no response \(index).", type: .normal)
+            }
+
             return
         }
         
@@ -265,6 +270,14 @@ public class Engine {
         return responses
     }
     
+    func showResponses(_ responses: [Response]) {
+        output("Enter a number to respond, or a normal command:", type: .prompt)
+        for n in 0 ..< responses.count  {
+            let response = responses[n]
+            output("\(n + 1). \(response.reply.text)", type: .response)
+        }
+    }
+    
     func checkConversations() {
         let currentSpeakers = speakers
         for speaker in currentSpeakers {
@@ -276,26 +289,19 @@ public class Engine {
         setupObjects()
 
         while running {
-            handleEvents()
+            // process events until there are none left
+            while !events.isEmpty {
+                tick += 1
+                handleEvents()
+                checkConversations()
+            }
             
-            // handling events may have generated more events...
-            // we only stop for input when we've handled them all and no handlers fired
-            if (events.count == 0) {
-                let responses = getResponses()
-                let count = responses.count
-                if count > 0 {
-                    for n in 0 ..< count  {
-                        let response = responses[n]
-                        output("\(n + 1). \(response.reply.text)", type: .option)
-                    }
-                    output("type a number to respond, or a normal command to end the conversation", type: .prompt)
-                }
-
-                handleInput(responses: responses)
+            let responses = getResponses()
+            if !responses.isEmpty {
+                showResponses(responses)
             }
 
-            checkConversations()
-            tick += 1
+            handleInput(responses: responses)
         }
         
         output("Bye.")

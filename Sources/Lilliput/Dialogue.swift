@@ -39,7 +39,7 @@ struct Dialogue {
         }
         
         func matches(_ context: EventContext) -> Bool {
-            if context.player.property(withKey: "repliedRecently", contains: id) {
+            if context.player.property(withKey: .spokenKey, contains: id) {
                 return false
             }
             

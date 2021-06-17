@@ -36,9 +36,9 @@ public enum OutputType {
     case debug
     case normal
     case append
-    case option
+    case response
     case dialogue
-    case reply
+    case responseChosen
     case warning
     case prompt
     case error

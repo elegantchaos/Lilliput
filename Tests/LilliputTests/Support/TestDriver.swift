@@ -16,6 +16,7 @@ class TestDriver: Driver {
     var output: [String] = []
     var full: [String] = []
     var checks: [Int:(String) -> Void] = [:]
+    var lastType: OutputType?
     
     func pushInput(_ string: String) {
         let lines = string.split(separator: "\n").map({ String($0) })
@@ -30,26 +31,37 @@ class TestDriver: Driver {
         count += 1
 
         input.remove(at: 0)
-        full.append("> \(string)\n\n")
+        if (lastType == .response) {
+            full.append("")
+        }
+
+        full.append("> \(string)\n")
         return Input(string, stopWords: [])!
     }
     
     func output(_ string: String, type: OutputType) {
         switch type {
-            case .input, .rawInput: return
             case .error:
                 print(string)
                 XCTFail("Engine threw error: \(string)")
 
-            default:
+            case .input, .rawInput:
                 break
+
+            default:
+                append(string)
+                
+                if (type != .append) && (type != .response) {
+                    append("")
+                }
         }
+
+        lastType = type
+    }
+    
+    func append(_ string: String) {
         output.append(string)
         full.append(string)
-        if type != .append {
-            output.append("\n\n")
-            full.append("\n\n")
-        }
     }
     
     func finish() {

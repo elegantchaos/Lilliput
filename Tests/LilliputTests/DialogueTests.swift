@@ -21,8 +21,8 @@ final class DialogueTests: XCTestCase {
             engine.readScript(from: url)
         }
 
-        driver.checks[1] = { output in XCTAssertEqual(engine.speakers.count, 0) }
-        driver.checks[3] = { output in XCTAssertEqual(engine.speakers.count, 2) }
+        driver.checks[0] = { output in XCTAssertEqual(engine.speakers.count, 0) }
+        driver.checks[1] = { output in XCTAssertEqual(engine.speakers.count, 2) }
 
         engine.run()
         driver.finish()
