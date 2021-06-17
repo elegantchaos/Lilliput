@@ -50,8 +50,8 @@
 
         "descriptions": {
             "definite": "Norman",
-            "detailed": "Normal Percival Charlesworth Esquire.",
-            "indefinite": "Norman Percival"
+            "detailed": "Normal Player-Character Esquire.",
+            "indefinite": "Norman Player-Character"
         },
         
         "handlers": [
@@ -64,25 +64,25 @@
         "dialogue": {
             "sentences": {
                 "greeting": "Norman says “Hello”.",
-                "response1": "Norman says “You asked the first question”.",
-                "response2": "Norman says “You asked the second question”."
+                "asked1": "My first name is Norman.",
+                "asked2": "My surname is Player-Character.",
+                "question1": "What is your first name?",
+                "question2": "What is your surname?"
             },
             "replies": [
                 {
                     "id": "question1",
-                    "text": "Ask a question",
                     "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
                 },
                 {
                     "id": "question2",
-                    "text": "Ask another question",
                     "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
                 },
             ],
             "triggers": {
                 "greeting": { "when": "event", "is": "startedTalking" },
-                "response1": { "when": "spoken", "of": "player", "contains": "question1" },
-                "response2": { "when": "spoken", "of": "player", "contains": "question2" }
+                "asked1": { "when": "spoken", "of": "player", "contains": "question1" },
+                "asked2": { "when": "spoken", "of": "player", "contains": "question2" }
             }
         },
 

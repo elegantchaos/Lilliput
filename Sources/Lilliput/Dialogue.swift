@@ -13,17 +13,11 @@ struct Dialogue {
     struct Reply {
         let id: String
         let index: Int
-        let text: String
         let trigger: Handler.Trigger
 
         init?(data: [String:Any]?, index: Int) {
             guard let data = data, let id = data[asString: "id"] else {
                 dialogChannel.log("Reply \(index) missing data / id.")
-                return nil
-            }
-            
-            guard let text = data[asString: "text"] else {
-                dialogChannel.log("Reply \(id) missing text.")
                 return nil
             }
             
@@ -34,7 +28,6 @@ struct Dialogue {
             
             self.id = id
             self.index = index
-            self.text = text
             self.trigger = Handler.Trigger(data: trigger)
         }
         
@@ -65,7 +58,7 @@ struct Dialogue {
 
             if let line = data as? String {
                 self.lines = [line]
-                self.repeatInterval = 1
+                self.repeatInterval = .max
             } else {
                 guard let data = data as? [String:Any] else {
                     dialogChannel.log("Sentence \(id) has no data.")
@@ -84,19 +77,33 @@ struct Dialogue {
                     return nil
                 }
                     
-                self.repeatInterval = (data["repeatInterval"] as? Int) ?? 1
+                self.repeatInterval = (data["repeatInterval"] as? Int) ?? .max
             }
         }
 
-        func speak(as speaker: Object, engine: Engine) {
-            let ticksSinceLastSpoken = speaker.ticksSince(for: id, inPropertyWithKey: .spokenKey)
-            if ticksSinceLastSpoken > repeatInterval {
-                let text = lines.randomElement() ?? "<missing lines>"
-                engine.output(text, type: .dialogue)
-                speaker.recordTick(for: id, toPropertyWithKey: .spokenKey)
-                speaker.setProperty(withKey: .speakingKey, to: id)
-                engine.post(event: Event(.said, target: speaker, parameters: [.spokenKey: id]))
+        func speak(as speaker: Object, to: Object, engine: Engine, asReply: Bool = false) {
+            let output: String
+            let type: OutputType
+            if asReply {
+                type = .responseChosen
+                output = "“\(text)”"
+            } else {
+                let ticksSinceLastSpoken = speaker.ticksSince(for: id, inPropertyWithKey: .spokenKey)
+                if ticksSinceLastSpoken < repeatInterval {
+                    return
+                }
+                type = .dialogue
+                output = text
             }
+            
+            engine.output(output, type: type)
+            speaker.recordTick(for: id, toPropertyWithKey: .spokenKey)
+            speaker.setProperty(withKey: .speakingKey, to: id)
+            engine.post(event: Event(.said, target: speaker, propogates: true, parameters: [.spokenKey: id]))
+        }
+
+        var text: String {
+            lines.randomElement() ?? "<missing lines>"
         }
     }
 

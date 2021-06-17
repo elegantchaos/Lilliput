@@ -18,8 +18,15 @@ extension String {
 
 public class Engine {
     struct Response {
-        let reply: Dialogue.Reply
+        let sentence: Dialogue.Sentence
         let target: Object
+        
+        init?(sentence: Dialogue.Sentence?, target: Object) {
+            guard let sentence = sentence else { return nil }
+            self.sentence = sentence
+            self.target = target
+        }
+        
     }
     
     let driver: Driver
@@ -213,11 +220,7 @@ public class Engine {
         if responses.count > 0, let index = Int(input.raw) {
             if index > 0, index <= responses.count {
                 let response = responses[index - 1]
-                let id = response.reply.id
-                post(event: Event(.replied, target: response.target, parameters: [ .replyIDParameter : id ]))
-                output("“\(response.reply.text)”", type: .responseChosen)
-                player.recordTick(for: id, toPropertyWithKey: .spokenKey)
-                player.setProperty(withKey: .speakingKey, to: id)
+                response.sentence.speak(as: player, to: response.target, engine: self, asReply: true)
             } else {
                 output("There is no response \(index).", type: .normal)
             }
@@ -258,8 +261,9 @@ public class Engine {
     func getResponses() -> [Response] {
         var responses: [Response] = []
         for person in player.speakingTo {
-            if let replies = person.definition.dialogue?.replies(for: player, to: person) {
-                responses.append(contentsOf: replies.map { Response(reply: $0, target: person)})
+            if let dialogue = person.definition.dialogue {
+                let replies = dialogue.replies(for: player, to: person)
+                responses.append(contentsOf: replies.compactMap { Response(sentence: dialogue.sentence(withID: $0.id), target: person)})
             }
         }
 
@@ -270,7 +274,7 @@ public class Engine {
         output("Enter a number to respond, or a normal command:", type: .prompt)
         for n in 0 ..< responses.count  {
             let response = responses[n]
-            output("\(n + 1). \(response.reply.text)", type: .response)
+            output("\(n + 1). \(response.sentence.text)", type: .response)
         }
     }
     
@@ -285,18 +289,18 @@ public class Engine {
         setupObjects()
 
         while running {
-            // process events until there are none left
-            while !events.isEmpty {
-                handleEvents()
-                checkConversations()
+            handleEvents()
+            checkConversations()
+            
+            if events.isEmpty && (handlersRan == 0) {
+                let responses = getResponses()
+                if !responses.isEmpty {
+                    showResponses(responses)
+                }
+
+                handleInput(responses: responses)
             }
             
-            let responses = getResponses()
-            if !responses.isEmpty {
-                showResponses(responses)
-            }
-
-            handleInput(responses: responses)
             tick += 1
         }
         

@@ -70,7 +70,7 @@ struct Action {
     func handleSpeak(_ sentenceID: String, in context: EventContext) {
         let speaker = context.receiver
         if let sentence = speaker.definition.dialogue?.sentence(withID: sentenceID) {
-            sentence.speak(as: speaker, engine: context.engine)
+            sentence.speak(as: speaker, to: context.player, engine: context.engine)
         }
     }
  
