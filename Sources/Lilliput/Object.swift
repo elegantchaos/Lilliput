@@ -512,7 +512,9 @@ public class Object {
     /// over a distance
     /// - Parameter object: The object to test
     func canTalkTo(_ object: Object) -> Bool {
-        return self.location == object.location
+        guard let location = location, let objectLocation = object.location else { return false }
+
+        return location.contains(object) || objectLocation.contains(self)
     }
 }
 
