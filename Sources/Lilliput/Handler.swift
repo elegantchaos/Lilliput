@@ -128,26 +128,6 @@ struct Handler {
             return false
         }
 
-        func testSpeaking(in context: EventContext) -> Bool {
-            if context.event.id == EventID.said.rawValue {
-                let sentenceID = context.event[stringWithKey: "sentence"]
-                if let id = data[asString: "was"] {
-                    return sentenceID == id
-                }
-            }
-//            let sentence = context.event.target.getString(withKey: "speaking")
-//            if let id = data[asString: "was"] {
-//                return sentence == id
-//            } else if let id = data[asString: "not"] {
-//                return sentence != id
-//            } else if let ids = data[asString: "in"] {
-//                return ids.contains(sentence)
-//            } else {
-//                return false
-//            }
-            return false
-        }
-
         
         func testValue(_ actual: Any?, in context: EventContext) -> Bool {
             if let expected = data["is"] {
@@ -208,8 +188,6 @@ struct Handler {
                 return testAsked(in: context)
             } else if when == "sentence" {
                 return testSentence(in: context)
-            } else if when == "speaking" {
-                return testSpeaking(in: context)
             } else if when == "event" {
                 return testValue(context.event.id, in: context)
             } else if when == "any", let of = data["of"] as? [[String:Any]] {

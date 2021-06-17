@@ -54,26 +54,10 @@ struct Dialogue {
         
     }
     
-    struct Speech {
-        let sentence: Sentence
-        let replies: [Reply]
-        let context: EventContext
-        
-        func speak() -> [Reply] {
-            let engine = context.engine
-            let paragraphs = sentence.output.split(separator: "\n")
-            for para in paragraphs {
-                engine.output(String(para), type: .dialogue)
-            }
-            engine.post(event: Event(.said, target: context.receiver, parameters: ["sentence": sentence.id]))
-            return replies.filter({ $0.matches(context) }).sorted(by: \.id)
-        }
-    }
-    
     struct Sentence {
-        let id: String
-        let lines: [String]
-        let repeatInterval: Int
+        fileprivate let id: String
+        fileprivate let lines: [String]
+        fileprivate let repeatInterval: Int
         
         init?(id: String, data: Any?) {
             self.id = id
@@ -103,19 +87,15 @@ struct Dialogue {
                 self.repeatInterval = (data["repeatInterval"] as? Int) ?? 1
             }
         }
-        
-//        func matches(_ context: EventContext) -> Bool {
-//            if (repeatInterval == 0) && context.receiver.property(withKey: .spokenKey, contains: id) {
-//                dialogChannel.log("\(id) already spoken")
-//                return false
-//            }
-//
-//            dialogChannel.log("sentence \(id) matches")
-//            return true
-//        }
 
-        var output: String {
-            return lines.randomElement() ?? "<missing lines>"
+        func speak(as speaker: Object, engine: Engine) {
+            if !speaker.property(withKey: .spokenKey, contains: id) {
+                let text = lines.randomElement() ?? "<missing lines>"
+                engine.output(text)
+                speaker.append(id, toPropertyWithKey: .spokenKey)
+                speaker.setProperty(withKey: .speakingKey, to: id)
+                engine.post(event: Event(.said, target: speaker, parameters: [.spokenKey: id]))
+            }
         }
     }
 
@@ -152,20 +132,6 @@ struct Dialogue {
         sentences[id]
     }
     
-//    func selectSentence(forContext context: EventContext) -> Sentence? {
-//        let options = sentences.filter({ $0.matches(context) })
-//        let sentence = options.randomElement()
-//        return sentence
-//    }
-
-//    func speak(inContext context: EventContext) -> Speech? {
-//        guard let sentence = selectSentence(forContext: context) else { return nil }
-//        let speaker = context.event.target
-//        speaker.append(sentence.id, toPropertyWithKey: "spoken")
-//        speaker.setProperty(withKey: "speaking", to: sentence.id)
-//        return Speech(sentence: sentence, replies: replies, context: context)
-//    }
-    
     /// Returns a set of handlers generated from the triggers.
     /// The action for these handlers is always to speak a one of the sentences.
     var handlers: [Handler] {
@@ -189,5 +155,11 @@ struct Dialogue {
         }
 
         return handlers
+    }
+    
+    func replies(for speaker: Object, to person: Object) -> [Reply] {
+        let event = Event(.getReplies, target: person)
+        let context = EventContext(event: event, receiver: speaker)
+        return replies.filter({ $0.matches(context) }).sorted(by: \.id)
     }
 }

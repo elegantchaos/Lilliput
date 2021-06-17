@@ -19,7 +19,7 @@ struct Action {
     
     func run(in context: EventContext) {
         if let output = data[asString: "output"] {
-            handleOutput(output, in: context)
+            context.engine.output(output)
         } else if let target = data[asString: "move"] {
             handleMove(target: target, in: context)
         } else if let dialog = data[asString: "speak"] {
@@ -31,10 +31,6 @@ struct Action {
         } else if let subject = object(fromKey: "stopTalking", in: context) {
             handleStopTalking(to: subject, in: context)
         }
-    }
-    
-    func handleOutput(_ output: String, in context: EventContext) {
-        context.engine.output(output)
     }
     
     func handleMove(target targetName: String, in context: EventContext) {
@@ -71,12 +67,10 @@ struct Action {
 
     }
     
-    func handleSpeak(_ text: String, in context: EventContext) {
+    func handleSpeak(_ sentenceID: String, in context: EventContext) {
         let speaker = context.receiver
-        if let sentence = speaker.definition.dialogue?.sentence(withID: text) {
-            context.engine.output(sentence.output)
-            speaker.append(sentence.id, toPropertyWithKey: .spokenKey)
-            speaker.setProperty(withKey: .speakingKey, to: sentence.id)
+        if let sentence = speaker.definition.dialogue?.sentence(withID: sentenceID) {
+            sentence.speak(as: speaker, engine: context.engine)
         }
     }
  

@@ -259,10 +259,7 @@ public class Engine {
     func getResponses() -> [Response] {
         var responses: [Response] = []
         for person in player.speakingTo {
-            let event = Event(.getReplies, target: person)
-            let context = EventContext(event: event, receiver: player)
-            if let dialogue = person.definition.dialogue {
-                let replies = dialogue.replies.filter({ $0.matches(context) }).sorted(by: \.id)
+            if let replies = person.definition.dialogue?.replies(for: player, to: person) {
                 responses.append(contentsOf: replies.map { Response(reply: $0, target: person)})
             }
         }
