@@ -430,6 +430,20 @@ public class Object {
             setProperty(withKey: key, to: list)
         }
     }
+
+    func recordTick(for value: String, toPropertyWithKey key: String) {
+        var record = getProperty(withKey: key) as? [String:Int] ?? [:]
+        record[value] = engine.tick
+        setProperty(withKey: key, to: record)
+    }
+    
+    func ticksSince(for value: String, inPropertyWithKey key: String) -> Int {
+        let record = getProperty(withKey: key) as? [String:Int]
+        guard let lastTick = record?[value] else { return .max }
+        return engine.tick - lastTick
+    }
+
+
     func getObject(withKey key: String) -> Object? {
         let value = getProperty(withKey: key)
         if let object = value as? Object {
@@ -560,13 +574,13 @@ extension Object: EventHandler {
         switch EventID(rawValue: event.id) {
         case .startedTalking:
             if let person = event[objectWithKey: .toParameter] {
-                print("\(self) started talking to \(person)")
+                engine.debug("\(self) started talking to \(person)")
                 result = .handled
             }
             
         case .stoppedTalking:
             if let person = event[objectWithKey: .toParameter] {
-                print("\(self) stopped talking to \(person)")
+                engine.debug("\(self) stopped talking to \(person)")
                 result = .handled
             }
             

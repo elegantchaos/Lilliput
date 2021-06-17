@@ -44,6 +44,10 @@ struct Handler {
                 return list.contains(value)
             }
             
+            if let record = of as? [String:Int], let value = includes as? String {
+                return record[value] != nil
+            }
+
             return false
         }
         

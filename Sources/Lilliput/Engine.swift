@@ -210,14 +210,13 @@ public class Engine {
         output(input.raw, type: .rawInput)
         output(input.cleaned, type: .input)
         
-        if let index = Int(input.raw) {
+        if responses.count > 0, let index = Int(input.raw) {
             if index > 0, index <= responses.count {
                 let response = responses[index - 1]
                 let id = response.reply.id
-                let text = response.reply.text
                 post(event: Event(.replied, target: response.target, parameters: [ .replyIDParameter : id ]))
-                output("“\(text)”", type: .responseChosen)
-                player.append(id, toPropertyWithKey: .spokenKey)
+                output("“\(response.reply.text)”", type: .responseChosen)
+                player.recordTick(for: id, toPropertyWithKey: .spokenKey)
                 player.setProperty(withKey: .speakingKey, to: id)
             } else {
                 output("There is no response \(index).", type: .normal)
@@ -288,7 +287,6 @@ public class Engine {
         while running {
             // process events until there are none left
             while !events.isEmpty {
-                tick += 1
                 handleEvents()
                 checkConversations()
             }
@@ -299,6 +297,7 @@ public class Engine {
             }
 
             handleInput(responses: responses)
+            tick += 1
         }
         
         output("Bye.")

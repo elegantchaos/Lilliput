@@ -39,7 +39,7 @@ struct Dialogue {
         }
         
         func matches(_ context: EventContext) -> Bool {
-            if context.player.property(withKey: .spokenKey, contains: id) {
+            if context.player.ticksSince(for: id, inPropertyWithKey: .spokenKey) < .max {
                 return false
             }
             
@@ -89,10 +89,11 @@ struct Dialogue {
         }
 
         func speak(as speaker: Object, engine: Engine) {
-            if !speaker.property(withKey: .spokenKey, contains: id) {
+            let ticksSinceLastSpoken = speaker.ticksSince(for: id, inPropertyWithKey: .spokenKey)
+            if ticksSinceLastSpoken > repeatInterval {
                 let text = lines.randomElement() ?? "<missing lines>"
-                engine.output(text)
-                speaker.append(id, toPropertyWithKey: .spokenKey)
+                engine.output(text, type: .dialogue)
+                speaker.recordTick(for: id, toPropertyWithKey: .spokenKey)
                 speaker.setProperty(withKey: .speakingKey, to: id)
                 engine.post(event: Event(.said, target: speaker, parameters: [.spokenKey: id]))
             }
