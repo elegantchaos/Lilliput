@@ -16,12 +16,12 @@ struct Dialogue {
         let trigger: Handler.Trigger
 
         init?(data: [String:Any]?, index: Int) {
-            guard let data = data, let id = data[asString: "id"] else {
+            guard let data = data, let id = data.keys.first else {
                 dialogChannel.log("Reply \(index) missing data / id.")
                 return nil
             }
             
-            guard let trigger = data["triggers"] as? [String:Any] else {
+            guard let trigger = data[id] as? [String:Any] else {
                 dialogChannel.log("Reply \(id) missing trigger.")
                 return nil
             }
@@ -126,7 +126,7 @@ struct Dialogue {
             var index = 0
             replies = defs.compactMap({
                 let reply = Reply(data: $0, index: index)
-                index = index + 1
+                index += 1
                 return reply
             })
         } else {

@@ -70,14 +70,8 @@
                 "question2": "What is your surname?"
             },
             "replies": [
-                {
-                    "id": "question1",
-                    "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
-                },
-                {
-                    "id": "question2",
-                    "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
-                },
+                { "question1": { "when": "spoken", "of": "target", "contains": "greeting" }},
+                { "question2": { "when": "spoken", "of": "target", "contains": "greeting" }},
             ],
             "triggers": {
                 "greeting": { "when": "event", "is": "startedTalking" },
