@@ -75,6 +75,8 @@ struct Action {
         let speaker = context.receiver
         if let sentence = speaker.definition.dialogue?.sentence(withID: text) {
             context.engine.output(sentence.output)
+            speaker.append(sentence.id, toPropertyWithKey: .spokenKey)
+            speaker.setProperty(withKey: .speakingKey, to: sentence.id)
         }
     }
  

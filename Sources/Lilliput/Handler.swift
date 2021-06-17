@@ -39,6 +39,14 @@ struct Handler {
         let when: String
         let data: [String:Any]
         
+        func testContents(of: Any?, includes: Any?) -> Bool {
+            if let list = of as? [String], let value = includes as? String {
+                return list.contains(value)
+            }
+            
+            return false
+        }
+        
         func testMatch(of: Any?, with expected: Any?) -> Bool {
             if (of == nil) && (expected is NSNull) {
                 return true
@@ -120,11 +128,34 @@ struct Handler {
             return false
         }
 
+        func testSpeaking(in context: EventContext) -> Bool {
+            if context.event.id == EventID.said.rawValue {
+                let sentenceID = context.event[stringWithKey: "sentence"]
+                if let id = data[asString: "was"] {
+                    return sentenceID == id
+                }
+            }
+//            let sentence = context.event.target.getString(withKey: "speaking")
+//            if let id = data[asString: "was"] {
+//                return sentence == id
+//            } else if let id = data[asString: "not"] {
+//                return sentence != id
+//            } else if let ids = data[asString: "in"] {
+//                return ids.contains(sentence)
+//            } else {
+//                return false
+//            }
+            return false
+        }
+
+        
         func testValue(_ actual: Any?, in context: EventContext) -> Bool {
             if let expected = data["is"] {
                 return testMatch(of: actual, with: expected)
             } else if let expected = data["not"] {
                 return !testMatch(of: actual, with: expected)
+            } else if let expected = data["contains"] {
+                return testContents(of: actual, includes: expected)
             } else {
                 context.event.target.engine.warning("Missing test condition for \(String(describing: actual)) in test \(data)")
                 return false
@@ -135,6 +166,10 @@ struct Handler {
             let value: Any?
             if owner == "event" {
                 value = context.event[rawWithKey: key]
+            } else if owner == "target" {
+                value = context.event.target.getProperty(withKey: key)
+            } else if owner == "receiver" {
+                value = context.receiver.getProperty(withKey: key)
             } else {
                 guard let of = context.receiver.engine.objects[owner] else { return false }
                 value = of.getProperty(withKey: key)
@@ -173,6 +208,8 @@ struct Handler {
                 return testAsked(in: context)
             } else if when == "sentence" {
                 return testSentence(in: context)
+            } else if when == "speaking" {
+                return testSpeaking(in: context)
             } else if when == "event" {
                 return testValue(context.event.id, in: context)
             } else if when == "any", let of = data["of"] as? [[String:Any]] {

@@ -483,6 +483,23 @@ public class Object {
         }
         engine.updateSpeakers()
     }
+    
+    func checkConversations() {
+        let reachable = Set(speakingTo.filter(canTalkTo))
+        let unreachable = speakingTo.subtracting(reachable)
+        if unreachable.count > 0 {
+            leaveConversation(with: unreachable)
+        }
+    }
+    
+    /// Can two objects talk?
+    /// For now this is solely determined by whether they share a location.
+    /// Later there might be other mechanisms, such as phones, which allow conversation
+    /// over a distance
+    /// - Parameter object: The object to test
+    func canTalkTo(_ object: Object) -> Bool {
+        return self.location == object.location
+    }
 }
 
 extension Object: Equatable {

@@ -5,6 +5,11 @@
 
 import Foundation
 
+extension String {
+    static let spokenKey = "spoken"
+    static let speakingKey = "speaking"
+}
+
 struct PersonBehaviour: Behaviour {
     static var id: String { "person" }
     static var commands: [Command] {

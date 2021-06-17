@@ -8,9 +8,8 @@ import Foundation
 enum EventID: String {
     case contentAdded
     case contentRemoved
-    case startedTalking
-    case stoppedTalking
     case examined
+    case getReplies
     case loaded
     case moved
     case played
@@ -18,6 +17,8 @@ enum EventID: String {
     case said
     case sat
     case shot
+    case startedTalking
+    case stoppedTalking
     case taken
     case used
 }

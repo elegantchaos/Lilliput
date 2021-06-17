@@ -27,7 +27,7 @@ struct Dialogue {
                 return nil
             }
             
-            guard let trigger = data["shows"] as? [String:Any] else {
+            guard let trigger = data["triggers"] as? [String:Any] else {
                 dialogChannel.log("Reply \(id) missing trigger.")
                 return nil
             }
@@ -104,15 +104,15 @@ struct Dialogue {
             }
         }
         
-        func matches(_ context: EventContext) -> Bool {
-            if (repeatInterval == 0) && context.receiver.property(withKey: "spoken", contains: id) {
-                dialogChannel.log("\(id) already spoken")
-                return false
-            }
-            
-            dialogChannel.log("sentence \(id) matches")
-            return true
-        }
+//        func matches(_ context: EventContext) -> Bool {
+//            if (repeatInterval == 0) && context.receiver.property(withKey: .spokenKey, contains: id) {
+//                dialogChannel.log("\(id) already spoken")
+//                return false
+//            }
+//
+//            dialogChannel.log("sentence \(id) matches")
+//            return true
+//        }
 
         var output: String {
             return lines.randomElement() ?? "<missing lines>"

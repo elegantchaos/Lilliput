@@ -70,8 +70,13 @@
             "replies": [
                 {
                     "id": "question1",
-                    "text": "Why are you giving this case to me?",
-                    "shows": { "when": "mission", "of": "player", "is": "bray" },
+                    "text": "Ask Question 1",
+                    "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
+                },
+                {
+                    "id": "question2",
+                    "text": "Ask Question 2",
+                    "triggers": { "when": "spoken", "of": "target", "contains": "greeting" }
                 },
             ],
             "triggers": {

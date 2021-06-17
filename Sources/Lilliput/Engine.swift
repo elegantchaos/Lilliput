@@ -17,7 +17,7 @@ extension String {
 }
 
 public class Engine {
-    struct ReplySelection {
+    struct Response {
         let reply: Dialogue.Reply
         let target: Object
     }
@@ -205,21 +205,21 @@ public class Engine {
         return result
     }
     
-    func handleInput() {
+    func handleInput(responses: [Response]) {
         let input = driver.getInput(stopWords: stopWords)
         output(input.raw, type: .rawInput)
         output(input.cleaned, type: .input)
         
-//        if let index = Int(input.raw), index > 0, index <= replies.count {
-//            let reply = replies[index - 1]
-//            let id = reply.reply.id
-//            let text = reply.reply.text
-//            post(event: Event(.replied, target: reply.target, parameters: [ .replyIDParameter : id ]))
-//            output("“\(text)”", type: .reply)
-//            player.append(id, toPropertyWithKey: "replied")
-//            player.append(id, toPropertyWithKey: "repliedRecently")
-//            return
-//        }
+        if let index = Int(input.raw), index > 0, index <= responses.count {
+            let response = responses[index - 1]
+            let id = response.reply.id
+            let text = response.reply.text
+            post(event: Event(.replied, target: response.target, parameters: [ .replyIDParameter : id ]))
+            output("“\(text)”", type: .reply)
+            player.append(id, toPropertyWithKey: .spokenKey)
+            player.setProperty(withKey: .speakingKey, to: id)
+            return
+        }
         
         let candidates = inputCandidates()
         for object in candidates {
@@ -251,44 +251,25 @@ public class Engine {
         }
     }
 
-    func handleSpeech() {
-//        for (context,sentenceID) in dialogue {
-//            let receiver = context.receiver
-//            if let dialog = receiver.definition.dialogue {
-//                if let sentence = dialog.sentence(withID: sentenceID) {
-//                    handle(sentence: sentence, receiver: receiver, replies: dialog.replies, context: context)
-//                }
-//            }
-//        }
-    }
-    
-    func printReplies() {
-//        let count = replies.count
-//        if count > 0 {
-//            replies = replies.sorted(by: \.reply.index).reversed()
-//            var n = 1
-//            for reply in replies {
-//                output("\(n). \(reply.reply.text)", type: .option)
-//                n = n + 1
-//            }
-//            output("type a number to respond, or a normal command to end the conversation", type: .prompt)
-//        }
-    }
-    
-    func handle(sentence: Dialogue.Sentence, receiver: Object, replies dialogReplies: [Dialogue.Reply], context: EventContext) {
-        receiver.append(sentence.id, toPropertyWithKey: "spoken")
-        receiver.setProperty(withKey: "speaking", to: sentence.id)
-        let speech = Dialogue.Speech(sentence: sentence, replies: dialogReplies, context: context)
+    func getResponses() -> [Response] {
+        var responses: [Response] = []
+        for person in player.speakingTo {
+            let event = Event(.getReplies, target: person)
+            let context = EventContext(event: event, receiver: player)
+            if let dialogue = person.definition.dialogue {
+                let replies = dialogue.replies.filter({ $0.matches(context) }).sorted(by: \.id)
+                responses.append(contentsOf: replies.map { Response(reply: $0, target: person)})
+            }
+        }
 
-//        for reply in speech.speak() {
-//            replies.append(ReplySelection(reply: reply, target: receiver))
-//        }
-
+        return responses
     }
     
-    func clearSpeech() {
-//        dialogue = []
-//        spoken = []
+    func checkConversations() {
+        let currentSpeakers = speakers
+        for speaker in currentSpeakers {
+            speaker.checkConversations()
+        }
     }
     
     public func run() {
@@ -296,18 +277,24 @@ public class Engine {
 
         while running {
             handleEvents()
-            handleSpeech()
             
-            // handling events or speech may have generated more events...
+            // handling events may have generated more events...
             // we only stop for input when we've handled them all and no handlers fired
             if (events.count == 0) {
-                printReplies()
-                handleInput()
-//                replies = []
+                let responses = getResponses()
+                let count = responses.count
+                if count > 0 {
+                    for n in 0 ..< count  {
+                        let response = responses[n]
+                        output("\(n + 1). \(response.reply.text)", type: .option)
+                    }
+                    output("type a number to respond, or a normal command to end the conversation", type: .prompt)
+                }
+
+                handleInput(responses: responses)
             }
 
-            clearSpeech()
-
+            checkConversations()
             tick += 1
         }
         
