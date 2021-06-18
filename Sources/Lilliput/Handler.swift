@@ -88,51 +88,7 @@ struct Handler {
             
             return true
         }
-        
-        func testReply(in context: EventContext) -> Bool {
-            if context.event.id == EventID.replied.rawValue {
-                let replyID = context.event[stringWithKey: .replyIDParameter]
-                if let id = data[asString: "was"] {
-                    return replyID == id
-                } else if let id = data[asString: "not"] {
-                    return replyID != id
-                    
-                }
-            }
-             
-            return false
-        }
-        
-        func testAsked(in context: EventContext) -> Bool {
-            if let ids = data["includes"] as? [String] {
-                let recent = context.player.getStrings(withKey: "repliedRecently")
-                return Set(ids).intersection(recent).count > 0
-            }
-
-            return false
-        }
-        
-        func testSentence(in context: EventContext) -> Bool {
-            if context.event.id == EventID.said.rawValue {
-                let sentenceID = context.event[stringWithKey: "sentence"]
-                if let id = data[asString: "was"] {
-                    return sentenceID == id
-                }
-            }
-//            let sentence = context.event.target.getString(withKey: "speaking")
-//            if let id = data[asString: "was"] {
-//                return sentence == id
-//            } else if let id = data[asString: "not"] {
-//                return sentence != id
-//            } else if let ids = data[asString: "in"] {
-//                return ids.contains(sentence)
-//            } else {
-//                return false
-//            }
-            return false
-        }
-
-        
+                
         func testValue(_ actual: Any?, in context: EventContext) -> Bool {
             if let expected = data["is"] {
                 return testMatch(of: actual, with: expected)
@@ -186,12 +142,6 @@ struct Handler {
             if when == "playerArrived" {
                 let from = data[asString: .fromParameter].flatMap { context.receiver.engine.objects[$0] }
                 return testPlayerArrived(in: context, from: from)
-            } else if when == "reply" {
-                return testReply(in: context)
-            } else if when == "asked" {
-                return testAsked(in: context)
-            } else if when == "sentence" {
-                return testSentence(in: context)
             } else if when == "event" {
                 return testValue(context.event.id, in: context)
             } else if when == "any", let of = data["of"] as? [[String:Any]] {
