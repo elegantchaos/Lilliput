@@ -88,7 +88,13 @@ struct Handler {
             
             return true
         }
-                
+               
+        func testLocation(_ location: Any?, containsObject object: Any?, in context: EventContext) -> Bool {
+            guard let locationID = location as? String, let location = context.engine.objects[locationID] else { return false }
+            guard let objectID = object as? String, let object = context.engine.objects[objectID] else { return false }
+            return location.contains(object)
+        }
+        
         func testValue(_ actual: Any?, in context: EventContext) -> Bool {
             if let expected = data["is"] {
                 return testMatch(of: actual, with: expected)
@@ -96,6 +102,10 @@ struct Handler {
                 return !testMatch(of: actual, with: expected)
             } else if let expected = data["contains"] {
                 return testContents(of: actual, includes: expected)
+            } else if let expected = data["containsObject"] {
+                return testLocation(actual, containsObject: expected, in: context)
+            } else if let expected = data["doesntContainObject"] {
+                return !testLocation(actual, containsObject: expected, in: context)
             } else {
                 context.event.target.engine.warning("Missing test condition for \(String(describing: actual)) in test \(data)")
                 return false
