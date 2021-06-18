@@ -5,11 +5,15 @@
 
 import Foundation
 
-class DropCommand: TargetedCommand {
+class DropCommand: NonExclusiveTargetedCommand {
     init() {
         super.init(keywords: ["drop", "put"])
     }
     
+    override func matchesAll(in context: CommandContext) -> Bool {
+        return context.target.location == context.player
+    }
+
     override func perform(in context: CommandContext) {
         if let location = context.player.location {
             let object = context.target

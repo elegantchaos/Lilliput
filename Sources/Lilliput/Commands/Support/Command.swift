@@ -9,12 +9,21 @@ public class Command {
     struct Match: Comparable {
         let command: Command
         let context: CommandContext
+        let exclusive: Bool
+        let priority: Double
 
+        init(command: Command, context: CommandContext) {
+            self.command = command
+            self.context = context
+            self.exclusive = command.exclusive(in: context)
+            self.priority = command.priority(in: context)
+        }
+        
         static func < (lhs: Command.Match, rhs: Command.Match) -> Bool {
-            if lhs.command.exclusive == rhs.command.exclusive {
-                return lhs.command.priority < rhs.command.priority
+            if lhs.exclusive == rhs.exclusive {
+                return lhs.priority < rhs.priority
             } else {
-                return rhs.command.exclusive
+                return rhs.exclusive
             }
         }
         
@@ -45,11 +54,11 @@ public class Command {
         return false
     }
 
-    var exclusive: Bool {
+    func exclusive(in context: CommandContext) -> Bool {
         return true
     }
     
-    var priority: Double {
+    func priority(in context: CommandContext) -> Double {
         return 1.0
     }
     

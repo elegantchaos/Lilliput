@@ -14,7 +14,7 @@ class NonExclusiveTargetedCommand: TargetedCommand {
         return true
     }
     
-    override var exclusive: Bool {
+    override func exclusive(in context: CommandContext) -> Bool {
         return false
     }
 }

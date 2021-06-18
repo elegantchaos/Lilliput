@@ -247,7 +247,7 @@ public class Engine {
             } else {
                 for match in matches.sorted() {
                     match.command.perform(in: match.context)
-                    if match.command.exclusive {
+                    if match.exclusive {
                         return
                     }
                 }
