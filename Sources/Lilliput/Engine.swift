@@ -212,34 +212,47 @@ public class Engine {
         return result
     }
     
+    func handleResponse(input: Input, responses: [Response]) -> Bool {
+        guard responses.count > 0, let index = Int(input.raw) else { return false }
+        
+        if index > 0, index <= responses.count {
+            let response = responses[index - 1]
+            response.sentence.speak(as: player, to: response.target, engine: self, asReply: true)
+        } else {
+            output("There is no response \(index).", type: .normal)
+        }
+        
+        return true
+    }
+    
     func handleInput(responses: [Response]) {
         let input = driver.getInput(stopWords: stopWords)
         output(input.raw, type: .rawInput)
         output(input.cleaned, type: .input)
-        
-        if responses.count > 0, let index = Int(input.raw) {
-            if index > 0, index <= responses.count {
-                let response = responses[index - 1]
-                response.sentence.speak(as: player, to: response.target, engine: self, asReply: true)
-            } else {
-                output("There is no response \(index).", type: .normal)
+            
+        if !handleResponse(input: input, responses: responses) {
+            let candidates = inputCandidates()
+            var matches: [Command.Match] = []
+            for object in candidates {
+                for command in object.commands {
+                    let context = CommandContext(input: input, target: object, engine: self)
+                    if command.matches(context) {
+                        matches.append(Command.Match(command: command, context: context))
+                    }
+                }
             }
 
-            return
-        }
-        
-        let candidates = inputCandidates()
-        for object in candidates {
-            let context = CommandContext(input: input, target: object, engine: self)
-            for command in object.commands {
-                if command.matches(context) {
-                    command.perform(in: context)
-                    return
+            if matches.count == 0 {
+                output("That didn't really help.")
+            } else {
+                for match in matches.sorted() {
+                    match.command.perform(in: match.context)
+                    if match.command.exclusive {
+                        return
+                    }
                 }
             }
         }
-        
-        output("That didn't really help.")
     }
 
     

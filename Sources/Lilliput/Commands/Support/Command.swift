@@ -6,6 +6,23 @@
 import Foundation
 
 public class Command {
+    struct Match: Comparable {
+        let command: Command
+        let context: CommandContext
+
+        static func < (lhs: Command.Match, rhs: Command.Match) -> Bool {
+            if lhs.command.exclusive == rhs.command.exclusive {
+                return lhs.command.priority < rhs.command.priority
+            } else {
+                return rhs.command.exclusive
+            }
+        }
+        
+        static func == (lhs: Command.Match, rhs: Command.Match) -> Bool {
+            lhs.command.keywords == rhs.command.keywords
+        }
+    }
+
     let keywords: [String]
     var arguments: [String] = []
     
@@ -28,6 +45,14 @@ public class Command {
         return false
     }
 
+    var exclusive: Bool {
+        return true
+    }
+    
+    var priority: Double {
+        return 1.0
+    }
+    
     func matches(_ context: CommandContext) -> Bool {
         return keywordMatches(context: context)
     }
