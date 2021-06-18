@@ -9,11 +9,15 @@ extension String {
     static let takenFlag = "taken"
 }
 
-class TakeCommand: TargetedCommand {
+class TakeCommand: NonExclusiveTargetedCommand {
     init() {
         super.init(keywords: ["take", "get"])
     }
     
+    override func matchesAll(in context: CommandContext) -> Bool {
+        return context.target.location != context.player
+    }
+
     override func perform(in context: CommandContext) {
         let object = context.target
         let brief = object.getDefinite()

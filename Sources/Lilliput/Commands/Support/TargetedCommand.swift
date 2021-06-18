@@ -14,6 +14,10 @@ class TargetedCommand: Command {
             target = "player"
         }
         
+        return matches(target: target, in: context)
+    }
+    
+    func matches(target: String, in context: CommandContext) -> Bool {
         return context.target.names.contains(target)
     }
     
