@@ -25,3 +25,13 @@ extension Collection {
 extension String: InitMappable {
     public typealias FromType = Substring
 }
+
+extension String {
+    var sentenceCased: String {
+        guard let first = self.first else { return self }
+        
+        var copy = String(first.uppercased())
+        copy.append(contentsOf: self[index(after: startIndex)...])
+        return copy
+    }
+}
