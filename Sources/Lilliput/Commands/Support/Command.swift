@@ -4,26 +4,33 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+import SwiftUI
 
 public class Command {
     struct Match: Comparable {
+        enum Kind: Comparable {
+            case exclusive
+            case normal
+            case fallback
+        }
+
         let command: Command
         let context: CommandContext
-        let exclusive: Bool
+        let kind: Kind
         let priority: Double
 
         init(command: Command, context: CommandContext) {
             self.command = command
             self.context = context
-            self.exclusive = command.exclusive(in: context)
+            self.kind = command.kind(in: context)
             self.priority = command.priority(in: context)
         }
         
         static func < (lhs: Command.Match, rhs: Command.Match) -> Bool {
-            if lhs.exclusive == rhs.exclusive {
+            if lhs.kind == rhs.kind {
                 return lhs.priority < rhs.priority
             } else {
-                return rhs.exclusive
+                return lhs.kind < rhs.kind
             }
         }
         
@@ -54,8 +61,8 @@ public class Command {
         return false
     }
 
-    func exclusive(in context: CommandContext) -> Bool {
-        return true
+    func kind(in context: CommandContext) -> Match.Kind {
+        return .exclusive
     }
     
     func priority(in context: CommandContext) -> Double {

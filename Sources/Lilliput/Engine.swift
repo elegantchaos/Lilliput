@@ -245,11 +245,16 @@ public class Engine {
             if matches.count == 0 {
                 output("That didn't really help.")
             } else {
+                var performed = false
                 for match in matches.sorted() {
-                    let matchedContext = CommandContext(match: match, from: matches)
-                    match.command.perform(in: matchedContext)
-                    if match.exclusive {
-                        return
+                    if !performed || match.kind != .fallback {
+                        let matchedContext = CommandContext(match: match, from: matches)
+                        match.command.perform(in: matchedContext)
+                        if match.kind == .exclusive {
+                            return
+                        } else {
+                            performed = true
+                        }
                     }
                 }
             }

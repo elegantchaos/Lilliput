@@ -14,7 +14,7 @@ class NonExclusiveTargetedCommand: TargetedCommand {
         return true
     }
     
-    override func exclusive(in context: CommandContext) -> Bool {
-        return false
+    override func kind(in context: CommandContext) -> Match.Kind {
+        return .normal
     }
 }
