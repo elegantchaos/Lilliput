@@ -7,7 +7,7 @@ import Coercion
 import Foundation
 import Logger
 
-let dialogChannel = Channel("Dialogue")
+let dialogueChannel = Channel("Dialogue")
 
 struct Dialogue {
     struct Reply {
@@ -17,12 +17,12 @@ struct Dialogue {
 
         init?(data: [String:Any]?, index: Int) {
             guard let data = data, let id = data.keys.first else {
-                dialogChannel.log("Reply \(index) missing data / id.")
+                dialogueChannel.log("Reply \(index) missing data / id.")
                 return nil
             }
             
             guard let trigger = data[id] as? [String:Any] else {
-                dialogChannel.log("Reply \(id) missing trigger.")
+                dialogueChannel.log("Reply \(id) missing trigger.")
                 return nil
             }
             
@@ -37,11 +37,11 @@ struct Dialogue {
             }
             
             if !trigger.matches(context) {
-                dialogChannel.log("reply \(id) failed triggers")
+                dialogueChannel.log("reply \(id) failed triggers")
                 return false
             }
             
-            dialogChannel.log("reply \(id) matches")
+            dialogueChannel.log("reply \(id) matches")
             return true
         }
         
@@ -61,19 +61,19 @@ struct Dialogue {
                 self.repeatInterval = .max
             } else {
                 guard let data = data as? [String:Any] else {
-                    dialogChannel.log("Sentence \(id) has no data.")
+                    dialogueChannel.log("Sentence \(id) has no data.")
                     return nil
                 }
                 
                 guard let lines = data["lines"] else {
-                    dialogChannel.log("Sentence \(id) has no lines.")
+                    dialogueChannel.log("Sentence \(id) has no lines.")
                     return nil
                 }
 
                 if let lines = lines as? [String] {
                     self.lines = lines
                 } else {
-                    dialogChannel.log("Lines are wrong format: \(lines)")
+                    dialogueChannel.log("Lines are wrong format: \(lines)")
                     return nil
                 }
                     

@@ -16,7 +16,7 @@ struct ReplyTriggers {
     func matches(_ context: EventContext) -> Bool {
         for trigger in triggers {
             if !trigger.matches(context) {
-                dialogChannel.log("failed trigger \(trigger)")
+                dialogueChannel.log("failed trigger \(trigger)")
                 return false
             }
         }

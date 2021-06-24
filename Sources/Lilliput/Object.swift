@@ -6,6 +6,7 @@
 import Coercion
 import CollectionExtensions
 import Foundation
+import Logger
 
 extension Double {
     static let defaultMaximumMass = 100.0
@@ -576,13 +577,13 @@ extension Object: EventHandler {
         switch EventID(rawValue: event.id) {
         case .startedTalking:
             if let person = event[objectWithKey: .toParameter] {
-                engine.debug("\(self) started talking to \(person)")
+                dialogueChannel.log("\(self) started talking to \(person)")
                 result = .handled
             }
             
         case .stoppedTalking:
             if let person = event[objectWithKey: .toParameter] {
-                engine.debug("\(self) stopped talking to \(person)")
+                dialogueChannel.log("\(self) stopped talking to \(person)")
                 result = .handled
             }
             
