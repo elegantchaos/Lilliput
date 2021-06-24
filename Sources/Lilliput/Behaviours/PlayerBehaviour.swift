@@ -22,6 +22,7 @@ struct PlayerBehaviour: Behaviour {
             TeleportCommand(),
             
             GoFallbackCommand(),
+            TakeFallbackCommand()
         ]
     }
 

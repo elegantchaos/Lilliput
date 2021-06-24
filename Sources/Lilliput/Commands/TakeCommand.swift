@@ -15,7 +15,8 @@ class TakeCommand: NonExclusiveTargetedCommand {
     }
     
     override func matchesAll(in context: CommandContext) -> Bool {
-        return context.target.location != context.player
+        let object = context.target
+        return (object.location != context.player) && object.hasFlag(.awareFlag)
     }
 
     override func perform(in context: CommandContext) {
@@ -51,3 +52,24 @@ class TakeCommand: NonExclusiveTargetedCommand {
         context.engine.output(output)
     }
 }
+
+class TakeFallbackCommand: Command {
+    init() {
+        super.init(keywords: ["take", "get"])
+    }
+    
+    override func kind(in context: CommandContext) -> Command.Match.Kind {
+        return .fallback
+    }
+    
+    override func matches(_ context: CommandContext) -> Bool {
+        guard super.matches(context), arguments.count > 0 else { return false }
+        let target = arguments.joined(separator: " ")
+        return target == "all"
+    }
+
+    override func perform(in context: CommandContext) {
+        context.engine.output("There is nothing here that you can take.")
+    }
+}
+
