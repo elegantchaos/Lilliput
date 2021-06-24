@@ -15,12 +15,12 @@ struct PlayerBehaviour: Behaviour {
     static var commands: [Command] {
         [
             DebugCommand(),
-            ExamineCommand(shouldMatchTarget: false),
             GoCommand(),
             InventoryCommand(),
             StandCommand(),
             TeleportCommand(),
             
+            ExamineFallbackCommand(),
             GoFallbackCommand(),
             TakeFallbackCommand()
         ]

@@ -5,8 +5,12 @@
 
 import Foundation
 
-class TalkCommand: Command {
+class TalkCommand: TargetedCommand {
     init() {
-        super.init(keywords: ["talk"])
+        super.init(keywords: ["talk", "talk to"])
+    }
+    
+    override func perform(in context: CommandContext) {
+        context.player.joinConversation(with: [context.target])
     }
 }

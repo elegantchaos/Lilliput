@@ -53,17 +53,13 @@ class TakeCommand: NonExclusiveTargetedCommand {
     }
 }
 
-class TakeFallbackCommand: Command {
-    init() {
-        super.init(keywords: ["take", "get"])
-    }
-    
+class TakeFallbackCommand: TakeCommand {
     override func kind(in context: CommandContext) -> Command.Match.Kind {
         return .fallback
     }
     
     override func matches(_ context: CommandContext) -> Bool {
-        guard super.matches(context), arguments.count > 0 else { return false }
+        guard keywordMatches(in: context), arguments.count > 0 else { return false }
         let target = arguments.joined(separator: " ")
         return target == "all"
     }

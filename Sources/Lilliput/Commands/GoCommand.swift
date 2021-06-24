@@ -57,6 +57,10 @@ class GoFallbackCommand: Command {
         return super.matches(context) || Self.commonDirections.contains(context.input.command)
     }
 
+    override func kind(in context: CommandContext) -> Command.Match.Kind {
+        return .fallback
+    }
+
     override func perform(in context: CommandContext) {
         if arguments.count == 0 {
             context.engine.output("Go where exactly?")

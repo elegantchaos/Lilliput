@@ -79,6 +79,9 @@ public struct Definition {
         }
         self.traits = traits
         
+        if dialogue != nil {
+            dialogueChannel.log("Object \(id) has dialogue.")
+        }
     }
     
     func hasFlag(_ key: String) -> Bool {

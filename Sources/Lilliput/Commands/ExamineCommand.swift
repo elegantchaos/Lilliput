@@ -10,31 +10,32 @@ extension String {
 }
 
 class ExamineCommand: NonExclusiveTargetedCommand {
-    let shouldMatchTarget: Bool
-    
-    init(shouldMatchTarget: Bool = true) {
-        self.shouldMatchTarget = shouldMatchTarget
+    init() {
         super.init(keywords: ["examine", "look at", "look in", "look out of", "look through", "look", "search", "l", "ex"])
     }
     
+    override func perform(in context: CommandContext) {
+        let object = context.target
+        let description = object.getDescriptionAndContents()
+        let prefix = context.hasMultipleTargets ? "\(object.getDefinite().sentenceCased): " : ""
+        object.setFlag(.examinedFlag)
+        object.setFlag(.awareFlag)
+        context.engine.output("\(prefix)\(description)")
+        context.engine.post(event: Event(.examined, target: context.target))
+    }
+}
+
+class ExamineFallbackCommand: ExamineCommand {
     override func matches(_ context: CommandContext) -> Bool {
-        if shouldMatchTarget && super.matches(context) {
-            return true
-        }
-        
-        return (!shouldMatchTarget && keywordMatches(context: context) && arguments.count == 0)
+        keywordMatches(in: context) && arguments.count == 0
+    }
+    
+    override func kind(in context: CommandContext) -> Command.Match.Kind {
+        return .fallback
     }
     
     override func perform(in context: CommandContext) {
-        if shouldMatchTarget {
-            let object = context.target
-            let description = object.getDescriptionAndContents()
-            let prefix = context.hasMultipleTargets ? "\(object.getDefinite().sentenceCased): " : ""
-            object.setFlag(.examinedFlag)
-            object.setFlag(.awareFlag)
-            context.engine.output("\(prefix)\(description)")
-            context.engine.post(event: Event(.examined, target: context.target))
-   } else if let description = PlayerBehaviour(context.player)?.describeLocation() {
+        if let description = PlayerBehaviour(context.player)?.describeLocation() {
             context.engine.output(description)
         }
     }

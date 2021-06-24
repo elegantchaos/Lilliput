@@ -46,7 +46,7 @@ public class Command {
         self.keywords = keywords
     }
     
-    func keywordMatches(context: CommandContext) -> Bool {
+    func keywordMatches(in context: CommandContext) -> Bool {
         for keyword in keywords {
             let raw = context.input.raw
             if raw.starts(with: keyword) {
@@ -70,7 +70,7 @@ public class Command {
     }
     
     func matches(_ context: CommandContext) -> Bool {
-        return keywordMatches(context: context)
+        return keywordMatches(in: context)
     }
     
     func perform(in context: CommandContext) {
