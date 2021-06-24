@@ -7,7 +7,7 @@ import Foundation
 
 class TalkCommand: TargetedCommand {
     init() {
-        super.init(keywords: ["talk", "talk to"])
+        super.init(keywords: ["talk to", "talk"])
     }
     
     override func perform(in context: CommandContext) {
