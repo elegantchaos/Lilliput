@@ -9,7 +9,7 @@ extension String {
     static let examinedFlag = "examined"
 }
 
-class ExamineCommand: TargetedCommand {
+class ExamineCommand: NonExclusiveTargetedCommand {
     let shouldMatchTarget: Bool
     
     init(shouldMatchTarget: Bool = true) {
@@ -29,9 +29,10 @@ class ExamineCommand: TargetedCommand {
         if shouldMatchTarget {
             let object = context.target
             let description = object.getDescriptionAndContents()
+            let prefix = context.hasMultipleTargets ? "\(object.getDefinite().sentenceCased): " : ""
             object.setFlag(.examinedFlag)
             object.setFlag(.awareFlag)
-            context.engine.output(description)
+            context.engine.output("\(prefix)\(description)")
             context.engine.post(event: Event(.examined, target: context.target))
    } else if let description = PlayerBehaviour(context.player)?.describeLocation() {
             context.engine.output(description)
