@@ -11,6 +11,7 @@ struct CommandContext {
     let engine: Engine
     let playerBehviour: PlayerBehaviour
     let location: Object
+    let matches: [Command.Match]?
     
     var player: Object {
         playerBehviour.object
@@ -26,9 +27,23 @@ struct CommandContext {
         self.engine = engine
         self.playerBehviour = PlayerBehaviour(engine.player)!
         self.location = playerBehviour.object.location!
+        self.matches = nil
+    }
+    
+    init(match: Command.Match, from matches: [Command.Match]) {
+        self.input = match.context.input
+        self.owner = match.context.owner
+        self.engine = match.context.engine
+        self.playerBehviour = match.context.playerBehviour
+        self.location = match.context.location
+        self.matches = matches
     }
     
     var target: Object {
         owner as! Object
+    }
+    
+    var hasMultipleTargets: Bool {
+        matches.map { $0.count > 1 } ?? false
     }
 }

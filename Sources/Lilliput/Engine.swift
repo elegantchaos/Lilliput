@@ -246,7 +246,8 @@ public class Engine {
                 output("That didn't really help.")
             } else {
                 for match in matches.sorted() {
-                    match.command.perform(in: match.context)
+                    let matchedContext = CommandContext(match: match, from: matches)
+                    match.command.perform(in: matchedContext)
                     if match.exclusive {
                         return
                     }
