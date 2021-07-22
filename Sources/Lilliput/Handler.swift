@@ -5,6 +5,9 @@
 
 import Coercion
 import Foundation
+import Logger
+
+let handlerChannel = Channel("handler")
 
 struct Handlers {
     
@@ -26,7 +29,7 @@ struct Handlers {
     func process(in context: EventContext) {
         for handler in handlers {
             if handler.matches(context: context) {
-//                print("handler \(handler.triggers) matched")
+                handlerChannel.log("handler \(handler.triggers) matched")
                 handler.run(in: context)
                 context.engine.handlersRan += 1
             }
@@ -217,7 +220,7 @@ struct Handler {
     
     func run(in context: EventContext) {
         for action in actions {
-//            print("handler ran \(action)")
+            handlerChannel.log("handler ran \(action) in \(context)")
             action.run(in: context)
         }
     }
