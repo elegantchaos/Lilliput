@@ -321,6 +321,8 @@ public class Engine {
             }
             
             tick += 1
+            
+            Logger.defaultManager.flush()
         }
         
         output("Bye.")
