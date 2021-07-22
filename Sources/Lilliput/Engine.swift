@@ -322,7 +322,9 @@ public class Engine {
             
             tick += 1
             
+            #if DEBUG
             Logger.defaultManager.flush()
+            #endif
         }
         
         output("Bye.")
