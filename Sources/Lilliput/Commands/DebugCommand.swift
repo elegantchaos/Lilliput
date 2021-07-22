@@ -47,6 +47,8 @@ class DebugCommand: Command {
             if let channel = manager.channel(named: arguments[1]) {
                 let state = ["on", "enabled", "true"].contains(arguments[2])
                 manager.update(channels: [channel], state: state)
+            } else {
+                engine.output("Unknown channel \(arguments[1])")
             }
         }
     }
