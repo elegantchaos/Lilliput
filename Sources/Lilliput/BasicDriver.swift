@@ -13,8 +13,9 @@ public class BasicDriver: Driver {
     }
     
     public func pushInput(_ string: String) {
-        let lines = string.split(separator: "\n").map({ String($0) })
-        preamble.append(contentsOf: lines)
+        let lines = string.split(separator: "\n").map({ String($0).trimmingCharacters(in: .whitespaces) })
+        let withoutComments = lines.filter({ $0.first != "#" })
+        preamble.append(contentsOf: withoutComments)
     }
     
     public func getInput(stopWords: [String.SubSequence]) -> Input {
