@@ -34,6 +34,45 @@ struct LocationPair {
     }
 }
 
+public struct StringTable {
+    typealias Index = [String:StringAlternatives]
+    let table: Index
+    
+    var keys: Index.Keys {
+        table.keys
+    }
+    
+    init(from data: Any?) {
+        var filtered: Index = [:]
+        if let items = (data as? [String:Any]) {
+            for item in items {
+                if let strings = StringAlternatives(item.value) {
+                    filtered[item.key] = strings
+                }
+            }
+        }
+        table = filtered
+    }
+    
+    func alternatives(for key: String) -> StringAlternatives? {
+        return table[key]
+    }
+}
+
+public struct StringAlternatives {
+    let strings: [String]
+    
+    init?(_ data: Any?) {
+        if let string = data as? String {
+            self.strings = [string]
+        } else if let strings = data as? [String] {
+            self.strings = strings
+        } else {
+            return nil
+        }
+    }
+}
+
 extension LocationPair: Comparable {
     static func < (lhs: LocationPair, rhs: LocationPair) -> Bool {
         if lhs.id == rhs.id {
@@ -50,7 +89,7 @@ extension LocationPair: Comparable {
 public struct Definition {
     let id: String
     let location: LocationPair?
-    let strings: [String:String]
+    let strings: StringTable
     let properties: [String:Any]
     let names: [String]
     let exits: [String:String]
@@ -67,7 +106,7 @@ public struct Definition {
         self.dialogue = Dialogue(from: properties["dialogue"] as? [String:Any])
         self.handlers = Handlers(from: properties["handlers"], dialogue: dialogue)
         self.location = LocationPair(from: properties["location"])
-        self.strings = (properties["descriptions"] as? [String:String]) ?? [:]
+        self.strings = StringTable(from: properties["descriptions"])
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
         self.mass = properties[asDouble: "mass"] ?? 0

@@ -11,10 +11,10 @@ class SwearFallbackCommand: GenerateEventCommand {
         "bastard", "bitch", "bloody", "bollocks", "bugger", "bullshit",
         "cock", "crap", "cunt",
         "dick", "dickhead",
-        "fuck", "fucker",
+        "fuck", "fucked", "fucker",
         "motherfucker",
-        "prick", "piss",
-        "shit",
+        "prick", "pish", "piss",
+        "shit", "shite", "shat",
         "tits", "twat",
         "wank"
     ]

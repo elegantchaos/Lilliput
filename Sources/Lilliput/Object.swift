@@ -269,11 +269,11 @@ public class Object {
     }
     
     func getDescription(for context: String) -> String? {
-        return definition.strings[context]
+        return engine.string(withKey: context, from: definition.strings)
     }
     
     func getDescription(for context: DescriptionContext) -> String? {
-        return definition.strings[context.rawValue]
+        return engine.string(withKey: context.rawValue, from: definition.strings)
     }
     
     func describeContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) -> String {
@@ -377,9 +377,9 @@ public class Object {
         let description = prefix + getDescriptionWarnIfMissing(for: context)
         var output = description
         
-        for string in definition.strings {
-            if hasFlagMatchingKey(string.key) {
-                output += string.value
+        for entry in definition.strings.table {
+            if hasFlagMatchingKey(entry.key) {
+                output += engine.string(fromAlternatives: entry.value)
             }
         }
         

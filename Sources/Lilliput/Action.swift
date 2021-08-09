@@ -18,8 +18,9 @@ struct Action {
     }
     
     func run(in context: EventContext) {
-        if let output = data[asString: "output"] {
-            context.engine.output(output)
+        if let strings = StringAlternatives(data["output"]) {
+            let engine = context.engine
+            engine.output(engine.string(fromAlternatives: strings))
         } else if let target = data[asString: "move"] {
             handleMove(target: target, in: context)
         } else if let target = data[asString: "swap"] {
@@ -71,8 +72,6 @@ struct Action {
     
     
     func handleSwap(target targetName: String, in context: EventContext) {
-        let target: Object?
-        let locationName: String
         let nowhere = context.engine.objects["nowhere"]
 
         guard let target = context.engine.objects[targetName] else {

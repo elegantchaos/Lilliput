@@ -124,13 +124,13 @@ struct PlayerBehaviour: Behaviour {
             context = .locationContentRecursive
             
             // optional extra descriptions when certain objects are missing
-            for string in location.definition.strings {
-                var key = string.key
+            for entry in location.definition.strings.table {
+                var key = entry.key
                 if let range = key.range(of: "missing.", options: .anchored) {
                     key.removeSubrange(range)
                     if let object = engine.objects[key] {
                         if !location.contains(object, recursive: false) {
-                            output += string.value
+                            output += engine.string(fromAlternatives: entry.value)
                         }
                     }
                 }

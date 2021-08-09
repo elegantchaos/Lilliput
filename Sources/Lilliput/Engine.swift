@@ -332,6 +332,16 @@ public class Engine {
         output("Bye.")
     }
     
+    public func string(withKey key: String, from table: StringTable) -> String? {
+        guard let alternatives = table.alternatives(for: key) else { return nil }
+        return string(fromAlternatives: alternatives)
+    }
+    
+    public func string(fromAlternatives alternatives: StringAlternatives) -> String {
+        let strings = alternatives.strings
+        let index = tick % strings.count
+        return strings[index]
+    }
 }
 
 extension Engine: CommandOwner {
