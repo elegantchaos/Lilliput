@@ -49,6 +49,7 @@ public class Engine {
     
     public func registerStandardBehaviours() {
         register([
+            DrinkableBehaviour.self,
             LocationBehaviour.self,
             LockableBehaviour.self,
             LoadableBehaviour.self,

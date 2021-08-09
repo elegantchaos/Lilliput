@@ -13,6 +13,7 @@ enum DescriptionContext: String {
     case contentPrefix                          /// prefix for the contents of something (eg "The desk contains")
     case detailed                               /// detailed description (shown when examined/searched)
     case definite                               /// brief description with definite article (eg "the pen")
+    case drink                                  /// shown when the object is drunk
     case excessMass                             /// player is carrying too much weight
     case excessVolume                           /// player is carrying too much volume
     case exit                                   /// description of a portal used when listing exits
