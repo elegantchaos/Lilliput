@@ -21,6 +21,7 @@ enum EventID: String {
     case shot
     case startedTalking
     case stoppedTalking
+    case swore
     case taken
     case used
 }

@@ -31,6 +31,7 @@ enum DescriptionContext: String {
     case preventTake                            /// if present, shown when the user tries to take the object (and prevents taking)
     case push                                   /// shown when the object is pushed
     case shoot                                  /// shown when the object is shot
+    case swear                                  /// shown when the engine detects swearing
     case tooHeavy                               /// object is too heavy to carry
     case tooLarge                               /// object is too large
     case unlocks                                /// description of a thing needed to unlock something

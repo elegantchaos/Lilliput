@@ -22,7 +22,8 @@ struct PlayerBehaviour: Behaviour {
             
             ExamineFallbackCommand(),
             GoFallbackCommand(),
-            TakeFallbackCommand()
+            TakeFallbackCommand(),
+            SwearFallbackCommand()
         ]
     }
 
