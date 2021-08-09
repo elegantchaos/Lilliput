@@ -120,7 +120,7 @@ struct PlayerBehaviour: Behaviour {
             if !description.isEmpty {
                 output += "\n\n\(description)"
             }
-            context = .containedRecursively
+            context = .locationContentRecursive
             
             // optional extra descriptions when certain objects are missing
             for string in location.definition.strings {

@@ -20,6 +20,7 @@ enum DescriptionContext: String {
     case load                                   /// shown when the object is loaded
     case location                               /// description of a location
     case locationContent                        /// description of a location's content
+    case locationContentRecursive               /// description of a location's location's content
     case locationSuffix = "location.suffix"
     case locked                                 /// description when locked
     case none

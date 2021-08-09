@@ -260,7 +260,12 @@ public class Object {
             return prefix
         }
         
-        return (context == .locationContent) ? " You can see" : " It contains"
+        switch context {
+            case .locationContent, .locationContentRecursive:
+                return "You can see"
+            default:
+                return "It contains"
+        }
     }
     
     func getDescription(for context: String) -> String? {
