@@ -141,7 +141,7 @@ struct PlayerBehaviour: Behaviour {
             }
             
             // append exit descriptions
-            if let exits = LocationBehaviour(location)?.describeExits() {
+            if let exits = LocationBehaviour(location)?.describeExits(), !exits.isEmpty {
                 output += "\n\n\(exits)"
             }
         }
