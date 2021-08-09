@@ -8,6 +8,7 @@ import Foundation
 public class BasicDriver: Driver {
     var preamble: [String] = []
     var lastType: OutputType = .normal
+    let trimCharacters = CharacterSet.alphanumerics.inverted
 
     public init() {
     }
@@ -32,7 +33,9 @@ public class BasicDriver: Driver {
             }
             
             print("\n> ", terminator: "")
-            if let string = readLine(), let input = Input(string, stopWords: stopWords) {
+            if let string = readLine()?.trimmingCharacters(in: trimCharacters), let input = Input(string, stopWords: stopWords) {
+//                print(string.flatMap { $0.unicodeScalars.flatMap { $0.value } })
+                
                 return input
             }
         }

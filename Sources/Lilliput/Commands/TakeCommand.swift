@@ -30,6 +30,8 @@ class TakeCommand: NonExclusiveTargetedCommand {
             output = "You can't pick up something that contains you!"
         } else if !object.hasFlag(.awareFlag) {
             output = "You can't see \(brief) here."
+        } else if let description = object.getDescription(for: .preventTake) {
+            output = description
         } else {
             let player = context.player
             

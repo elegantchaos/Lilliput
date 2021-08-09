@@ -17,6 +17,7 @@ enum DescriptionContext: String {
     case excessMass                             /// player is carrying too much weight
     case excessVolume                           /// player is carrying too much volume
     case exit                                   /// description of a portal used when listing exits
+    case fill                                   /// show when the object is filled
     case indefinite                             /// brief description with indefinite article (eg "a pen")
     case load                                   /// shown when the object is loaded
     case location                               /// description of a location
@@ -27,6 +28,7 @@ enum DescriptionContext: String {
     case none
     case outside                                /// prefix for describing view from a location (eg when sitting in a chair)
     case play                                   /// shown when the object is played
+    case preventTake                            /// if present, shown when the user tries to take the object (and prevents taking)
     case push                                   /// shown when the object is pushed
     case shoot                                  /// shown when the object is shot
     case tooHeavy                               /// object is too heavy to carry

@@ -22,6 +22,8 @@ struct Action {
             context.engine.output(output)
         } else if let target = data[asString: "move"] {
             handleMove(target: target, in: context)
+        } else if let target = data[asString: "swap"] {
+            handleSwap(target: target, in: context)
         } else if let dialog = data[asString: "speak"] {
             handleSpeak(dialog, in: context)
         } else if let key = data[asString: "set"], let value = data["to"], let id = data[asString: "of"], let object = context.engine.objects[id] {
@@ -65,6 +67,41 @@ struct Action {
             object.move(to: location, quiet: true)
         }
 
+    }
+    
+    
+    func handleSwap(target targetName: String, in context: EventContext) {
+        let target: Object?
+        let locationName: String
+        let nowhere = context.engine.objects["nowhere"]
+
+        guard let target = context.engine.objects[targetName] else {
+            context.engine.warning("Unknown object \(targetName) for replace command.")
+            return
+        }
+
+        guard let replacementName = data[asString: "with"] else {
+            context.engine.warning("Replace \(targetName) command is missing the `with` parameter.")
+            return
+        }
+        
+        guard let targetLocation = target.location ?? nowhere else {
+            context.engine.warning("Can't replace \(targetName) with \(replacementName) as \(targetName) has no location.")
+            return
+        }
+
+        guard let replacement = context.engine.objects[replacementName] else {
+            context.engine.warning("Unknown object \(replacementName) for replacing \(targetName).")
+            return
+        }
+
+        guard let replacementLocation = replacement.location ?? nowhere else {
+            context.engine.warning("Can't replace \(targetName) with \(replacementName) as \(replacementName) has no location.")
+            return
+        }
+        
+        target.move(to: replacementLocation, quiet: true)
+        replacement.move(to: targetLocation, quiet: true)
     }
     
     func handleSpeak(_ sentenceID: String, in context: EventContext) {

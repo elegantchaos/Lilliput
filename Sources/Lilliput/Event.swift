@@ -10,6 +10,7 @@ enum EventID: String {
     case contentRemoved
     case drunk
     case examined
+    case filled
     case getReplies
     case loaded
     case moved
