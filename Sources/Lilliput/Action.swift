@@ -18,9 +18,13 @@ struct Action {
     }
     
     func run(in context: EventContext) {
-        if let strings = StringAlternatives(data["output"]) {
+        if let key = data["output"] as? String {
             let engine = context.engine
-            engine.output(engine.string(fromAlternatives: strings))
+            if let strings = engine.string(withKey: key, from: context.event.target.definition.strings) {
+                engine.output(strings)
+            } else {
+                engine.output(key)
+            }
         } else if let target = data[asString: "move"] {
             handleMove(target: target, in: context)
         } else if let target = data[asString: "swap"] {
