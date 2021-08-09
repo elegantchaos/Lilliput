@@ -1,7 +1,7 @@
 {
     "Room 1": {
         "traits": ["location"],
-        "descriptions": {
+        "strings": {
             "container": "a shabby looking room.",
             "definite": "room 1",
             "location": "You are in a shabby looking room."
@@ -11,7 +11,7 @@
     "Ball": {
         "traits": ["movable"],
         "names": ["ball"],
-        "descriptions": {
+        "strings": {
             "definite": "the ball",
             "indefinite": "a ball",
             "description": "A small ping-pong ball."
@@ -24,7 +24,7 @@
     "Weight": {
         "traits": ["movable"],
         "names": ["weight"],
-        "descriptions": {
+        "strings": {
             "definite": "the weight",
             "indefinite": "a 100kg weight",
             "description": "A large weight."
@@ -37,7 +37,7 @@
     "Elephant": {
         "traits": ["movable"],
         "names": ["elephant"],
-        "descriptions": {
+        "strings": {
             "definite": "the elephant",
             "indefinite": "an elephant",
             "description": "A rather large elephant."
@@ -49,7 +49,7 @@
     
     "player": {
         "traits": ["player"],
-        "descriptions": {
+        "strings": {
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },

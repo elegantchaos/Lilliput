@@ -1,7 +1,7 @@
 {
     "Room 1": {
         "traits": ["location"],
-        "descriptions": {
+        "strings": {
             "definite": "room 1",
             "location": "You are in room 1."
         },
@@ -12,7 +12,7 @@
 
     "Room 2": {
         "traits": ["location"],
-        "descriptions": {
+        "strings": {
             "definite": "room 2",
             "location": "You are in room 2."
         },
@@ -23,7 +23,7 @@
 
     "Chair": {
         "traits": ["movable", "sittable", "location"],
-        "descriptions": {
+        "strings": {
             "definite": "the chair",
             "detailed": "A sturdy looking chair.",
             "indefinite": "a chair",
@@ -41,7 +41,7 @@
    
    "Box": {
            "traits": ["movable"],
-           "descriptions": {
+           "strings": {
                "definite": "the box",
                "detailed": "A small, sealed box.",
                "indefinite": "a box",
@@ -61,7 +61,7 @@
             "npc"
         ],
 
-        "descriptions": {
+        "strings": {
             "definite": "Norman",
             "detailed": "Normal Percival Charlesworth Esquire.",
             "indefinite": "Norman Percival"
@@ -87,7 +87,7 @@
 
     "player": {
         "traits": ["player"],
-        "descriptions": {
+        "strings": {
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },

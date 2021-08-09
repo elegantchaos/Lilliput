@@ -1,7 +1,7 @@
 {
     "Room 1": {
         "type": "location",
-        "descriptions": {
+        "strings": {
             "definite": "room 1",
             "location": "You are in room 1."
         },
@@ -11,7 +11,7 @@
     },
 
     "Room 2": {
-        "descriptions": {
+        "strings": {
             "definite": "room 2",
             "location": "You are in room 2."
         },
@@ -22,7 +22,7 @@
     },
 
     "Room 1 Door": {
-        "descriptions": {
+        "strings": {
             "detailed": "A normal office door, with a keyhole.",
             "definite": "the door",
             "exit": "through a door",
@@ -46,7 +46,7 @@
     },
 
     "Key": {
-        "descriptions": {
+        "strings": {
             "definite": "the key",
             "detailed": "A large key.",
             "indefinite": "a key"
@@ -60,7 +60,7 @@
     },
 
     "player": {
-        "descriptions": {
+        "strings": {
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },

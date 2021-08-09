@@ -106,7 +106,7 @@ public struct Definition {
         self.dialogue = Dialogue(from: properties["dialogue"] as? [String:Any])
         self.handlers = Handlers(from: properties["handlers"], dialogue: dialogue)
         self.location = LocationPair(from: properties["location"])
-        self.strings = StringTable(from: properties["descriptions"])
+        self.strings = StringTable(from: properties["strings"])
         self.names = (properties["names"] as? [String]) ?? []
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
         self.mass = properties[asDouble: "mass"] ?? 0
