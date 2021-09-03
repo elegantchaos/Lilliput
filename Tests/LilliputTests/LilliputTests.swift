@@ -18,48 +18,31 @@ final class LilliputTests: XCTestCase {
         let url = LilliputExamples.urlForGame(named: "ChairTest")!
         engine.load(url: url)
         
-        driver.input = ["sit chair", "take box", "stand", "sit", "north"]
+        driver.input = ["sit chair"]
         engine.run()
         driver.finish()
         
-        let expected = ["You are in a shabby looking room.\n\n You can see a box, a chair.\n\nThere is a single exit north.", "\n\n", "You sit on the chair.", "\n\n", "You are sitting on a sturdy looking chair. It\'s not very comfortable. From the chair you can see a shabby looking room.\n\n\n\n It contains a box.\n\nThere is a single exit north.", "\n\n", "You take the box.", "\n\n", "You stand up.", "\n\n", "You are in a shabby looking room.\n\n You can see a chair.\n\nThere is a single exit north.", "\n\n", "You sit on the chair.", "\n\n", "You are sitting on a sturdy looking chair. It\'s not very comfortable. From the chair you can see a shabby looking room.\n\n\n\nThere is a single exit north.", "\n\n", "You are in room 2.\n\nThere is a single exit south to room 1.", "\n\n", "Bye.", "\n\n"]
-        XCTAssertEqual(driver.output, expected)
+        XCTAssertEqual(engine.player.location?.id, "Chair")
     }
 
-    func testRestore() {
-        func save() -> [String] {
-            let driver = TestDriver()
-            let engine = Engine(driver: driver)
-            let url = LilliputExamples.urlForGame(named: "RestoreTest")!
-            engine.load(url: url)
-            
-            driver.input = ["take box", "n", "save unittest1"]
-            engine.run()
-            driver.finish()
+    func testOpening() {
+        let driver = TestDriver()
+        let engine = Engine(driver: driver)
+        let url = LilliputExamples.urlForGame(named: "OpenTest")!
+        engine.load(url: url)
 
-            return driver.output
+
+        driver.input = ["open desk"]
+        driver.checks[0] = { _ in
+            let desk = engine.objects["Your Desk"]!
+            XCTAssertFalse(desk.hasFlag("open"))
         }
         
-        func restore() -> [String] {
-            let driver = TestDriver()
-            let engine = Engine(driver: driver)
-            let url = LilliputExamples.urlForGame(named: "RestoreTest")!
-            engine.load(url: url)
-            
-            driver.input = ["restore unittest1", "i", "s"]
-            engine.run()
-            driver.finish()
+        engine.run()
+        driver.finish()
 
-            return driver.output
-        }
+        let desk = engine.objects["Your Desk"]!
+        XCTAssertTrue(desk.hasFlag("open"))
 
-        let expected = ["You are in room 1.\n\n You can see a box, a chair, Norman Percival.\n\nThere is a single exit north.", "\n\n", "You take the box.", "\n\n", "You are in room 2.\n\nThere is a single exit south to room 1.", "\n\n", "Bye.", "\n\n"]
-        
-        XCTAssertEqual(save(), expected)
-        
-        let expected2 = ["You are in room 1.\n\n You can see a box, a chair, Norman Percival.\n\nThere is a single exit north.", "\n\n", "You are in room 2.\n\nThere is a single exit south to room 1.", "\n\n", "You are carrying a box.", "\n\n", "You are in room 1.\n\n You can see a chair, Norman Percival.\n\nThere is a single exit north to room 2.", "\n\n", "Bye.", "\n\n"]
-
-
-        XCTAssertEqual(restore(), expected2)
     }
 }
