@@ -57,8 +57,7 @@ class Exits {
         
         if count > 0 {
             let start = count == 1 ? "There is a single exit " : "There are exits "
-            let list = body.joined(separator: ", ")
-            output += "\(start)\(list)."
+            output += "\(start)\(object.engine.asList(body))."
         }
         
         return output

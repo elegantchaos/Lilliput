@@ -338,7 +338,7 @@ public class Object {
             for object in describeBriefly {
                 items.append(object.getIndefinite())
             }
-            let list = items.joined(separator: ", ")
+            let list = engine.asList(items)
             if !output.isEmpty { output += "\n\n" }
             output += "\(prefix) \(list)."
         }
