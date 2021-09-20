@@ -23,7 +23,8 @@ struct PlayerBehaviour: Behaviour {
             ExamineFallbackCommand(),
             GoFallbackCommand(),
             TakeFallbackCommand(),
-            SwearFallbackCommand()
+            SwearFallbackCommand(),
+            LeaveFallbackCommand(),
         ]
     }
 
@@ -71,6 +72,7 @@ struct PlayerBehaviour: Behaviour {
         var worn: [String] = []
         var held: [String] = []
         
+        let engine = object.engine
         object.contents.forEach { object, position in
             object.setFlag(.awareFlag)
             let brief = object.getIndefinite()
@@ -83,16 +85,14 @@ struct PlayerBehaviour: Behaviour {
         }
         
         if (held.count + worn.count) == 0 {
-            object.engine.output("You are not carrying anything.")
+            engine.output("You are not carrying anything.")
         } else {
             if held.count > 0 {
-                let list = held.joined(separator: ", ")
-                object.engine.output("You are carrying \(list).")
+                engine.output("You are carrying \(engine.asList(held)).")
             }
             
             if worn.count > 0 {
-                let list = worn.joined(separator: ", ")
-                object.engine.output("You are wearing \(list).")
+                engine.output("You are wearing \(engine.asList(worn)).")
             }
         }
     }
