@@ -42,8 +42,24 @@ class ContentList {
             objects.append(object)
         }
         return objects
-
     }
+
+    var allAwareObjects: [Object] {
+        var objects: [Object] = []
+        forEach(recursingIf: { object in object.hasFlag(.awareFlag) }) { object, position in
+            objects.append(object)
+        }
+        return objects
+    }
+
+    var allVisibleObjects: [Object] {
+        var objects: [Object] = []
+        forEach(recursingIf: { object in (OpenableBehaviour(object) == nil) || object.hasFlag(.openedFlag) }) { object, position in
+            objects.append(object)
+        }
+        return objects
+    }
+
     var allEntries: ContentList {
         let contents = ContentList()
         forEach(recursive: true) { object, position in
@@ -90,4 +106,16 @@ class ContentList {
             }
         }
     }
+    
+    func forEach(recursingIf: (Object) -> Bool, perform: (Object, Position) -> ()) {
+        let sorted = entries.keys.sorted(by: \.id)
+        for object in sorted {
+            let position = entries[object]!
+            perform(object, position)
+            if recursingIf(object) {
+                object.contents.forEach(recursingIf: recursingIf, perform: perform)
+            }
+        }
+    }
+
 }

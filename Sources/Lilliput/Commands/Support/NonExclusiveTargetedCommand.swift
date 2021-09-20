@@ -6,8 +6,15 @@
 import Foundation
 
 class NonExclusiveTargetedCommand: TargetedCommand {
+    var matchedAll = false
+    
     override func matches(target: String, in context: CommandContext) -> Bool {
-        return target == "all" ? matchesAll(in: context) : super.matches(target: target, in: context)
+        if target == "all" {
+            matchedAll = matchesAll(in: context)
+            return matchedAll
+        } else {
+            return super.matches(target: target, in: context)
+        }
     }
     
     func matchesAll(in context: CommandContext) -> Bool {

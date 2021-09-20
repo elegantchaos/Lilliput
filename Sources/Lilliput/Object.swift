@@ -522,6 +522,22 @@ public class Object {
 
         return location.contains(object) || objectLocation.contains(self)
     }
+    
+    func isVisibleFrom(_ location: Object) -> Bool {
+        guard let ourLocation = self.location else { return false }
+
+        if ourLocation == location {
+            return true
+        }
+        
+        if let openable = OpenableBehaviour(ourLocation) {
+            if !openable.isContentVisible {
+                return false
+            }
+        }
+        
+        return ourLocation.isVisibleFrom(location)
+    }
 }
 
 extension Object: Equatable {

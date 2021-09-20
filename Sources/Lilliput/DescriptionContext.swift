@@ -19,6 +19,7 @@ enum DescriptionContext: String {
     case exit                                   /// description of a portal used when listing exits
     case fill                                   /// show when the object is filled
     case indefinite                             /// brief description with indefinite article (eg "a pen")
+    case leave                                  /// description to show when leaving location
     case load                                   /// shown when the object is loaded
     case location                               /// description of a location
     case locationContent                        /// description of a location's content

@@ -15,13 +15,23 @@ class ExamineCommand: NonExclusiveTargetedCommand {
     }
     
     override func perform(in context: CommandContext) {
+        if !matchedAll || includedInExamineAll(context) {
+            let object = context.target
+            let description = object.getDescriptionAndContents()
+            let prefix = context.hasMultipleTargets ? "\(object.getDefinite().sentenceCased): " : ""
+            object.setFlag(.examinedFlag)
+            object.setFlag(.awareFlag)
+            context.engine.output("\(prefix)\(description)")
+            context.engine.post(event: Event(.examined, target: context.target))
+        }
+    }
+    
+    func includedInExamineAll(_ context: CommandContext) -> Bool {
         let object = context.target
-        let description = object.getDescriptionAndContents()
-        let prefix = context.hasMultipleTargets ? "\(object.getDefinite().sentenceCased): " : ""
-        object.setFlag(.examinedFlag)
-        object.setFlag(.awareFlag)
-        context.engine.output("\(prefix)\(description)")
-        context.engine.post(event: Event(.examined, target: context.target))
+        if object == context.player { return false }
+        if object.location == context.player { return false }
+        guard let playerLocation = context.player.location else { return false }
+        return object.isVisibleFrom(playerLocation)
     }
 }
 
