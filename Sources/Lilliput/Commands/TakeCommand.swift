@@ -14,6 +14,15 @@ class TakeCommand: NonExclusiveTargetedCommand {
         super.init(keywords: ["take", "get"])
     }
     
+    override func kind(in context: CommandContext) -> Command.Match.Kind {
+        if context.target.isCarriedByPlayer {
+            // only apply command to things we've already got as a fallback, if nothing else matches
+            return .fallback
+        } else {
+            return super.kind(in: context)
+        }
+    }
+    
     override func matchesAll(in context: CommandContext) -> Bool {
         let object = context.target
         return (object.location != context.player) && object.hasFlag(.awareFlag)

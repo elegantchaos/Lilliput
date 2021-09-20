@@ -13,6 +13,16 @@ class DropCommand: NonExclusiveTargetedCommand {
     override func matchesAll(in context: CommandContext) -> Bool {
         return context.target.location == context.player
     }
+    
+    override func kind(in context: CommandContext) -> Command.Match.Kind {
+        if !context.target.isCarriedByPlayer {
+            // only apply command to things we don't have as a fallback, if nothing else matches
+            return .fallback
+        } else {
+            return super.kind(in: context)
+        }
+    }
+    
 
     override func perform(in context: CommandContext) {
         if let location = context.player.location {

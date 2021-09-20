@@ -530,7 +530,7 @@ public class Object {
             return true
         }
         
-        if let openable = OpenableBehaviour(ourLocation) {
+        if let openable = OpenableBehaviour(ourLocation) { // TODO: a more generic way to allow all behavious to contribute to this
             if !openable.isContentVisible {
                 return false
             }
