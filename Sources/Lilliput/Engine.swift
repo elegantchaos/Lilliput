@@ -41,7 +41,6 @@ public class Engine {
     var handlersRan = 0
     var tick = 0
     var stopWords: [String.SubSequence] = []
-    let listFormatter = ListFormatter()
     
     public init(driver: Driver) {
         self.driver = driver
@@ -345,7 +344,18 @@ public class Engine {
     }
     
     public func asList(_ items: [String]) -> String {
-        return listFormatter.string(from: items) ?? ""
+        switch items.count {
+            case 0:
+                return ""
+                
+            case 1:
+                return items.first!
+                
+            default:
+                let last = items.last!
+                let rest = items.dropLast().joined(separator: ", ")
+                return "\(rest) and \(last)"
+        }
     }
 }
 
