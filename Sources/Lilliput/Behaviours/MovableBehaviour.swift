@@ -10,7 +10,7 @@ struct MovableBehaviour: Behaviour {
     static var commands: [Command] {
         [
             DropCommand(),
-            TakeCommand()
+            TakeCommand(),
         ]
     }
 

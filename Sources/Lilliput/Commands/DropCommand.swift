@@ -7,7 +7,7 @@ import Foundation
 
 class DropCommand: NonExclusiveTargetedCommand {
     init() {
-        super.init(keywords: ["drop", "put"])
+        super.init(keywords: ["drop", "put"], patterns: [#"(drop|put)\w+(in|on)\w+(.*)"#])
     }
     
     override func matchesAll(in context: CommandContext) -> Bool {

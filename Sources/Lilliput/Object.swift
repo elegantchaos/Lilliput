@@ -129,7 +129,7 @@ public class Object {
         engine.debug("behaviours: \(behaviourStorage)")
         engine.debug("mass: contained \(containedMass) max \(maximumMass)")
         engine.debug("volume: contained \(containedVolume) max \(maximumVolume)")
-        engine.debug("commands: \(commands.map({ $0.keywords[0] }))")
+        engine.debug("commands: \(commands.map({ $0.patterns[0] }))")
         
     }
     

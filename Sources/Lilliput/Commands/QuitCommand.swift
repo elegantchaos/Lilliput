@@ -6,7 +6,7 @@
 import Foundation
 
 class QuitCommand: Command {
-    override init(keywords: [String] = []) {
+    init() {
         super.init(keywords: ["quit", "q"])
     }
     

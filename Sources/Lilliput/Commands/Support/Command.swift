@@ -4,6 +4,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+import AppKit
 
 public class Command {
     struct Match: Comparable {
@@ -34,25 +35,50 @@ public class Command {
         }
         
         static func == (lhs: Command.Match, rhs: Command.Match) -> Bool {
-            lhs.command.keywords == rhs.command.keywords
+            lhs.command.patterns == rhs.command.patterns
         }
     }
 
     let keywords: [String]
+    let patterns: [NSRegularExpression]
+    
+    var matched: String = ""
     var arguments: [String] = []
     
-    init(keywords: [String] = []) {
+    init(keywords: [String] = [], patterns: [String] = []) {
+        var expressions: [NSRegularExpression] = []
+        
+        for keyword in keywords {
+//            if let expression = try? NSRegularExpression(pattern: "^\(keyword)$", options: .allowCommentsAndWhitespace) {
+//                expressions.append(expression)
+//            }
+            if let expression = try? NSRegularExpression(pattern: "^\(keyword)(?: \\s+(.*))?+$", options: .allowCommentsAndWhitespace) {
+                expressions.append(expression)
+            }
+        }
+        
+        expressions.append(contentsOf: patterns.compactMap({ try? NSRegularExpression(pattern: $0, options: .allowCommentsAndWhitespace) }))
+        
         self.keywords = keywords
+        self.patterns = expressions
     }
     
     func keywordMatches(in context: CommandContext) -> Bool {
-        for keyword in keywords {
-            let raw = context.input.raw
-            if raw.starts(with: keyword) {
-                let index = raw.index(raw.startIndex, offsetBy: keyword.count)
+        let raw = context.input.raw
+        for pattern in patterns {
+            if let match = pattern.matches(in: raw, options: .withoutAnchoringBounds, range: .init(location: 0, length: raw.count)).first {
+                var captures: [String] = []
+                let nsstring = raw as NSString
+                for n in 1 ..< match.numberOfRanges {
+                    let range = match.range(at: n)
+                    if range.location != NSNotFound {
+                        let capture = nsstring.substring(with: range)
+                        captures.append(capture)
+                    }
+                }
                 
-                let remainder = raw[index...]
-                self.arguments = remainder.split(separator: " ").map(as: String.self)
+                self.matched = pattern.pattern
+                self.arguments = captures
                 return true
             }
         }
