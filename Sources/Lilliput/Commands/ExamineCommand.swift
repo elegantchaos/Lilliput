@@ -11,7 +11,7 @@ extension String {
 
 class ExamineCommand: NonExclusiveTargetedCommand {
     init() {
-        super.init(keywords: ["examine", "look at", "look in", "look out of", "look through", "look", "search", "l", "ex"])
+        super.init(keywords: ["examine", "look at", "look in", "look out of", "look through", "look", "search", "l", "ex", "read"])
     }
     
     override func perform(in context: CommandContext) {
