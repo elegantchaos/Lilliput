@@ -27,11 +27,11 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.1.2"),
-        .package(url: "https://github.com/elegantchaos/CollectionExtensions.git", from: "1.1.4"),
+        .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.1.3"),
+        .package(url: "https://github.com/elegantchaos/CollectionExtensions.git", from: "1.1.7"),
         .package(url: "https://github.com/elegantchaos/Expressions.git", from: "1.1.1"),
-        .package(url: "https://github.com/elegantchaos/Files.git", from: "1.2.0"),
-        .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.6.0"),
+        .package(url: "https://github.com/elegantchaos/Files.git", from: "1.2.2"),
+        .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.7.3"),
         .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.2.0"),
     ],
     targets: [
