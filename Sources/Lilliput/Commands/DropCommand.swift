@@ -29,17 +29,39 @@ class DropCommand: NonExclusiveTargetedCommand {
     
 
     override func perform(in context: CommandContext) {
-        if let location = context.player.location {
+        var location = context.player.location
+        var position: Position = .in
+
+        if (arguments.count == 3) {
+            let destinationName = arguments[2]
+            for candidate in context.candidates {
+                if candidate.names.contains(destinationName), let object = candidate.owningObject {
+                    location = object
+                    if let pos = Position(preposition: arguments[1]) {
+                        position = pos
+                    }
+                    break
+                }
+            }
+        }
+        
+        if let location = location {
             let object = context.target
             let brief = object.getDefinite()
             if object.isCarriedByPlayer {
                 object.setFlag(.awareFlag)
-                object.move(to: location)
-                let description =
-                    object.getDescription(for: "drop.\(location.id)") ??
-                    object.getDescription(for: "drop") ??
-                    "You drop \(brief)."
-                context.engine.output(description)
+                object.move(to: location, position: position)
+                switch position {
+                case .in:
+                    let description =
+                        object.getDescription(for: "drop.\(location.id)") ??
+                        object.getDescription(for: "drop") ??
+                        "You drop \(brief)."
+                    context.engine.output(description)
+                    
+                default:
+                    context.engine.output("You put \(brief) \(position) \(location.getDefinite().)")
+                }
             } else {
                 context.engine.output("You do not have \(brief).")
             }

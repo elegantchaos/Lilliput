@@ -9,7 +9,7 @@ class TargetedCommand: Command {
     func inputMatchesTarget(in context: CommandContext) -> Bool {
         guard arguments.count > 0 else { return false }
         
-        var target = arguments.joined(separator: " ")
+        var target = arguments.first!
         if target == "self" {
             target = "player"
         }

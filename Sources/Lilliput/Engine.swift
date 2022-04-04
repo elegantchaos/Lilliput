@@ -237,7 +237,7 @@ public class Engine {
             var matches: [Command.Match] = []
             for object in candidates {
                 for command in object.commands {
-                    let context = CommandContext(input: input, target: object, engine: self)
+                    let context = CommandContext(input: input, target: object, engine: self, candidates: candidates)
                     if command.matches(context) {
                         matches.append(Command.Match(command: command, context: context))
                     }
@@ -250,7 +250,7 @@ public class Engine {
                 var performed = false
                 for match in matches.sorted() {
                     if !performed || match.kind != .fallback {
-                        let matchedContext = CommandContext(match: match, from: matches)
+                        let matchedContext = CommandContext(match: match, from: matches, candidates: candidates)
                         match.command.perform(in: matchedContext)
                         if match.kind == .exclusive {
                             return
@@ -360,6 +360,8 @@ public class Engine {
 }
 
 extension Engine: CommandOwner {
+    var owningObject: Object? { return nil }
+
     var commands: [Command] {
         return [
             QuitCommand(),

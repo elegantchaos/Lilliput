@@ -11,6 +11,7 @@ struct CommandContext {
     let engine: Engine
     let playerBehviour: PlayerBehaviour
     let location: Object
+    let candidates: [CommandOwner]
     let matches: [Command.Match]?
     
     var player: Object {
@@ -21,21 +22,23 @@ struct CommandContext {
         playerBehviour.stats
     }
     
-    init(input: Input, target: CommandOwner, engine: Engine) {
+    init(input: Input, target: CommandOwner, engine: Engine, candidates: [CommandOwner]) {
         self.input = input
         self.owner = target
         self.engine = engine
         self.playerBehviour = PlayerBehaviour(engine.player)!
         self.location = playerBehviour.object.location!
+        self.candidates = candidates
         self.matches = nil
     }
     
-    init(match: Command.Match, from matches: [Command.Match]) {
+    init(match: Command.Match, from matches: [Command.Match], candidates: [CommandOwner]) {
         self.input = match.context.input
         self.owner = match.context.owner
         self.engine = match.context.engine
         self.playerBehviour = match.context.playerBehviour
         self.location = match.context.location
+        self.candidates = candidates
         self.matches = matches
     }
     

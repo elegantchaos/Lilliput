@@ -560,6 +560,7 @@ extension Object: CustomStringConvertible {
 }
 
 extension Object: CommandOwner {
+    var owningObject: Object? { return self }
 }
 
 extension Object: EventHandler {

@@ -9,6 +9,16 @@ enum Position: String, Equatable {
     case `in`
     case on
     case worn
+    
+    init?(preposition: String) {
+        switch preposition {
+        case "into": self = .in
+        case "onto": self = .on
+        default:
+            guard let s = Self(rawValue: preposition) else { return nil }
+            self = s
+        }
+    }
 }
 
 extension Position: Comparable {

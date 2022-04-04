@@ -42,7 +42,13 @@ let package = Package(
         
         .target(
             name: "Lilliput",
-            dependencies: ["Coercion", "CollectionExtensions", "Files", "Logger"]
+            dependencies: [
+                "Coercion",
+                "CollectionExtensions",
+                "Expressions",
+                "Files",
+                "Logger"
+            ]
         ),
         
         .target(

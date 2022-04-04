@@ -8,6 +8,7 @@
 import Foundation
 
 protocol CommandOwner {
+    var owningObject: Object? { get }
     var commands: [Command] { get }
     var names: [String] { get }
 }
