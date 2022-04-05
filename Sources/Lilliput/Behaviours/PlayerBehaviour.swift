@@ -69,6 +69,12 @@ struct PlayerBehaviour: Behaviour {
     }
 
     func showInventory() {
+        let description = describeInventory()
+        object.engine.output(description)
+    }
+    
+    func describeInventory() -> Paragraph {
+        var output = Paragraph()
         var worn: [String] = []
         var held: [String] = []
         
@@ -85,16 +91,18 @@ struct PlayerBehaviour: Behaviour {
         }
         
         if (held.count + worn.count) == 0 {
-            engine.output("You are not carrying anything.")
+            output += "You are not carrying anything"
         } else {
             if held.count > 0 {
-                engine.output("You are carrying \(engine.asList(held)).")
+                output += ItemList("You are carrying", items: held)
             }
             
             if worn.count > 0 {
-                engine.output("You are wearing \(engine.asList(worn)).")
+                engine.output(ItemList("You are wearing", items: worn))
             }
         }
+        
+        return output
     }
     
     func describeLocation() -> String {

@@ -43,7 +43,7 @@ class Exits {
     }
 
     func describe(for object: Object) -> String {
-        var output = ""
+        var output = Paragraph()
         let player = object.engine.player!
         var count = 0
         var body: [String] = []
@@ -57,10 +57,11 @@ class Exits {
         
         if count > 0 {
             let start = count == 1 ? "There is a single exit " : "There are exits "
-            output += "\(start)\(object.engine.asList(body))."
+            let list = ItemList(start, items: body)
+            output += list
         }
         
-        return output
+        return output.text
     }
     
     func link(portal: Object, to destinations: [String]) {

@@ -11,7 +11,23 @@ import XCTestExtensions
 @testable import Lilliput
 
 final class DescriptionTests: XCTestCase {
+    func testInventory() {
+        let driver = TestDriver()
+        let engine = Engine(driver: driver)
+        let url = LilliputExamples.urlForGame(named: "ContainersTest")!
+        engine.load(url: url)
+        engine.setupObjects()
+        
+        let player = engine.player!
+        let ball = engine.object(withID: "Ball")
+        ball.move(to: player)
 
+        if let behaviour = PlayerBehaviour(player) {
+            let inventory = behaviour.describeInventory().text
+            XCTAssertEqual(inventory, "You are carrying a ball.")
+        }
+    }
+    
     func testBox() {
         let driver = TestDriver()
         let engine = Engine(driver: driver)

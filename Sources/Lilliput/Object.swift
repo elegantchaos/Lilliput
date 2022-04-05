@@ -345,7 +345,7 @@ public class Object {
                     items.append(object.getIndefinite())
                 }
                 
-                let list = ItemList(prefix: prefix, items: items)
+                let list = ItemList(prefix, items: items)
                 output += Paragraph(list.text)
             }
         }

@@ -48,7 +48,11 @@ import Foundation
 //    }
 //}
 
-public struct Sentence {
+public protocol TextComponent {
+    var text: String { get }
+}
+
+public struct Sentence: TextComponent {
     var value: String
     
     public init() {
@@ -90,7 +94,7 @@ extension Sentence: ExpressibleByStringLiteral {
     }
 }
 
-public struct Paragraph {
+public struct Paragraph: TextComponent {
     var value: [Sentence]
     
     public init() {
@@ -110,19 +114,26 @@ public struct Paragraph {
             value.append(sentence)
         }
     }
-    
+
+    public mutating func append(_ component: TextComponent) {
+        append(Sentence(component.text))
+    }
+
     public var text: String {
         return value.map({ $0.text }).joined(separator: " ")
     }
-    
+
     static func +=(lhs: inout Paragraph, rhs: Sentence) {
+        lhs.append(rhs)
+    }
+
+    static func +=(lhs: inout Paragraph, rhs: TextComponent) {
         lhs.append(rhs)
     }
 
     static func +=(lhs: inout Paragraph, rhs: String) {
         lhs.append(Sentence(rhs))
     }
-
 }
 
 extension Paragraph: ExpressibleByStringLiteral {
@@ -131,7 +142,7 @@ extension Paragraph: ExpressibleByStringLiteral {
     }
 }
 
-public struct Section {
+public struct Section: TextComponent {
     var value: [Paragraph]
     
     public init() {
@@ -169,14 +180,19 @@ public struct Section {
     }
 }
 
-public struct ItemList {
+public struct ItemList: TextComponent {
     let prefix: String
     let items: [String]
+    
+    public init(_ prefix: String, items: [String]) {
+        self.prefix = prefix
+        self.items = items
+    }
     
     public var text: String {
         switch items.count {
             case 0:
-                return prefix
+                return ""
                 
             case 1:
                 return "\(prefix) \(items.first!)"

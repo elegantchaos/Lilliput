@@ -114,6 +114,10 @@ public class Engine {
         speakers = speakers.filter({ $0.speakingTo.count > 0 })
     }
     
+    public func output(_ component: TextComponent, type: OutputType = .normal) {
+        driver.output(component.text, type: type)
+    }
+    
     public func output(_ string: String, type: OutputType = .normal) {
         driver.output(string, type: type)
     }
