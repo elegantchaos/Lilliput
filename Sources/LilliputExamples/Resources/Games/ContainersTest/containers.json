@@ -57,6 +57,18 @@
         "volume": 1
     },
     
+    "Coat": {
+        "names": ["coat", "greatcoat", "pockets"],
+        "traits": ["movable", "wearable"],
+        "location": {"location": "player", "position": "worn"},
+        "strings": {
+            "definite": "the greatcoat",
+            "detailed": "A long greatcoat. It's warm, but has seen better days.",
+            "indefinite": "a long greatcoat",
+            "contentPrefix": "In the pockets you find",
+        }
+    },
+
     "player": {
         "traits": ["player"],
         "strings": {

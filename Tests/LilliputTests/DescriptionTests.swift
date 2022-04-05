@@ -19,13 +19,22 @@ final class DescriptionTests: XCTestCase {
         engine.setupObjects()
         
         let player = engine.player!
+        let behaviour = PlayerBehaviour(player)!
+
         let ball = engine.object(withID: "Ball")
         ball.move(to: player)
 
-        if let behaviour = PlayerBehaviour(player) {
-            let inventory = behaviour.describeInventory().text
-            XCTAssertEqual(inventory, "You are carrying a ball.")
-        }
+        let inventory = behaviour.describeInventory().text
+        XCTAssertEqual(inventory, "You are carrying a ball. You are wearing a long greatcoat.")
+        
+        let coat = engine.object(withID: "Coat")
+        coat.move(to: player.location!)
+
+        let box = engine.object(withID: "Box")
+        box.move(to: player)
+        
+        let inventory2 = behaviour.describeInventory().text
+        XCTAssertEqual(inventory2, "You are carrying a ball and a large box.")
     }
     
     func testBox() {

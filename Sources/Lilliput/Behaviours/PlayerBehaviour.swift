@@ -98,7 +98,7 @@ struct PlayerBehaviour: Behaviour {
             }
             
             if worn.count > 0 {
-                engine.output(ItemList("You are wearing", items: worn))
+                output += ItemList("You are wearing", items: worn)
             }
         }
         
