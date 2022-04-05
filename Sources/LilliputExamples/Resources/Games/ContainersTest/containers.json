@@ -9,12 +9,21 @@
     },
 
     "Box": {
-        "traits": ["movable"],
+        "traits": ["movable", "openable"],
         "names": ["box"],
         "strings": {
             "definite": "the box",
             "indefinite": "a large box",
-            "description": "A large box."
+            "detailed": "A large box with a latch on the lid.",
+            "contentEmpty": "The box seems to be empty.",
+            "contentPrefix": "The box contains",
+            "contentPrefix-location": "The box is open. It contains",
+            "not-open": "The box is currently closed.",
+            "open": "It is currently open.",
+            "open-changed-false": "The box clicks closed.",
+            "open-changed-true": "You pop the latch and open the box.",
+            "open-already-false": "The box is already closed.",
+            "open-already-true": "The box is already open."
         },
         "location": "Room 1",
         "mass": 0.1,
@@ -27,7 +36,8 @@
         "strings": {
             "definite": "the table",
             "indefinite": "a flat table",
-            "description": "A flat table."
+            "detailed": "A flat table.",
+            "contentPrefix.on": "On it is",
         },
         "location": "Room 1",
         "mass": 0.1,
@@ -40,7 +50,7 @@
         "strings": {
             "definite": "the ball",
             "indefinite": "a ball",
-            "description": "A small ping-pong ball."
+            "detailed": "A small ping-pong ball."
         },
         "location": "Room 1",
         "mass": 0.1,

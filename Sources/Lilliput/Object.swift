@@ -251,11 +251,15 @@ public class Object {
         return getDescriptionWarnIfMissing(for: .indefinite)
     }
     
-    func getContentPrefix(for context: DescriptionContext = .none) -> String {
+    func getContentPrefix(for context: DescriptionContext = .none, position: Position) -> String {
         if context != .none, let prefix = getDescription(for: "contentPrefix-\(context)") {
             return prefix
         }
         
+        if let prefix = getDescription(for: "contentPrefix.\(position)") {
+            return prefix
+        }
+
         if let prefix = getDescription(for: .contentPrefix) {
             return prefix
         }
@@ -277,12 +281,7 @@ public class Object {
     }
     
     func describeContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) -> String {
-        // get a phrase like "You can see", or "It contains" to prefix the contents with
-        let prefix = getContentPrefix(for: context)
-
         var output = ""
-        var describeBriefly: [Object] = []
-        var describeRecursively: [Object] = []
         let playerLocation = engine.player.location
         let container = self
         let containerID = id
@@ -294,6 +293,9 @@ public class Object {
         // - add it to the list of objects to describe briefly
         // - optionally add it to the list of objects to recursively describe the contents of
         
+        var briefPositions = Set<Position>()
+        var describeBriefly: [Object] = []
+        var describeRecursively: [Object] = []
         contents.forEach { object, position in
             if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
                 object.setFlag(.awareFlag)
@@ -317,6 +319,7 @@ public class Object {
                     
                 } else if !object.hasFlag(.skipBriefFlag) {
                     describeBriefly.append(object)
+                    briefPositions.insert(position)
                 }
                 
                 let mode = object.getString(withKey: .showContentModeProperty)
@@ -328,19 +331,24 @@ public class Object {
         
         if describeBriefly.count == 0 {
             if showIfEmpty {
+                let prefix = getContentPrefix(for: context, position: .in)
                 let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
-                if !output.isEmpty { output += "\n\n" }
-                output += description
+                output.startParagraph(description)
             }
             
         } else {
-            var items: [String] = []
-            for object in describeBriefly {
-                items.append(object.getIndefinite())
+            for position in briefPositions {
+                let prefix = getContentPrefix(for: context, position: position)
+
+                var items: [String] = []
+                for object in describeBriefly.filter({ $0.position == position }) {
+                    items.append(object.getIndefinite())
+                }
+                let list = engine.asList(items)
+                output.startParagraph(prefix)
+                output.continueSentence(list)
+                output.endSentence()
             }
-            let list = engine.asList(items)
-            if !output.isEmpty { output += "\n\n" }
-            output += "\(prefix) \(list)."
         }
         
         let recursiveContext: DescriptionContext
@@ -350,7 +358,7 @@ public class Object {
         }
         for object in describeRecursively {
             let description = object.describeContents(context: recursiveContext, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
-            output += description
+            output.startSentence(description)
         }
         
         return output
@@ -379,14 +387,14 @@ public class Object {
         
         for entry in definition.strings.table {
             if hasFlagMatchingKey(entry.key) {
-                output += engine.string(fromAlternatives: entry.value)
+                output.startSentence(engine.string(fromAlternatives: entry.value))
             }
         }
         
         return output
     }
     
-    func getContentsIfVisible() -> String {
+    func describeContentsIfVisible() -> String {
         return isContentVisible ? describeContents(context: .contained) : ""
     }
     
@@ -396,7 +404,7 @@ public class Object {
     
     func getDescriptionAndContents() -> String {
         var output = getDescription(context: .detailed)
-        output += getContentsIfVisible()
+        output.startSentence(describeContentsIfVisible())
         return output
     }
     

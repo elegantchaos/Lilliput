@@ -60,7 +60,7 @@ class DropCommand: NonExclusiveTargetedCommand {
                     context.engine.output(description)
                     
                 default:
-                    context.engine.output("You put \(brief) \(position) \(location.getDefinite().)")
+                    context.engine.output("You put \(brief) \(position) \(location.getDefinite()).")
                 }
             } else {
                 context.engine.output("You do not have \(brief).")

@@ -106,7 +106,7 @@ struct PlayerBehaviour: Behaviour {
         var next = object.location
         while let location = next {
             locations.append(location)
-            output += location.getDescription(context: context, prefix: prefix)
+            output.startSentence(location.getDescription(context: context, prefix: prefix))
             next = location.location
             if next != nil {
                 context = .container
@@ -118,9 +118,7 @@ struct PlayerBehaviour: Behaviour {
         for location in locations {
             // description of contents
             let description = location.describeContents(context: context)
-            if !description.isEmpty {
-                output += "\n\n\(description)"
-            }
+            output.startParagraph(description)
             context = .locationContentRecursive
             
             // optional extra descriptions when certain objects are missing

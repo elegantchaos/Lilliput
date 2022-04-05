@@ -14,7 +14,7 @@
         "strings": {
             "definite": "the ball",
             "indefinite": "a ball",
-            "description": "A small ping-pong ball."
+            "detailed": "A small ping-pong ball."
         },
         "location": "Room 1",
         "mass": 0.1,
@@ -27,7 +27,7 @@
         "strings": {
             "definite": "the weight",
             "indefinite": "a 100kg weight",
-            "description": "A large weight."
+            "detailed": "A large weight."
         },
         "location": "Room 1",
         "mass": 100,
@@ -40,7 +40,7 @@
         "strings": {
             "definite": "the elephant",
             "indefinite": "an elephant",
-            "description": "A rather large elephant."
+            "detailed": "A rather large elephant."
         },
         "location": "Room 1",
         "mass": 1000,

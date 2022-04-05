@@ -332,6 +332,10 @@ public class Engine {
         output("Bye.")
     }
     
+    public func object(withID id: String) -> Object {
+        return objects[id]!
+    }
+    
     public func string(withKey key: String, from table: StringTable) -> String? {
         guard let alternatives = table.alternatives(for: key) else { return nil }
         return string(fromAlternatives: alternatives)
