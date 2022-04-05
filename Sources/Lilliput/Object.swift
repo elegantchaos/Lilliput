@@ -281,7 +281,7 @@ public class Object {
     }
     
     func describeContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) -> String {
-        var output = ""
+        var output = Section()
         let playerLocation = engine.player.location
         let container = self
         let containerID = id
@@ -314,7 +314,7 @@ public class Object {
                 
                 if customDescriptions.count > 0 {
                     for description in customDescriptions {
-                        output += description
+                        output += Sentence(description)
                     }
                     
                 } else if !object.hasFlag(.skipBriefFlag) {
@@ -333,7 +333,7 @@ public class Object {
             if showIfEmpty {
                 let prefix = getContentPrefix(for: context, position: .in)
                 let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
-                output.startParagraph(description)
+                output += Paragraph(description)
             }
             
         } else {
@@ -344,10 +344,9 @@ public class Object {
                 for object in describeBriefly.filter({ $0.position == position }) {
                     items.append(object.getIndefinite())
                 }
-                let list = engine.asList(items)
-                output.startParagraph(prefix)
-                output.continueSentence(list)
-                output.endSentence()
+                
+                let list = ItemList(prefix: prefix, items: items)
+                output += Paragraph(list.text)
             }
         }
         
@@ -358,10 +357,10 @@ public class Object {
         }
         for object in describeRecursively {
             let description = object.describeContents(context: recursiveContext, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
-            output.startSentence(description)
+            output += description
         }
         
-        return output
+        return output.text
     }
     
     func hasVisited(_ location: Object) -> Bool {
@@ -383,15 +382,15 @@ public class Object {
     func getDescription(context: DescriptionContext, prefix: String = "") -> String {
         
         let description = prefix + getDescriptionWarnIfMissing(for: context)
-        var output = description
+        var output = Paragraph(description)
         
         for entry in definition.strings.table {
             if hasFlagMatchingKey(entry.key) {
-                output.startSentence(engine.string(fromAlternatives: entry.value))
+                output += engine.string(fromAlternatives: entry.value)
             }
         }
         
-        return output
+        return output.text
     }
     
     func describeContentsIfVisible() -> String {
@@ -403,9 +402,9 @@ public class Object {
     }
     
     func getDescriptionAndContents() -> String {
-        var output = getDescription(context: .detailed)
-        output.startSentence(describeContentsIfVisible())
-        return output
+        var output = Paragraph(getDescription(context: .detailed))
+        output += describeContentsIfVisible()
+        return output.text
     }
     
     func getProperty(withKey key: String) -> Any? {

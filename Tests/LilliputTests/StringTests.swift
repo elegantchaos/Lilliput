@@ -45,8 +45,9 @@ class StringTests: XCTestCase {
     
     func testSection() {
         var s = Section()
-        s.append("This is a paragraph")
-        s.append("This is another paragraph")
-        XCTAssertEqual(s.text, "This is a paragraph.\n\nThis is another paragraph.")
+        s.append(Paragraph("This is a paragraph"))
+        s.append(Paragraph("This is another paragraph"))
+        s.append("With a second sentence")
+        XCTAssertEqual(s.text, "This is a paragraph.\n\nThis is another paragraph. With a second sentence.")
     }
 }
