@@ -19,8 +19,8 @@ class StringTests: XCTestCase {
 
     func testAppendingChunks() {
         var s = Sentence()
-        s.append("this is")
-        s.append("a test")
+        s.append(" this is")
+        s.append("a test ")
         XCTAssertEqual(s.text, "This is a test.")
     }
 

@@ -56,11 +56,12 @@ public struct Sentence {
     }
     
     public mutating func append(_ string: String) {
-        if !string.isEmpty {
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
             if let last = value.last, last != " " {
                 value.append(" ")
             }
-            value.append(string)
+            value.append(trimmed)
         }
     }
 
