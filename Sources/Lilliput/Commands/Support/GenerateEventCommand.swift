@@ -16,7 +16,7 @@ class GenerateEventCommand: TargetedCommand {
     }
 
     override func perform(in context: CommandContext) {
-        if let output = context.target.getDescription(for: eventContext) {
+        if let output = context.target.getText(for: eventContext) {
             context.engine.output(output)
         }
         context.engine.post(event: Event(eventID, target: context.target))

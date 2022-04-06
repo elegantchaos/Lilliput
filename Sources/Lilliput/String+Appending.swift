@@ -9,6 +9,43 @@ public protocol TextComponent {
     var text: String { get }
 }
 
+public struct Text: TextComponent {
+    var value: String
+    
+    public init() {
+        value = ""
+    }
+    
+    public init(_ string: String) {
+        self.value = string
+    }
+    
+    public mutating func append(_ string: String) {
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            if let last = value.last, last != " " {
+                value.append(" ")
+            }
+            value.append(trimmed)
+        }
+    }
+
+    public var text: String {
+        return value
+    }
+    
+    static func +=(lhs: inout Text, rhs: String) {
+        lhs.append(rhs)
+    }
+}
+
+extension Text: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
+        self.value = value
+    }
+}
+
+
 public struct Sentence: TextComponent {
     var value: String
     
@@ -42,6 +79,10 @@ public struct Sentence: TextComponent {
         }
         
         return buffer
+    }
+    
+    static func +=(lhs: inout Sentence, rhs: String) {
+        lhs.append(rhs)
     }
 }
 

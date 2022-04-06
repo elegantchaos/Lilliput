@@ -24,39 +24,41 @@ class Exits {
         self.exits = exits
     }
 
-    func getExitDescription(exit: Exit, direction: String, player: Object) -> String {
-        var description = direction
+    func describe(exit: Exit, direction: String, player: Object) -> String {
+        var description = Text(direction)
         
         if let portal = exit.portal {
-            let brief = portal.getDescriptionWarnIfMissing(for: .exit)
-            description += " \(brief)"
+            let brief = portal.describeRequired(for: .exit)
+            description += brief
         }
         
         let destination = exit.destination
         // add a more detailed description if we've already been there (or the location is always known)
         if player.playerIsAwareOf(destination) {
             let brief = destination.getDefinite()
-            description += " to \(brief)"
+            description += "to \(brief)"
         }
 
-        return description
+        return description.text
     }
 
-    func describe(for object: Object) -> String {
+    func describeExits(for object: Object) -> String {
         var output = Paragraph()
         let player = object.engine.player!
         var count = 0
         var body: [String] = []
-        for (direction, exit) in exits {
+        let sortedDirections = exits.keys.sorted() // TODO: sort directions in compass order?
+        for direction in sortedDirections {
+            let exit = exits[direction]!
             if exit.isVisible {
-                let string = getExitDescription(exit: exit, direction: direction, player: player)
+                let string = describe(exit: exit, direction: direction, player: player)
                 body.append(string)
                 count += 1
             }
         }
         
         if count > 0 {
-            let start = count == 1 ? "There is a single exit " : "There are exits "
+            let start = count == 1 ? "There is a single exit" : "There are exits"
             let list = ItemList(start, items: body)
             output += list
         }

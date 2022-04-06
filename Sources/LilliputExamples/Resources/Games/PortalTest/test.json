@@ -6,7 +6,8 @@
             "location": "You are in room 1."
         },
         "exits": {
-            "north": "Room 2"
+            "north": "Room 2",
+            "south": "Room 3"
         }
     },
 
@@ -17,6 +18,17 @@
         },
         "exits": {
             "south": "Room 1"
+        },
+        "type": "location"
+    },
+
+    "Room 3": {
+        "strings": {
+            "definite": "room 3",
+            "location": "You are in room 3."
+        },
+        "exits": {
+            "north": "Room 1"
         },
         "type": "location"
     },

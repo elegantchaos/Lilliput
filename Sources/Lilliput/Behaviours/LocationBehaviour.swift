@@ -55,7 +55,7 @@ struct LocationBehaviour: Behaviour {
     }
 
     func describeExits() -> String {
-        return storage.exits.describe(for: object)
+        return storage.exits.describeExits(for: object)
     }
     
     func link(portal object: Object, to destinations: [String]) {

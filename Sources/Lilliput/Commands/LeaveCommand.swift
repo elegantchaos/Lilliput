@@ -30,7 +30,7 @@ class LeaveCommand: TargetedCommand {
         
         if player.location == location {
             if let container = location.location {
-                output = location.getDescription(context: .leave)
+                output = location.describe(context: .leave)
                 player.clearFlag(.sittingFlag)
                 player.move(to: container)
             } else {

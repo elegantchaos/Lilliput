@@ -39,19 +39,19 @@ class TakeCommand: NonExclusiveTargetedCommand {
             output = "You can't pick up something that contains you!"
         } else if !object.hasFlag(.awareFlag) {
             output = "You can't see \(brief) here."
-        } else if let description = object.getDescription(for: .preventTake) {
+        } else if let description = object.getText(for: .preventTake) {
             output = description
         } else {
             let player = context.player
             
             if object.definition.mass > player.maximumMass {
-                output = object.getDescription(for: .tooHeavy) ?? "\(brief.capitalizedFirst) is too heavy."
+                output = object.getText(for: .tooHeavy) ?? "\(brief.capitalizedFirst) is too heavy."
             } else if object.definition.volume > player.maximumVolume {
-                output = object.getDescription(for: .tooLarge) ?? "\(brief.capitalizedFirst) is too large."
+                output = object.getText(for: .tooLarge) ?? "\(brief.capitalizedFirst) is too large."
             } else if player.containedMass + object.definition.mass > player.maximumMass {
-                output = object.getDescription(for: .excessMass) ?? "You are carrying too much."
+                output = object.getText(for: .excessMass) ?? "You are carrying too much."
             } else if player.containedVolume + object.definition.volume > player.maximumVolume {
-                output = object.getDescription(for: .excessVolume) ?? "You don't have room for that."
+                output = object.getText(for: .excessVolume) ?? "You don't have room for that."
             } else {
                 object.move(to: context.player)
                 object.setFlag(.takenFlag)

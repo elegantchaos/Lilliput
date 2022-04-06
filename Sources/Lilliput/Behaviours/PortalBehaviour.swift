@@ -38,7 +38,7 @@ struct PortalBehaviour: Behaviour {
     }
     
     var impassableDescription: String {
-        if let description = object.getDescription(for: .locked) {
+        if let description = object.getText(for: .locked) {
             return description
         }
         

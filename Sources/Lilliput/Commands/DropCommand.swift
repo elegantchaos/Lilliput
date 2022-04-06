@@ -54,8 +54,8 @@ class DropCommand: NonExclusiveTargetedCommand {
                 switch position {
                 case .in:
                     let description =
-                        object.getDescription(for: "drop.\(location.id)") ??
-                        object.getDescription(for: "drop") ??
+                        object.getText(for: "drop.\(location.id)") ??
+                        object.getText(for: "drop") ??
                         "You drop \(brief)."
                     context.engine.output(description)
                     

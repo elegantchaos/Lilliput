@@ -36,7 +36,7 @@ class ChangeFlagCommand: TargetedCommand {
             case "missing": return "You are missing something."
 
             case "changed":
-                let custom = context.target.getDescription(for: "\(mode)")
+                let custom = context.target.getText(for: "\(mode)")
                 return custom ?? "You \(mode) \(brief)."
                 
             default:
@@ -47,7 +47,7 @@ class ChangeFlagCommand: TargetedCommand {
     func outputReport(forKey key: String, in context: CommandContext) {
         let object = context.target
         let output: String
-        if let custom = object.getDescription(for: "\(flag)-\(key)-\(state)") {
+        if let custom = object.getText(for: "\(flag)-\(key)-\(state)") {
             output = custom
         } else {
             output = defaultReport(forKey: key, in: context)

@@ -11,7 +11,7 @@ class PushCommand: TargetedCommand {
     }
  
     override func perform(in context: CommandContext) {
-        if let output = context.target.getDescription(for: .push) {
+        if let output = context.target.getText(for: .push) {
             context.engine.output(output)
             if let action = context.target.getProperty(withKey: "push-action") as? [String:Any] {
                 if let target = action[asString: "of"], let property = action[asString: "set"], let value = action["to"] {

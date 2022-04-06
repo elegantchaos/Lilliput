@@ -8,6 +8,8 @@ import Foundation
 enum Position: String, Equatable {
     case `in`
     case on
+    case under
+    case behind
     case worn
     
     init?(preposition: String) {

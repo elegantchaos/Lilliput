@@ -17,7 +17,7 @@ class ExamineCommand: NonExclusiveTargetedCommand {
     override func perform(in context: CommandContext) {
         if !matchedAll || includedInExamineAll(context) {
             let object = context.target
-            let description = object.getDescriptionAndContents()
+            let description = object.describeWithContents()
             let prefix = context.hasMultipleTargets ? "\(object.getDefinite().sentenceCased): " : ""
             object.setFlag(.examinedFlag)
             object.setFlag(.awareFlag)

@@ -223,145 +223,62 @@ public class Object {
 
         let isExamined = hasFlag(.examinedFlag)
         let exContext = isExamined ? "\(context)-examined" : "\(context)-not-examined"
-        if let description = getDescription(for: exContext) {
+        if let description = getText(for: exContext) {
             descriptions.append(description)
         }
 
-        if let description = getDescription(for: context) {
+        if let description = getText(for: context) {
             descriptions.append(description)
         }
         
         return descriptions
     }
     
-    func getDescriptionWarnIfMissing(for context: DescriptionContext) -> String {
-        if let description = getDescription(for: context) {
-            return description
-        }
-
-        engine.warning("Missing \(context) string for \(self)")
-        return id
-    }
-    
     func getDefinite() -> String {
-        return getDescriptionWarnIfMissing(for: .definite)
+        return describeRequired(for: .definite)
     }
     
     func getIndefinite() -> String {
-        return getDescriptionWarnIfMissing(for: .indefinite)
+        return describeRequired(for: .indefinite)
     }
     
-    func getContentPrefix(for context: DescriptionContext = .none, position: Position) -> String {
-        if context != .none, let prefix = getDescription(for: "contentPrefix-\(context)") {
+    func getContentPrefix(for context: DescriptionContext = .none, position: Position, useFullName: Bool = false) -> String {
+        if context != .none, let prefix = getText(for: "contentPrefix-\(context)") {
             return prefix
         }
         
-        if let prefix = getDescription(for: "contentPrefix.\(position)") {
+        if let prefix = getText(for: "contentPrefix.\(position)") {
             return prefix
         }
-
-        if let prefix = getDescription(for: .contentPrefix) {
+        
+        if let prefix = getText(for: .contentPrefix) {
             return prefix
         }
         
         switch context {
-            case .locationContent, .locationContentRecursive:
-                return "You can see"
+        case .locationContent, .locationContentRecursive:
+            return "You can see"
+        default:
+            let name = useFullName ? getDefinite() : "it"
+            switch position {
+            case .on:
+                return "On \(name) is"
+            case .under:
+                return "Under \(name) is"
             default:
-                return "It contains"
+                return "\(name) contains"
+            }
         }
     }
     
-    func getDescription(for context: String) -> String? {
-        return engine.string(withKey: context, from: definition.strings)
+    func getText(for key: String) -> String? {
+        return engine.string(withKey: key, from: definition.strings)
     }
     
-    func getDescription(for context: DescriptionContext) -> String? {
+    func getText(for context: DescriptionContext) -> String? {
         return engine.string(withKey: context.rawValue, from: definition.strings)
     }
     
-    func describeContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) -> String {
-        var output = Section()
-        let playerLocation = engine.player.location
-        let container = self
-        let containerID = id
-        
-        // for each of our contents we:
-        // - skip it if it's the player or the player's location
-        // - skip it if it is marked as hidden
-        // - show a custom descriptions for the item if there is one
-        // - add it to the list of objects to describe briefly
-        // - optionally add it to the list of objects to recursively describe the contents of
-        
-        var briefPositions = Set<Position>()
-        var describeBriefly: [Object] = []
-        var describeRecursively: [Object] = []
-        contents.forEach { object, position in
-            if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
-                object.setFlag(.awareFlag)
-                
-                // object descriptions for any location
-                var customDescriptions = object.getContextDescriptions(for: context)
-
-                // extra descriptions for the object, tagged with this context and container
-                // (eg an object's "contained.box" description would be appended
-                //  when the context is "contained" and the container's id is "box")
-                customDescriptions.append(contentsOf: object.getContextDescriptions(for: "\(context).\(containerID)"))
-                
-                // extra descriptions when this container contains the object
-                customDescriptions.append(contentsOf: container.getContextDescriptions(for: "contains.\(object.id)"))
-                
-                
-                if customDescriptions.count > 0 {
-                    for description in customDescriptions {
-                        output += Sentence(description)
-                    }
-                    
-                } else if !object.hasFlag(.skipBriefFlag) {
-                    describeBriefly.append(object)
-                    briefPositions.insert(position)
-                }
-                
-                let mode = object.getString(withKey: .showContentModeProperty)
-                if (mode == .showContentAlwaysMode) || object.hasFlag(mode) {
-                    describeRecursively.append(object)
-                }
-            }
-        }
-        
-        if describeBriefly.count == 0 {
-            if showIfEmpty {
-                let prefix = getContentPrefix(for: context, position: .in)
-                let description = getDescription(for: .contentEmpty) ?? "\(prefix) nothing."
-                output += Paragraph(description)
-            }
-            
-        } else {
-            for position in briefPositions {
-                let prefix = getContentPrefix(for: context, position: position)
-
-                var items: [String] = []
-                for object in describeBriefly.filter({ $0.position == position }) {
-                    items.append(object.getIndefinite())
-                }
-                
-                let list = ItemList(prefix, items: items)
-                output += Paragraph(list.text)
-            }
-        }
-        
-        let recursiveContext: DescriptionContext
-        switch context {
-            case .location, .contained: recursiveContext = .containedRecursively
-            default: recursiveContext = context
-        }
-        for object in describeRecursively {
-            let description = object.describeContents(context: recursiveContext, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
-            output += description
-        }
-        
-        return output.text
-    }
     
     func hasVisited(_ location: Object) -> Bool {
         return location.hasFlag(.visitedFlag)
@@ -379,32 +296,8 @@ public class Object {
         return key.starts(with: "not-") && !hasFlag(String(key.dropFirst(4)))
     }
     
-    func getDescription(context: DescriptionContext, prefix: String = "") -> String {
-        
-        let description = prefix + getDescriptionWarnIfMissing(for: context)
-        var output = Paragraph(description)
-        
-        for entry in definition.strings.table {
-            if hasFlagMatchingKey(entry.key) {
-                output += engine.string(fromAlternatives: entry.value)
-            }
-        }
-        
-        return output.text
-    }
-    
-    func describeContentsIfVisible() -> String {
-        return isContentVisible ? describeContents(context: .contained) : ""
-    }
-    
     var isContentVisible: Bool {
         OpenableBehaviour(self)?.isContentVisible ?? true
-    }
-    
-    func getDescriptionAndContents() -> String {
-        var output = Paragraph(getDescription(context: .detailed))
-        output += describeContentsIfVisible()
-        return output.text
     }
     
     func getProperty(withKey key: String) -> Any? {
@@ -622,4 +515,135 @@ extension Object: EventHandler {
 
         return result
     }
+}
+
+// MARK: Description
+
+extension Object {
+    /// Returns the description of this object, in a given context.
+    func describe(context: DescriptionContext, prefix: String = "") -> String {
+        let description = prefix + describeRequired(for: context)
+        var output = Paragraph(description)
+        
+        for entry in definition.strings.table {
+            if hasFlagMatchingKey(entry.key) {
+                output += engine.string(fromAlternatives: entry.value)
+            }
+        }
+        
+        return output.text
+    }
+
+    /// Returns the description of this object in a given context.
+    /// Emits an error if the description text is missing.
+    func describeRequired(for context: DescriptionContext) -> String {
+        if let description = getText(for: context) {
+            return description
+        }
+
+        engine.warning("Missing \(context) string for \(self)")
+        return id
+    }
+    
+    /// Returns the description of this object's contents in a given context.
+    func describeContents(context: DescriptionContext = .none, showIfEmpty: Bool = false) -> String {
+        var output = Section()
+        let playerLocation = engine.player.location
+        let container = self
+        let containerID = id
+        
+        // for each of our contents we:
+        // - skip it if it's the player or the player's location
+        // - skip it if it is marked as hidden
+        // - show a custom descriptions for the item if there is one
+        // - add it to the list of objects to describe briefly
+        // - optionally add it to the list of objects to recursively describe the contents of
+        
+        var briefPositions = Set<Position>()
+        var describeBriefly: [Object] = []
+        var describeRecursively: [Object] = []
+        contents.forEach { object, position in
+            if !object.hasFlag(.hiddenFlag) && !object.isPlayer && object != playerLocation {
+                object.setFlag(.awareFlag)
+                
+                // object descriptions for any location
+                var customDescriptions = object.getContextDescriptions(for: context)
+
+                // extra descriptions for the object, tagged with this context and container
+                // (eg an object's "contained.box" description would be appended
+                //  when the context is "contained" and the container's id is "box")
+                customDescriptions.append(contentsOf: object.getContextDescriptions(for: "\(context).\(containerID)"))
+                
+                // extra descriptions when this container contains the object
+                customDescriptions.append(contentsOf: container.getContextDescriptions(for: "contains.\(object.id)"))
+                
+                
+                if customDescriptions.count > 0 {
+                    for description in customDescriptions {
+                        output += Sentence(description)
+                    }
+                    
+                } else if !object.hasFlag(.skipBriefFlag) {
+                    describeBriefly.append(object)
+                    briefPositions.insert(position)
+                }
+                
+                let mode = object.getString(withKey: .showContentModeProperty)
+                if (mode == .showContentAlwaysMode) || object.hasFlag(mode) {
+                    describeRecursively.append(object)
+                }
+            }
+        }
+        
+        if describeBriefly.count == 0 {
+            if showIfEmpty {
+                let prefix = getContentPrefix(for: context, position: .in)
+                let description = getText(for: .contentEmpty) ?? "\(prefix) nothing."
+                output += Paragraph(description)
+            }
+            
+        } else {
+            var useFullName = false
+            var positionOutput = Paragraph()
+            for position in briefPositions {
+                let prefix = getContentPrefix(for: context, position: position, useFullName: useFullName)
+
+                var items: [String] = []
+                for object in describeBriefly.filter({ $0.position == position }) {
+                    items.append(object.getIndefinite())
+                }
+                
+                let list = ItemList(prefix, items: items)
+                positionOutput += Sentence(list.text)
+                useFullName = true
+            }
+            output += positionOutput
+        }
+        
+        let recursiveContext: DescriptionContext
+        switch context {
+            case .location, .contained: recursiveContext = .containedRecursively
+            default: recursiveContext = context
+        }
+        for object in describeRecursively {
+            let description = object.describeContents(context: recursiveContext, showIfEmpty: showIfEmpty || object.hasFlag(.showIfEmptyFlag))
+            output += description
+        }
+        
+        return output.text
+    }
+
+    /// Returns a description of this object and its contents.
+    func describeWithContents() -> String {
+        var output = Paragraph(describe(context: .detailed))
+        output += describeContentsIfVisible()
+        return output.text
+    }
+
+    /// Returns a description of this object's contents, if they are visible.
+    func describeContentsIfVisible() -> String {
+        return isContentVisible ? describeContents(context: .contained) : ""
+    }
+    
+
 }

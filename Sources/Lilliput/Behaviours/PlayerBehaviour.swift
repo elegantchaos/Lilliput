@@ -114,11 +114,11 @@ struct PlayerBehaviour: Behaviour {
         var next = object.location
         while let location = next {
             locations.append(location)
-            output += location.getDescription(context: context, prefix: prefix)
+            output += location.describe(context: context, prefix: prefix)
             next = location.location
             if next != nil {
                 context = .container
-                prefix = location.getDescription(for: .outside) ?? ""
+                prefix = location.getText(for: .outside) ?? ""
             }
         }
 
@@ -143,7 +143,7 @@ struct PlayerBehaviour: Behaviour {
             }
             
             // append suffix
-            if let string = location.getDescription(for: .locationSuffix) {
+            if let string = location.getText(for: .locationSuffix) {
                 output += string
             }
             

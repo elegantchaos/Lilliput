@@ -340,30 +340,19 @@ public class Engine {
         return objects[id]!
     }
     
+    /// Return a pseudo-random string from the alternatives stored under a key in a string table.
+    /// The same string will be returned each time until the engine tick changes.
     public func string(withKey key: String, from table: StringTable) -> String? {
         guard let alternatives = table.alternatives(for: key) else { return nil }
         return string(fromAlternatives: alternatives)
     }
     
+    /// Returns a pseudo-random string from a set of alternatives.
+    /// The same string will be returned each time until the engine tick changes.
     public func string(fromAlternatives alternatives: StringAlternatives) -> String {
         let strings = alternatives.strings
         let index = tick % strings.count
         return strings[index]
-    }
-    
-    public func asList(_ items: [String]) -> String {
-        switch items.count {
-            case 0:
-                return ""
-                
-            case 1:
-                return items.first!
-                
-            default:
-                let last = items.last!
-                let rest = items.dropLast().joined(separator: ", ")
-                return "\(rest) and \(last)"
-        }
     }
 }
 
