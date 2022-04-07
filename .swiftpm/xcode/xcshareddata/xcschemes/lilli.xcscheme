@@ -78,6 +78,10 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "ContainersTest"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "ComplexContainmentTest"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -1,0 +1,13 @@
+examine table
+take bin
+examine table
+drop bin
+put bin on table
+examine table
+take ball
+put ball under table
+examine table
+inventory
+examine coat
+take zippo
+put zippo in box

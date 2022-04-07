@@ -69,6 +69,19 @@
         "volume": 1
     },
 
+    "Lighter": {
+        "traits": ["movable"],
+        "names": ["lighter", "cigarette lighter", "zippo"],
+        "strings": {
+            "definite": "the lighter",
+            "indefinite": "a lighter",
+            "detailed": "A classic zippo lighter."
+        },
+        "location": "Coat",
+        "mass": 0.1,
+        "volume": 1
+    },
+
     "Coat": {
         "names": ["coat", "greatcoat", "pockets"],
         "traits": ["movable", "wearable"],

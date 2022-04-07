@@ -7,7 +7,10 @@ import Foundation
 
 class DropCommand: NonExclusiveTargetedCommand {
     init() {
-        super.init(/*keywords: ["drop", "put"], */patterns: [#"^(?: drop|put)\s+(.*?)\s+(in|on|into|onto)\s+(.*?)$"#])
+        super.init(patterns: [
+            #"^(?: drop|put)\s+(.*?)\s+(in|on|into|onto|under|on top of)\s+(.*?)$"#,
+            #"^(?: drop)\s+(.*?)$"#
+        ])
     }
     
     override func keywordMatches(in context: CommandContext) -> Bool {
@@ -48,18 +51,16 @@ class DropCommand: NonExclusiveTargetedCommand {
         if let location = location {
             let object = context.target
             let brief = object.getDefinite()
-            if object.isCarriedByPlayer {
+            if object.isCarriedByPlayer || arguments.count == 3 {
                 object.setFlag(.awareFlag)
                 object.move(to: location, position: position)
-                switch position {
-                case .in:
+                if arguments.count == 1 {
                     let description =
                         object.getText(for: "drop.\(location.id)") ??
                         object.getText(for: "drop") ??
                         "You drop \(brief)."
                     context.engine.output(description)
-                    
-                default:
+                } else {
                     context.engine.output("You put \(brief) \(position) \(location.getDefinite()).")
                 }
             } else {
