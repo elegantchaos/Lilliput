@@ -345,7 +345,7 @@ public class Engine {
     }
     
     public var editableObjects: [Object] {
-        return Array(objects.values)
+        return objects.values.sorted(by: \.id.localizedLowercase)
     }
     
     /// Return a pseudo-random string from the alternatives stored under a key in a string table.
