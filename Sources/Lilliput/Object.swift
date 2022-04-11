@@ -26,7 +26,7 @@ extension String {
 }
 
 public class Object {
-    let definition: Definition
+    public let definition: Definition
     let engine: Engine
     var location: Object?
     var position: Position
@@ -53,7 +53,7 @@ public class Object {
         [ExamineCommand()]
     }
     
-    var id: String { definition.id }
+    public var id: String { definition.id }
     
     var names: [String] { definition.names }
 
@@ -234,11 +234,11 @@ public class Object {
         return descriptions
     }
     
-    func getDefinite() -> String {
+    public func getDefinite() -> String {
         return describeRequired(for: .definite)
     }
     
-    func getIndefinite() -> String {
+    public func getIndefinite() -> String {
         return describeRequired(for: .indefinite)
     }
     

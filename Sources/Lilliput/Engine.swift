@@ -310,6 +310,10 @@ public class Engine {
         }
     }
     
+    public func setup() {
+        setupObjects()
+    }
+    
     public func run() {
         setupObjects()
 
@@ -338,6 +342,10 @@ public class Engine {
     
     public func object(withID id: String) -> Object {
         return objects[id]!
+    }
+    
+    public var editableObjects: [Object] {
+        return Array(objects.values)
     }
     
     /// Return a pseudo-random string from the alternatives stored under a key in a string table.

@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum Position: String, Equatable {
+public enum Position: String, Equatable {
     case `in`
     case on
     case under
@@ -24,7 +24,7 @@ enum Position: String, Equatable {
 }
 
 extension Position: Comparable {
-    static func < (lhs: Position, rhs: Position) -> Bool {
+    public static func < (lhs: Position, rhs: Position) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
 }

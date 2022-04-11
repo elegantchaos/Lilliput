@@ -78,7 +78,6 @@ struct PlayerBehaviour: Behaviour {
         var worn: [String] = []
         var held: [String] = []
         
-        let engine = object.engine
         object.contents.forEach { object, position in
             object.setFlag(.awareFlag)
             let brief = object.getIndefinite()

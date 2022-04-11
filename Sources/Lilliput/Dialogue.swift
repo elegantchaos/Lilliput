@@ -9,7 +9,7 @@ import Logger
 
 let dialogueChannel = Channel("Dialogue")
 
-struct Dialogue {
+public struct Dialogue {
     struct Reply {
         let id: String
         let index: Int

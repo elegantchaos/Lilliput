@@ -5,9 +5,9 @@
 
 import Foundation
 
-struct LocationPair {
-    let id: String
-    let position: Position
+public struct LocationPair {
+    public let id: String
+    public let position: Position
     
     init(location: String, position: Position) {
         self.id = location
@@ -74,7 +74,7 @@ public struct StringAlternatives {
 }
 
 extension LocationPair: Comparable {
-    static func < (lhs: LocationPair, rhs: LocationPair) -> Bool {
+    public static func < (lhs: LocationPair, rhs: LocationPair) -> Bool {
         if lhs.id == rhs.id {
             return lhs.position < rhs.position
         } else {
@@ -87,17 +87,17 @@ extension LocationPair: Comparable {
 
 
 public struct Definition {
-    let id: String
-    let location: LocationPair?
-    let strings: StringTable
-    let properties: [String:Any]
-    let names: [String]
-    let exits: [String:String]
-    let traits: [String]
-    let dialogue: Dialogue?
-    let mass: Double
-    let volume: Double
-    let handlers: Handlers
+    public let id: String
+    public let location: LocationPair?
+    public let strings: StringTable
+    public let properties: [String:Any]
+    public let names: [String]
+    public let exits: [String:String]
+    public let traits: [String]
+    public let dialogue: Dialogue?
+    public let mass: Double
+    public let volume: Double
+    public let handlers: Handlers
     
     init(id: String, properties: [String:Any]) {
         self.id = id

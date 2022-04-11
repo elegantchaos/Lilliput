@@ -9,7 +9,7 @@ import Logger
 
 let handlerChannel = Channel("handler")
 
-struct Handlers {
+public struct Handlers {
     
     let handlers: [Handler]
     
