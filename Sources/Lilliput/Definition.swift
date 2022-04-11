@@ -35,8 +35,8 @@ public struct LocationPair {
 }
 
 public struct StringTable {
-    typealias Index = [String:StringAlternatives]
-    let table: Index
+    public typealias Index = [String:StringAlternatives]
+    public let table: Index
     
     var keys: Index.Keys {
         table.keys
@@ -60,7 +60,7 @@ public struct StringTable {
 }
 
 public struct StringAlternatives {
-    let strings: [String]
+    public let strings: [String]
     
     init?(_ data: Any?) {
         if let string = data as? String {
