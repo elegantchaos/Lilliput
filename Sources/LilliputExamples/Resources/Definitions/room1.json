@@ -1,8 +1,8 @@
 {
     "traits": ["location"],
     "strings": {
-        "container": ["a shabby looking room."],
-        "definite": ["room 1"],
-        "location": ["You are in a shabby looking room."]
+        "container": "a shabby looking room.",
+        "definite": "room 1",
+        "location": "You are in a shabby looking room."
     }
 }

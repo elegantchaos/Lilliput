@@ -37,7 +37,7 @@ public struct Handlers {
     }
     
     var asInterchange: [[String:Any]] {
-        let value = handlers.map({ $0.asInterchange })
+        let value = handlers.filter({ $0.fromDialogue == false }).map({ $0.asInterchange })
         assertEncodable(value)
         return value
     }
@@ -47,7 +47,7 @@ struct Handler {
     struct Trigger {
         let when: String
         let data: [String:Any]
-        
+
         func testContents(of: Any?, includes: Any?) -> Bool {
             if let list = of as? [String], let value = includes as? String {
                 return list.contains(value)
@@ -206,20 +206,21 @@ struct Handler {
         }
     }
 
-
     let triggers: [Trigger]
     let actions: [Action]
-    
-    init?(_ definition: [String:Any]) {
+    let fromDialogue: Bool
+
+    init?(_ definition: [String:Any], fromDialogue: Bool = false) {
         guard
             let actions = definition["actions"] as? [[String:Any]],
             let triggers = definition["triggers"] as? [[String:Any]]
         else {
             return nil
         }
-
+        
         self.triggers = triggers.map({ Trigger(data: $0) })
         self.actions = actions.map({ Action(data: $0) })
+        self.fromDialogue = fromDialogue
     }
     
     func matches(context: EventContext) -> Bool {

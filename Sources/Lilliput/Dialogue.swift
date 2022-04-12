@@ -172,7 +172,7 @@ public struct Dialogue {
                     "triggers": triggers
                 ]
                 
-                if let handler = Handler(handler) {
+                if let handler = Handler(handler, fromDialogue: true) {
                     handlers.append(handler)
                 }
             }
