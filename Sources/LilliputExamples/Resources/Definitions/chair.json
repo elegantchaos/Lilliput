@@ -1,0 +1,17 @@
+{
+    "traits": ["movable", "sittable", "location"],
+    "strings": {
+        "definite": "the chair",
+        "detailed": "A sturdy looking chair.",
+        "indefinite": "a chair",
+        "location": "You are sitting on a sturdy looking chair. It's not very comfortable.",
+        "outside": " From the chair you can see "
+    },
+    "location": "Room 1",
+    "names": [
+        "chair",
+        "chair"
+    ],
+    "openLocation": true,
+    "sitMode": "on",
+}

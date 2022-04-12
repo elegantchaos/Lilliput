@@ -23,17 +23,22 @@ final class DefinitionTests: XCTestCase {
         let actual = String(data: encoded, encoding: .utf8)!
         XCTAssertEqual(actual, expected)
         if actual != expected {
-            try? normalised.write(to: outputFile(named: "expected", extension: "json"))
-            try? encoded.write(to: outputFile(named: "actual", extension: "json"))
+            try? normalised.write(to: outputFile(named: "\(name)-expected", extension: "json"))
+            try? encoded.write(to: outputFile(named: "\(name)-actual", extension: "json"))
         }
         print(actual)
     }
     
-    func testRoom() throws {
+    func testRoom2() throws {
         try testRoundTrip(for: "room1")
+        try testRoundTrip(for: "room2")
     }
     
     func testPerson() throws {
         try testRoundTrip(for: "person")
+    }
+    
+    func testObjects() throws {
+        try testRoundTrip(for: "chair")
     }
 }
