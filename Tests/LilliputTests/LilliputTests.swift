@@ -11,7 +11,6 @@ import XCTestExtensions
 @testable import Lilliput
 
 final class LilliputTests: XCTestCase {
-
     func testSitting() {
         let driver = TestDriver()
         let engine = Engine(driver: driver)

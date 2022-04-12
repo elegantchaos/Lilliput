@@ -1,6 +1,6 @@
 {
     "Room 1": {
-        "type": "location",
+        "traits": ["location"],
         "strings": {
             "definite": "room 1",
             "location": "You are in room 1."
@@ -12,28 +12,29 @@
     },
 
     "Room 2": {
+        "traits": ["location"],
         "strings": {
             "definite": "room 2",
             "location": "You are in room 2."
         },
         "exits": {
             "south": "Room 1"
-        },
-        "type": "location"
+        }
     },
 
     "Room 3": {
+        "traits": ["location"],
         "strings": {
             "definite": "room 3",
             "location": "You are in room 3."
         },
         "exits": {
             "north": "Room 1"
-        },
-        "type": "location"
+        }
     },
 
     "Room 1 Door": {
+        "traits": ["portal"],
         "strings": {
             "detailed": "A normal office door, with a keyhole.",
             "definite": "the door",
@@ -53,8 +54,7 @@
             "door",
             "room 1 door"
         ],
-        "requires": "Key",
-        "type": "portal"
+        "requires": "Key"
     },
 
     "Key": {
@@ -67,16 +67,15 @@
         "movable": true,
         "names": [
             "key"
-        ],
-        "type": "object"
+        ]
     },
 
     "player": {
+        "traits": ["player"],
         "strings": {
             "definite": "Testy McTestFace",
             "detailed": "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
         },
-        "location": "Room 1",
-        "type": "player"
+        "location": "Room 1"
     }
 }
