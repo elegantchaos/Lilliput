@@ -65,5 +65,6 @@ final class DefinitionTests: XCTestCase {
         try testRoundTrip(game: "PersonTest")
         try testRoundTrip(game: "PortalTest")
         try testRoundTrip(game: "WeightTest")
+        try testRoundTrip(game: "StrangeCases")
     }
 }

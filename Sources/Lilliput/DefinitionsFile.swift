@@ -71,7 +71,13 @@ struct DefinitionsFile {
             if let definitions = decoded as? [String:Any] {
                 for (id, definition) in definitions {
                     let encoded = try JSONSerialization.data(withJSONObject: definition, options: [.prettyPrinted, .sortedKeys])
-                    let output = destination.file(ItemName(id, pathExtension: "json"))
+                    var components = id.split(separator: ".")
+                    var container = destination
+                    while components.count > 1 {
+                        container = container.folder(String(components.removeFirst()))
+                    }
+                    try container.create()
+                    let output = container.file(ItemName(String(components[0]), pathExtension: "json"))
                     output.write(asData: encoded)
                     urls.append(output.url)
                 }
