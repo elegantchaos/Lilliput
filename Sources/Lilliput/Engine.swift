@@ -100,6 +100,24 @@ public class Engine {
             
     }
 
+    public func convert(url: URL, into: URL) -> [URL] {
+        var urls: [URL] = []
+        let folder = ThrowingManager.folder(for: url)
+        let converted = ThrowingManager.folder(for: into)
+        do {
+            try folder.forEach { item in
+                if item.name.pathExtension == "json", let file = item as? ThrowingFile {
+                    let definitions = DefinitionsFile(file: file)
+                    urls.append(contentsOf: try definitions.convert(into: converted))
+                }
+            }
+        } catch {
+            driver.output("\(error)", type: .error)
+        }
+        
+        return urls
+    }
+
     public func readScript(from url: URL) {
         if let text = ThrowingManager.file(for: url).asText {
             driver.pushInput(text)

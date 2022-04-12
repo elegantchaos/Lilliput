@@ -61,6 +61,25 @@ struct DefinitionsFile {
                 throw error
             }
         }
-        
     }
+
+    func convert(into destination: Folder) throws -> [URL] {
+        var urls: [URL] = []
+        try destination.create()
+        if let data = file.asData {
+            let decoded = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+            if let definitions = decoded as? [String:Any] {
+                for (id, definition) in definitions {
+                    let encoded = try JSONSerialization.data(withJSONObject: definition, options: [.prettyPrinted, .sortedKeys])
+                    let output = destination.file(ItemName(id, pathExtension: "json"))
+                    output.write(asData: encoded)
+                    urls.append(output.url)
+                }
+            }
+        }
+        
+        return urls
+    }
+    
+
 }
