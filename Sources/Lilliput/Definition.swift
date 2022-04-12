@@ -49,7 +49,7 @@ public struct Definition {
     }
     
     var asInterchange: [String:Any] {
-        var properties: [String:Any] = [:]
+        var properties: [String:Any] = self.properties
         
         properties[nonEmpty: "dialogue"] = dialogue?.asInterchange
         properties[nonEmpty: "handlers"] = handlers.asInterchange
