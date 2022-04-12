@@ -57,6 +57,7 @@ let package = Package(
             resources: [
                 .copy("Resources/Games"),
                 .copy("Resources/Commands"),
+                .copy("Resources/Definitions"),
             ]
         ),
         

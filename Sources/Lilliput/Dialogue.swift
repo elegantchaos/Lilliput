@@ -45,6 +45,9 @@ public struct Dialogue {
             return true
         }
         
+        var asInterchange: [String:Any] {
+            return [id: trigger.asInterchange]
+        }
     }
     
     struct Sentence {
@@ -104,6 +107,19 @@ public struct Dialogue {
 
         var text: String {
             lines.randomElement() ?? "<missing lines>"
+        }
+        
+        var asInterchange: Any {
+            if (lines.count == 1) && (repeatInterval == .max) {
+                return lines[0]
+            } else {
+                var value: [String:Any] = [
+                    "lines": lines,
+                ]
+                
+                value["repeatInterval", skipIf: Int.max] = repeatInterval
+                return value
+            }
         }
     }
 
@@ -169,5 +185,16 @@ public struct Dialogue {
         let event = Event(.getReplies, target: person)
         let context = EventContext(event: event, receiver: speaker)
         return replies.filter({ $0.matches(context) }).sorted(by: \.id)
+    }
+    
+    var asInterchange: [String:Any] {
+        var value: [String:Any] = [:]
+
+        value[nonEmpty: "sentences"] = sentences.mapValues({ $0.asInterchange })
+        value[nonEmpty: "replies"] = replies.map({ $0.asInterchange })
+        value[nonEmpty: "triggers"] = triggers
+        
+        assertEncodable(value)
+        return value
     }
 }

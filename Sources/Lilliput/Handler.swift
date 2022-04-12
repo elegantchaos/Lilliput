@@ -35,6 +35,12 @@ public struct Handlers {
             }
         }
     }
+    
+    var asInterchange: [[String:Any]] {
+        let value = handlers.map({ $0.asInterchange })
+        assertEncodable(value)
+        return value
+    }
 }
 
 struct Handler {
@@ -190,6 +196,14 @@ struct Handler {
             self.data = data
             self.when = data[asString: "when"] ?? ""
         }
+        
+        var asInterchange: [String: Any] {
+            var value = data
+            value[nonEmpty: "when"] = when
+            
+            assertEncodable(value)
+            return value
+        }
     }
 
 
@@ -224,4 +238,23 @@ struct Handler {
             action.run(in: context)
         }
     }
+    
+    var asInterchange: [String:Any] {
+        var value: [String:Any] = [:]
+        value[nonEmpty: "actions"] = actions.map({ $0.asInterchange })
+        value[nonEmpty: "triggers"] = triggers.map({ $0.asInterchange })
+        
+        assertEncodable(value)
+        return value
+    }
+}
+
+func assertEncodable<T>(_ value: T) {
+    #if DEBUG
+    do {
+        _ = try JSONSerialization.data(withJSONObject: value)
+    } catch {
+        fatalError("Can't encode \(value)")
+    }
+    #endif
 }

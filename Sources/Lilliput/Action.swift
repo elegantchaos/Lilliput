@@ -122,4 +122,7 @@ struct Action {
         context.receiver.leaveConversation(with: [context.player])
     }
 
+    var asInterchange: [String:Any] {
+        return data
+    }
 }

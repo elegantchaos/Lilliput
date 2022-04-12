@@ -32,6 +32,16 @@ public struct LocationPair {
     var persistenceData: [String] {
         return [id, position.rawValue]
     }
+    
+    var asInterchange: Any {
+        switch position {
+            case .in:
+                return id
+            default:
+                let result: [String:Any] = [.locationKey: id, .positionKey: position.rawValue]
+                return result
+        }
+    }
 }
 
 public struct StringTable {
@@ -57,6 +67,10 @@ public struct StringTable {
     func alternatives(for key: String) -> StringAlternatives? {
         return table[key]
     }
+    
+    public var asInterchange: [String: Any] {
+        return table.mapValues({ $0.asInterchange })
+    }
 }
 
 public struct StringAlternatives {
@@ -69,6 +83,14 @@ public struct StringAlternatives {
             self.strings = strings
         } else {
             return nil
+        }
+    }
+    
+    var asInterchange: Any {
+        if strings.count == 1 {
+            return strings[0]
+        } else {
+            return strings
         }
     }
 }
@@ -127,5 +149,62 @@ public struct Definition {
         guard let value = properties[key] as? Bool else { return false }
         return value
     }
+    
+    var asInterchange: [String:Any] {
+        var properties: [String:Any] = [:]
+        
+        properties[nonEmpty: "dialogue"] = dialogue?.asInterchange
+        properties[nonEmpty: "handlers"] = handlers.asInterchange
+        properties["location"] = location?.asInterchange
+        properties[nonEmpty: "strings"] = strings.asInterchange
+        properties[nonEmpty: "names"] = names
+        properties[nonEmpty: "exits"] = exits
+        properties[nonZero: "mass"] = mass
+        properties[nonZero: "volume"] = volume
+        properties[nonEmpty: "traits"] = traits
+
+        return properties
+    }
 }
 
+extension Dictionary where Value == Any {
+    subscript<V: Equatable>(_ key: Key, skipIf skip: V) -> V? {
+        get {
+            return self[key] as? V
+        }
+        set(newValue) {
+            if newValue == skip {
+                removeValue(forKey: key)
+            } else {
+                self[key] = newValue
+            }
+        }
+    }
+
+    subscript<V: BinaryFloatingPoint>(nonZero key: Key) -> V? {
+        get {
+            fatalError("write-only")
+        }
+        set(newValue) {
+            if newValue == 0.0 {
+                removeValue(forKey: key)
+            } else {
+                self[key] = newValue
+            }
+        }
+    }
+
+    subscript<V: Collection>(nonEmpty key: Key) -> V? {
+        get {
+            fatalError("write-only")
+        }
+        set(newValue) {
+            if newValue?.isEmpty ?? false {
+                removeValue(forKey: key)
+            } else {
+                self[key] = newValue
+            }
+        }
+    }
+
+}
