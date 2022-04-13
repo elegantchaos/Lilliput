@@ -42,15 +42,21 @@ public struct ProjectFolder {
     func loadObjects(from root: Folder, into engine: Engine) throws {
         let folder = root.folder("objects")
         if folder.exists {
-            try folder.forEach { item in
-                if item.name.pathExtension == "json", let file = item as? ThrowingFile {
-                    let definition = ObjectFile(file: file)
-                    try definition.load(into: engine)
-                }
+            try loadObjects(from: folder, prefix: "", into: engine)
+        }
+    }
+
+    func loadObjects(from folder: Folder, prefix: String, into engine: Engine) throws {
+        try folder.forEach { item in
+            if item.name.pathExtension == "json", let file = item as? ThrowingFile {
+                let definition = ObjectFile(file: file, idPrefix: prefix)
+                try definition.load(into: engine)
+            } else if let subfolder = item as? ThrowingFolder {
+                try loadObjects(from: subfolder, prefix: "\(prefix)\(subfolder.name).", into: engine)
             }
         }
     }
-    
+
     public func convert(url: URL, into: URL) -> [URL] {
         var urls: [URL] = []
         let folder = ThrowingManager.folder(for: url)
