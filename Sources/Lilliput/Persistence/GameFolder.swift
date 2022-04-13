@@ -6,7 +6,8 @@
 import Foundation
 import Files
 
-public struct ProjectFolder {
+/// Structured folder containing all the files that define a game.
+public struct GameFolder {
     let url: URL
 
     public init(url: URL) {
@@ -21,7 +22,7 @@ public struct ProjectFolder {
     }
     
     func loadStopWords(from root: Folder, into engine: Engine) throws {
-        let file = root.file("stop.txt")
+        let file = root.file("stop words.txt")
         if let text = file.asText {
             engine.stopWords = text.split(separator: "\n")
         }
@@ -47,7 +48,7 @@ public struct ProjectFolder {
     }
 
     func loadObjects(from folder: Folder, prefix: String, into engine: Engine) throws {
-        try folder.forEach { item in
+        try folder.forEach(recursive: false) { item in
             if item.name.pathExtension == "json", let file = item as? ThrowingFile {
                 let definition = ObjectFile(file: file, idPrefix: prefix)
                 try definition.load(into: engine)

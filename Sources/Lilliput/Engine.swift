@@ -81,7 +81,7 @@ public class Engine {
     }
     
     public func load(url: URL) {
-        let folder = ProjectFolder(url: url)
+        let folder = GameFolder(url: url)
         do {
             try folder.load(into: self)
         } catch {
