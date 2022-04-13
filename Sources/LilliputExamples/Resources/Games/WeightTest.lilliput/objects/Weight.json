@@ -1,0 +1,16 @@
+{
+  "location" : "Room 1",
+  "mass" : 100,
+  "names" : [
+    "weight"
+  ],
+  "strings" : {
+    "definite" : "the weight",
+    "detailed" : "A large weight.",
+    "indefinite" : "a 100kg weight"
+  },
+  "traits" : [
+    "movable"
+  ],
+  "volume" : 1
+}

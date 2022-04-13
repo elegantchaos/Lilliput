@@ -1,0 +1,70 @@
+{
+  "dialogue" : {
+    "replies" : [
+      {
+        "question1" : {
+          "contains" : "greeting",
+          "of" : "target",
+          "when" : "spoken"
+        }
+      },
+      {
+        "question2" : {
+          "contains" : "greeting",
+          "of" : "target",
+          "when" : "spoken"
+        }
+      }
+    ],
+    "sentences" : {
+      "asked1" : "My first name is Norman.",
+      "asked2" : "My surname is Player-Character.",
+      "greeting" : "Norman says “Hello”.",
+      "question1" : "What is your first name?",
+      "question2" : "What is your surname?"
+    },
+    "triggers" : {
+      "asked1" : {
+        "contains" : "question1",
+        "of" : "player",
+        "when" : "spoken"
+      },
+      "asked2" : {
+        "contains" : "question2",
+        "of" : "player",
+        "when" : "spoken"
+      },
+      "greeting" : {
+        "is" : "startedTalking",
+        "when" : "event"
+      }
+    }
+  },
+  "handlers" : [
+    {
+      "actions" : [
+        {
+          "startTalking" : "player"
+        }
+      ],
+      "triggers" : [
+        {
+          "when" : "playerArrived"
+        }
+      ]
+    }
+  ],
+  "location" : "Room 1",
+  "names" : [
+    "norman",
+    "npc"
+  ],
+  "strings" : {
+    "definite" : "Norman",
+    "detailed" : "Normal Player-Character Esquire.",
+    "indefinite" : "Norman Player-Character"
+  },
+  "traits" : [
+    "person"
+  ]
+}

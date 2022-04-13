@@ -1,0 +1,8 @@
+{
+  "location" : "Your Office",
+  "strings" : {
+    "definite" : "the window",
+    "detailed" : "The window does not open but a large crack in one of the panes allows a draught into the room. It is enough to make the room uncomfortably cold in the winter, but insufficient to provide relief from how stuffy the room can get in the summer.\n\n                    Outside, you can see a Hansom cab waiting by the pavement. The driver smokes a cigarette as he feeds the horse an apple.\n                ",
+    "indefinite" : "a dusty window"
+  }
+}

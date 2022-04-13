@@ -1,0 +1,25 @@
+{
+  "links" : [
+    "Room 1",
+    "Room 2"
+  ],
+  "lockable" : true,
+  "locked" : true,
+  "names" : [
+    "door",
+    "room 1 door"
+  ],
+  "requires" : "Key",
+  "strings" : {
+    "definite" : "the door",
+    "detailed" : "A normal office door, with a keyhole.",
+    "exit" : "through a door",
+    "indefinite" : "a door",
+    "locked" : "The door is locked.",
+    "locked-missing" : "You don't have the key.",
+    "not-locked" : "The door is unlocked."
+  },
+  "traits" : [
+    "portal"
+  ]
+}

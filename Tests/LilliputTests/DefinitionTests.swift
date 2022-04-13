@@ -33,15 +33,15 @@ final class DefinitionTests: XCTestCase {
         }
     }
 
-    func testRoundTrip(game name: String) throws {
-        let driver = TestDriver()
-        let engine = Engine(driver: driver)
-        let url = LilliputExamples.urlForGame(named: name)!
-        let converted = engine.convert(url: url, into: outputDirectory().appendingPathComponent("Converted").appendingPathComponent(name))
-        for definition in converted {
-            try testRoundTrip(url: definition)
-        }
-    }
+//    func testRoundTrip(game name: String) throws {
+//        let driver = TestDriver()
+//        let engine = Engine(driver: driver)
+//        let url = LilliputExamples.urlForGame(named: name)!
+//        let converted = engine.convert(url: url, into: outputDirectory().appendingPathComponent("Converted").appendingPathComponent(name))
+//        for definition in converted {
+//            try testRoundTrip(url: definition)
+//        }
+//    }
     
 
     func testRoom2() throws {
@@ -57,14 +57,14 @@ final class DefinitionTests: XCTestCase {
         try testRoundTrip(for: "chair")
     }
     
-    func testRoundtripGames() throws {
-        try testRoundTrip(game: "ChairTest")
-        try testRoundTrip(game: "ComplexContainmentTest")
-        try testRoundTrip(game: "ContainersTest")
-        try testRoundTrip(game: "OpenTest")
-        try testRoundTrip(game: "PersonTest")
-        try testRoundTrip(game: "PortalTest")
-        try testRoundTrip(game: "WeightTest")
-        try testRoundTrip(game: "StrangeCases")
-    }
+//    func testRoundtripGames() throws {
+//        try testRoundTrip(game: "ChairTest")
+//        try testRoundTrip(game: "ComplexContainmentTest")
+//        try testRoundTrip(game: "ContainersTest")
+//        try testRoundTrip(game: "OpenTest")
+//        try testRoundTrip(game: "PersonTest")
+//        try testRoundTrip(game: "PortalTest")
+//        try testRoundTrip(game: "WeightTest")
+//        try testRoundTrip(game: "StrangeCases")
+//    }
 }

@@ -1,0 +1,26 @@
+{
+  "location" : "Room 1",
+  "mass" : 0.10000000000000001,
+  "names" : [
+    "box"
+  ],
+  "strings" : {
+    "contentEmpty" : "The box seems to be empty.",
+    "contentPrefix" : "The box contains",
+    "contentPrefix-location" : "The box is open. It contains",
+    "definite" : "the box",
+    "detailed" : "A large box with a latch on the lid.",
+    "indefinite" : "a large box",
+    "not-open" : "The box is currently closed.",
+    "open" : "It is currently open.",
+    "open-already-false" : "The box is already closed.",
+    "open-already-true" : "The box is already open.",
+    "open-changed-false" : "The box clicks closed.",
+    "open-changed-true" : "You pop the latch and open the box."
+  },
+  "traits" : [
+    "movable",
+    "openable"
+  ],
+  "volume" : 1
+}

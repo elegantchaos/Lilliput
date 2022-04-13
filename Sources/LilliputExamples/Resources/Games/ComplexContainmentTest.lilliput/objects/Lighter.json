@@ -1,0 +1,18 @@
+{
+  "location" : "Coat",
+  "mass" : 0.10000000000000001,
+  "names" : [
+    "lighter",
+    "cigarette lighter",
+    "zippo"
+  ],
+  "strings" : {
+    "definite" : "the lighter",
+    "detailed" : "A classic zippo lighter.",
+    "indefinite" : "a lighter"
+  },
+  "traits" : [
+    "movable"
+  ],
+  "volume" : 1
+}

@@ -1,0 +1,14 @@
+{
+  "location" : "Room 1",
+  "names" : [
+    "box"
+  ],
+  "strings" : {
+    "definite" : "the box",
+    "detailed" : "A small, sealed box.",
+    "indefinite" : "a box"
+  },
+  "traits" : [
+    "movable"
+  ]
+}

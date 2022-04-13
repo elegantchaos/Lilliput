@@ -1,43 +1,37 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-//  Created by Sam Deane on 28/02/21.
-//  All code (c) 2021 - present day, Elegant Chaos Limited.
+//  Created by Sam Deane on 13/04/2022.
+//  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 import Files
 
-struct DefinitionsFile {
+/// File containing the definition of a single object.
+struct ObjectFile {
     let file: ThrowingFile
+    let id: String
     
-    init(file: ThrowingFile) {
+    init(file: ThrowingFile, idPrefix: String = "") {
         self.file = file
+        self.id = "\(idPrefix)\(file.name.name)"
     }
     
     func load(into engine: Engine) throws {
         if let data = file.asData {
             do {
-                let decoded = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                if let definitions = decoded as? [String:Any] {
-                    var count = 0
-                    for item in definitions {
-                        if let properties = item.value as? [String:Any] {
-                            let definition = Definition(id: item.key, properties: properties)
-                            engine.register(definition)
-                            count += 1
-                        } else {
-                            engine.warning("Invalid definition \(item).")
-                        }
-                    }
-                    
-                    engineChannel.log("Loaded \(count) definitions from \(file.name).")
+                let decoded = try JSONSerialization.jsonObject(with: data, options: [])
+                if let properties = decoded as? [String:Any] {
+                    let definition = Definition(id: id, properties: properties)
+                    engine.register(definition)
+                    engineChannel.log("Loaded \(id) definition.")
                 }
             } catch {
                 let nserror = error as NSError
                 if (nserror.domain == NSCocoaErrorDomain) && (nserror.code == 3840) {
                     if let json = String(data: data, encoding: .utf8),
-                        let description = nserror.userInfo["NSDebugDescription"] as? String,
-                        let number = description.split(separator: " ").last?.split(separator: ".").first,
-                        let index = Int(number) {
+                       let description = nserror.userInfo["NSDebugDescription"] as? String,
+                       let number = description.split(separator: " ").last?.split(separator: ".").first,
+                       let index = Int(number) {
                         
                         let lines = json.split(separator: "\n")
                         var count = 0
@@ -57,12 +51,12 @@ struct DefinitionsFile {
                         }
                     }
                 }
-
+                
                 throw error
             }
         }
     }
-
+    
     func convert(into destination: Folder) throws -> [URL] {
         var urls: [URL] = []
         try destination.create()
@@ -87,5 +81,5 @@ struct DefinitionsFile {
         return urls
     }
     
-
+    
 }

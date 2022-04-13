@@ -1,0 +1,21 @@
+{
+  "location" : {
+    "location" : "Table",
+    "position" : "under"
+  },
+  "mass" : 0.10000000000000001,
+  "names" : [
+    "bin",
+    "wastebin",
+    "wastebasket"
+  ],
+  "strings" : {
+    "definite" : "the bin",
+    "detailed" : "A small wastebin.",
+    "indefinite" : "a bin"
+  },
+  "traits" : [
+    "movable"
+  ],
+  "volume" : 1
+}

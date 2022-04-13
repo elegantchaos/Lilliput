@@ -1,0 +1,16 @@
+{
+  "location" : "Room 1",
+  "mass" : 0.10000000000000001,
+  "names" : [
+    "ball"
+  ],
+  "strings" : {
+    "definite" : "the ball",
+    "detailed" : "A small ping-pong ball.",
+    "indefinite" : "a ball"
+  },
+  "traits" : [
+    "movable"
+  ],
+  "volume" : 1
+}

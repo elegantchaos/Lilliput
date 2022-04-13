@@ -1,0 +1,12 @@
+{
+  "location" : "Room 1",
+  "movable" : true,
+  "names" : [
+    "key"
+  ],
+  "strings" : {
+    "definite" : "the key",
+    "detailed" : "A large key.",
+    "indefinite" : "a key"
+  }
+}

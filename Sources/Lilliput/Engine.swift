@@ -81,41 +81,12 @@ public class Engine {
     }
     
     public func load(url: URL) {
-        
-        let folder = ThrowingManager.folder(for: url)
+        let folder = ProjectFolder(url: url)
         do {
-            try folder.forEach { item in
-                if item.name.pathExtension == "json", let file = item as? ThrowingFile {
-                    let definitions = DefinitionsFile(file: file)
-                    try definitions.load(into: self)
-                } else if item.name.pathExtension == "stop", let file = item as? ThrowingFile {
-                    if let text = file.asText {
-                        stopWords = text.split(separator: "\n")
-                    }
-                }
-            }
+            try folder.load(into: self)
         } catch {
             driver.output("\(error)", type: .error)
         }
-            
-    }
-
-    public func convert(url: URL, into: URL) -> [URL] {
-        var urls: [URL] = []
-        let folder = ThrowingManager.folder(for: url)
-        let converted = ThrowingManager.folder(for: into)
-        do {
-            try folder.forEach { item in
-                if item.name.pathExtension == "json", let file = item as? ThrowingFile {
-                    let definitions = DefinitionsFile(file: file)
-                    urls.append(contentsOf: try definitions.convert(into: converted))
-                }
-            }
-        } catch {
-            driver.output("\(error)", type: .error)
-        }
-        
-        return urls
     }
 
     public func readScript(from url: URL) {

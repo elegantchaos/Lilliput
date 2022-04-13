@@ -7,7 +7,7 @@ import Foundation
 
 public struct LilliputExamples {
     public static func urlForGame(named name: String) -> URL? {
-        return Bundle.module.url(forResource: name, withExtension: nil, subdirectory: "Games")
+        return Bundle.module.url(forResource: name, withExtension: "lilliput", subdirectory: "Games")
     }
 
     public static func urlForDefinition(named name: String) -> URL? {

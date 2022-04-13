@@ -1,0 +1,16 @@
+{
+  "location" : "Room 1",
+  "mass" : 0.10000000000000001,
+  "names" : [
+    "table"
+  ],
+  "strings" : {
+    "definite" : "the table",
+    "detailed" : "A flat table.",
+    "indefinite" : "a flat table"
+  },
+  "traits" : [
+    "movable"
+  ],
+  "volume" : 1
+}

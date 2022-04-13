@@ -1,0 +1,16 @@
+{
+  "location" : "Room 1",
+  "mass" : 1000,
+  "names" : [
+    "elephant"
+  ],
+  "strings" : {
+    "definite" : "the elephant",
+    "detailed" : "A rather large elephant.",
+    "indefinite" : "an elephant"
+  },
+  "traits" : [
+    "movable"
+  ],
+  "volume" : 1000
+}

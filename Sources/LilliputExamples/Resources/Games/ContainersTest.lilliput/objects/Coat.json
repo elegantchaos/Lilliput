@@ -1,0 +1,21 @@
+{
+  "location" : {
+    "location" : "player",
+    "position" : "worn"
+  },
+  "names" : [
+    "coat",
+    "greatcoat",
+    "pockets"
+  ],
+  "strings" : {
+    "contentPrefix" : "In the pockets you find",
+    "definite" : "the greatcoat",
+    "detailed" : "A long greatcoat. It's warm, but has seen better days.",
+    "indefinite" : "a long greatcoat"
+  },
+  "traits" : [
+    "movable",
+    "wearable"
+  ]
+}

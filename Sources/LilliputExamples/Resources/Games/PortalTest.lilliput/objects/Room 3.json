@@ -1,0 +1,12 @@
+{
+  "exits" : {
+    "north" : "Room 1"
+  },
+  "strings" : {
+    "definite" : "room 3",
+    "location" : "You are in room 3."
+  },
+  "traits" : [
+    "location"
+  ]
+}
