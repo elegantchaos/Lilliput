@@ -13,6 +13,10 @@ public class Command {
             case fallback
         }
 
+        var id: String {
+            String(describing: type(of: self))
+        }
+        
         let command: Command
         let context: CommandContext
         let kind: Kind

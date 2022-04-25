@@ -1,5 +1,6 @@
 {
-    "traits": ["movable", "sittable", "location"],
+    "inherits": ["movable", "sittable"],
+    "traits": ["location"],
     "strings": {
         "definite": "the chair",
         "detailed": "A sturdy looking chair.",

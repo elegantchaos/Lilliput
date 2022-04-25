@@ -33,6 +33,7 @@ public class Engine {
     var running = true
     var definitions: [String:Definition] = [:]
     var objects: [String:Object] = [:]
+    var commandsByName: [String:Command] = [:]
     var player: Object!
     var events: [Event] = []
     var behaviours: [String:Behaviour.Type] = [:]
@@ -44,7 +45,18 @@ public class Engine {
     
     public init(driver: Driver) {
         self.driver = driver
+        registerStandardCommands()
         registerStandardBehaviours()
+    }
+    
+    public func registerStandardCommands() {
+        register([
+            DropCommand(),
+            LeaveCommand(),
+            SitCommand(),
+            TakeCommand(),
+            WearCommand()
+        ])
     }
     
     public func registerStandardBehaviours() {
@@ -54,7 +66,6 @@ public class Engine {
             LocationBehaviour.self,
             LockableBehaviour.self,
             LoadableBehaviour.self,
-            MovableBehaviour.self,
             OpenableBehaviour.self,
             PersonBehaviour.self,
             PlayableBehaviour.self,
@@ -62,7 +73,6 @@ public class Engine {
             PushableBehaviour.self,
             PortalBehaviour.self,
             ShootableBehaviour.self,
-            SittableBehaviour.self,
             UsableBehaviour.self,
             WearableBehaviour.self
         ])
@@ -80,10 +90,20 @@ public class Engine {
         }
     }
     
+    func register(_ command: Command) {
+        register([command])
+    }
+    
+    func register(_ commands: [Command]) {
+        for command in commands {
+            self.commandsByName[String(describing: type(of: command))] = command
+            engineChannel.log("registered command \(command)")
+        }
+    }
     public func load(url: URL) {
-        let folder = GameFolder(url: url)
+        var game = GameFolder(url: url)
         do {
-            try folder.load(into: self)
+            try game.load(into: self)
         } catch {
             driver.output("\(error)", type: .error)
         }

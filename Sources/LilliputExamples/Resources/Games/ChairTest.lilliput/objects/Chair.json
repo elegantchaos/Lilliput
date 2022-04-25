@@ -1,21 +1,20 @@
 {
-  "location" : "Room 1",
-  "names" : [
-    "chair",
-    "chair"
-  ],
-  "openLocation" : true,
-  "sitMode" : "on",
-  "strings" : {
-    "definite" : "the chair",
-    "detailed" : "A sturdy looking chair.",
-    "indefinite" : "a chair",
-    "location" : "You are sitting on a sturdy looking chair. It's not very comfortable.",
-    "outside" : " From the chair you can see "
-  },
-  "traits" : [
-    "movable",
-    "sittable",
-    "location"
-  ]
+    "inherits": ["movable", "sittable"],
+    "location" : "Room 1",
+    "names" : [
+        "chair",
+        "chair"
+    ],
+    "openLocation" : true,
+    "sitMode" : "on",
+    "strings" : {
+        "definite" : "the chair",
+        "detailed" : "A sturdy looking chair.",
+        "indefinite" : "a chair",
+        "location" : "You are sitting on a sturdy looking chair. It's not very comfortable.",
+        "outside" : " From the chair you can see "
+    },
+    "traits" : [
+        "location"
+    ]
 }

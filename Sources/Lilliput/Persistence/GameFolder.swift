@@ -3,22 +3,34 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import DictionaryResolver
 import Foundation
 import Files
 
 /// Structured folder containing all the files that define a game.
 public struct GameFolder {
     let url: URL
-
+    var resolver: DictionaryResolver
+    
     public init(url: URL) {
+        var resolver = DictionaryResolver()
+        resolver.addCombiner(Combiner.combineCombinable)
+
         self.url = url
+        self.resolver = resolver
     }
     
-    public func load(into engine: Engine) throws {
+    public mutating func load(into engine: Engine) throws {
         let root = ThrowingManager.folder(for: url)
-        try loadPackedObjects(from: root, into: engine)
-        try loadObjects(from: root, into: engine)
+        
+        if let url = Bundle.module.url(forResource: "Types", withExtension: "") {
+            try resolver.loadRecords(from: url, mode: .oneRecordPerFile)
+        }
+        
+        try loadPackedObjects(from: root)
+        try loadObjects(from: root)
         try loadStopWords(from: root, into: engine)
+        resolveObjects(into: engine)
     }
     
     func loadStopWords(from root: Folder, into engine: Engine) throws {
@@ -28,35 +40,28 @@ public struct GameFolder {
         }
     }
     
-    func loadPackedObjects(from root: Folder, into engine: Engine) throws {
+    mutating func loadPackedObjects(from root: Folder) throws {
         let folder = root.folder("packed")
         if folder.exists {
-            try folder.forEach { item in
-                if item.name.pathExtension == "json", let file = item as? ThrowingFile {
-                    let definitions = PackedObjectsFile(file: file)
-                    try definitions.load(into: engine)
-                }
-            }
+            try resolver.loadRecords(from: folder.url, mode: .multipleRecordsPerFile)
         }
     }
     
-    func loadObjects(from root: Folder, into engine: Engine) throws {
+    mutating func loadObjects(from root: Folder) throws {
         let folder = root.folder("objects")
         if folder.exists {
-            try loadObjects(from: folder, prefix: "", into: engine)
+            try resolver.loadRecords(from: folder.url, mode: .oneRecordPerFile)
         }
     }
 
-    func loadObjects(from folder: Folder, prefix: String, into engine: Engine) throws {
-        try folder.forEach(recursive: false) { item in
-            if item.name.pathExtension == "json", let file = item as? ThrowingFile {
-                let definition = ObjectFile(file: file, idPrefix: prefix)
-                try definition.load(into: engine)
-            } else if let subfolder = item as? ThrowingFolder {
-                try loadObjects(from: subfolder, prefix: "\(prefix)\(subfolder.name).", into: engine)
-            }
+    mutating func resolveObjects(into engine: Engine) {
+        resolver.resolve()
+        for (id, properties) in resolver.resolvedRecords {
+            let definition = Definition(id: id, properties: properties)
+            engine.register(definition)
         }
     }
+    
 
     public func convert(url: URL, into: URL) -> [URL] {
         var urls: [URL] = []

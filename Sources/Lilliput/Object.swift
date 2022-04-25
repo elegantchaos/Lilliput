@@ -111,7 +111,15 @@ public class Object {
                 behaviourStorage[id] = behaviour.storage(for: self)
                 commands.append(contentsOf: behaviour.commands)
             } else {
-                engine.warning("Unknown trait \(id).")
+                engine.warning("Unknown trait \(id) for \(self.id).")
+            }
+        }
+        
+        for id in definition.commands {
+            if let command = engine.commandsByName[id] {
+                commands.append(command)
+            } else {
+                engine.warning("Unknown command \(id).")
             }
         }
     }

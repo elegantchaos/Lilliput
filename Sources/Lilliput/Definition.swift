@@ -18,6 +18,7 @@ public struct Definition {
     public let mass: Double
     public let volume: Double
     public let handlers: Handlers
+    public let commands: [String]
     
     init(id: String, properties: [String:Any]) {
         self.id = id
@@ -31,6 +32,7 @@ public struct Definition {
         self.exits = (properties["exits"] as? [String:String]) ?? [:]
         self.mass = properties[asDouble: "mass"] ?? 0
         self.volume = properties[asDouble: "volume"] ?? 0
+        self.commands = properties["commands"] as? [String] ?? []
         
         var traits: [String] = (properties["traits"] as? [String]) ?? []
         if let kind = properties[asString: "type"] {
@@ -48,6 +50,9 @@ public struct Definition {
         return value
     }
     
+    func commands(withNames: [String]) -> [Command] {
+        return []
+    }
     var asInterchange: [String:Any] {
         var properties: [String:Any] = self.properties
         
