@@ -19,7 +19,7 @@
     "locked-missing" : "You don't have the key.",
     "not-locked" : "The door is unlocked."
   },
-  "traits" : [
+  "inherits" : [
     "portal"
   ]
 }

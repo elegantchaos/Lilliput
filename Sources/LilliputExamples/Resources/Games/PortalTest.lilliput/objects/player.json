@@ -4,7 +4,7 @@
     "definite" : "Testy McTestFace",
     "detailed" : "Your name is Testy McTestFace. There is not a day goes by that you don't curse your parents for their whimsy."
   },
-  "traits" : [
-    "player"
+  "inherits" : [
+    "pc"
   ]
 }
