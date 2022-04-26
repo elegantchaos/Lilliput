@@ -1,0 +1,27 @@
+{
+  "location" : "Your Office",
+  "names" : [
+    "desk",
+    "drawer",
+    "your desk"
+  ],
+  "showContentWhen" : "open",
+  "showEmpty" : true,
+  "strings" : {
+    "contentEmpty" : "The desk drawer is open, and empty.",
+    "contentPrefix" : "It contains",
+    "contentPrefix-location" : "The desk drawer is open. It contains",
+    "definite" : "the desk",
+    "detailed" : "The desk is cluttered with half-written reports, old newspapers and an empty cup that once contained coffee.",
+    "indefinite" : "your desk",
+    "not-open" : "It has one large drawer, which is currently closed.",
+    "open" : "It has one large drawer, which is currently open.",
+    "openDidClear" : "You shove the drawer closed.",
+    "openDidSet" : "The drawer is a bit stiff, but you eventually wrestle it open.",
+    "openWasAlreadyClear" : "The desk drawer is already closed.",
+    "openWasAlreadySet" : "The drawer is already open."
+  },
+  "inherits" : [
+    "openable"
+  ]
+}

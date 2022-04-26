@@ -1,0 +1,11 @@
+{
+  "location" : "Your Desk",
+  "strings" : {
+    "definite" : "the bullets",
+    "detailed" : "Large .577 rounds for your pistol.",
+    "indefinite" : "some bullets"
+  },
+  "inherits" : [
+    "movable"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "location" : "Your Desk",
+  "strings" : {
+    "definite" : "the matches",
+    "detailed" : "A box of matches. Strangely, however many matches you use, it never seems to be empty.",
+    "indefinite" : "a box of matches"
+  },
+  "inherits" : [
+    "movable"
+  ]
+}

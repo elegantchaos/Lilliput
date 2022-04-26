@@ -1,0 +1,62 @@
+{
+  "handlers" : [
+    {
+      "actions" : [
+        {
+          "output" : "You flip open the cylinder and load it with .577 rounds."
+        },
+        {
+          "swap" : "Pistol-unloaded",
+          "with" : "Pistol-loaded"
+        }
+      ],
+      "triggers" : [
+        {
+          "is" : "loaded",
+          "when" : "event"
+        },
+        {
+          "containsObject" : "Bullets",
+          "of" : "player",
+          "when" : "location"
+        }
+      ]
+    },
+    {
+      "actions" : [
+        {
+          "output" : "You'll be needing some bullets first."
+        }
+      ],
+      "triggers" : [
+        {
+          "is" : "loaded",
+          "when" : "event"
+        },
+        {
+          "doesntContainObject" : "Bullets",
+          "of" : "player",
+          "when" : "location"
+        }
+      ]
+    }
+  ],
+  "location" : "Your Desk",
+  "names" : [
+    "pistol",
+    "gun",
+    "webley",
+    "boxer"
+  ],
+  "strings" : {
+    "definite" : "the pistol",
+    "detailed" : "Your Webley Boxer, a veritable hand-cannon. A quick check of the cylinder confirms that it is unloaded.",
+    "indefinite" : "a pistol"
+  },
+  "inherits" : [
+    "movable",
+    "usable",
+    "loadable",
+    "shootable"
+  ]
+}

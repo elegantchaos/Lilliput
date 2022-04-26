@@ -1,0 +1,15 @@
+{
+  "location" : "Your Desk",
+  "names" : [
+    "flask",
+    "hip flask"
+  ],
+  "strings" : {
+    "definite" : "the flask",
+    "detailed" : "A battered old hip flask. Disappointingly, it is empty.",
+    "indefinite" : "a hip flask"
+  },
+  "inherits" : [
+    "movable"
+  ]
+}

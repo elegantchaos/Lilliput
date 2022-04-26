@@ -1,0 +1,10 @@
+{
+  "location" : "Your Office",
+  "strings" : {
+    "definite" : "Edmund Forrester",
+    "detailed" : "Your name is Edmund Forrester."
+  },
+  "inherits" : [
+    "pc"
+  ]
+}

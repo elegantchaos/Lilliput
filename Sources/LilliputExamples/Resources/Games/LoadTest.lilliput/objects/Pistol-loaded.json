@@ -1,0 +1,82 @@
+{
+  "handlers" : [
+    {
+      "actions" : [
+        {
+          "output" : "On reflection, this does not seem to be an appropriate moment to discharge a firearm. Think of the paperwork."
+        }
+      ],
+      "triggers" : [
+        {
+          "not" : "bray.garden",
+          "of" : "player",
+          "when" : "location"
+        },
+        {
+          "of" : [
+            {
+              "is" : "used",
+              "when" : "event"
+            },
+            {
+              "is" : "shot",
+              "when" : "event"
+            }
+          ],
+          "when" : "any"
+        }
+      ]
+    },
+    {
+      "actions" : [
+        {
+          "output" : "You raise the pistol and fire. The gun roars four times and the bullets strike the beast. The monster shrieks and slumps to the ground. It lies still on the lawn, blood pooling beneath it.\n\nYou walk towards the body and give it an experimental nudge with your foot. You roll the corpse over to get a better look at it. The beast of Bray manor is dead. It wears a fine necklace, a small gold heart inscribed with the the letters “C.B.”.\n\nYou pull the chain from the creature’s neck and trudge back to the waiting Hansom cab."
+        },
+        {
+          "move" : "bray.yard"
+        },
+        {
+          "of" : "player",
+          "set" : "mission",
+          "to" : "bray-done"
+        }
+      ],
+      "triggers" : [
+        {
+          "is" : "bray.garden",
+          "of" : "player",
+          "when" : "location"
+        },
+        {
+          "of" : [
+            {
+              "is" : "used",
+              "when" : "event"
+            },
+            {
+              "is" : "shot",
+              "when" : "event"
+            }
+          ],
+          "when" : "any"
+        }
+      ]
+    }
+  ],
+  "names" : [
+    "pistol",
+    "gun",
+    "webley",
+    "boxer"
+  ],
+  "strings" : {
+    "definite" : "the pistol",
+    "detailed" : "Your Webley Boxer, a veritable hand-cannon. A quick check of the cylinder confirms that it is loaded.",
+    "indefinite" : "a loaded pistol"
+  },
+  "inherits" : [
+    "movable",
+    "usable",
+    "shootable"
+  ]
+}

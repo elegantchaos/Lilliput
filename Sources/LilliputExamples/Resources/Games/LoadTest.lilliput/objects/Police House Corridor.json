@@ -1,0 +1,13 @@
+{
+  "exits" : {
+    "west" : "Your Office"
+  },
+  "strings" : {
+    "definite" : "the corridor",
+    "indefinite" : "a corridor",
+    "location" : "You stand in the wood-paneled corridor of the police house."
+  },
+  "inherits" : [
+    "location"
+  ]
+}
