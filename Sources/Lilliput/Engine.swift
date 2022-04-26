@@ -86,7 +86,6 @@ public class Engine {
     public func registerStandardBehaviours() {
         register([
             LocationBehaviour.self,
-            LockableBehaviour.self,
             OpenableBehaviour.self,
             PersonBehaviour.self,
             PlayerBehaviour.self,
