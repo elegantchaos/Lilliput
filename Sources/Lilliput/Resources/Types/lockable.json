@@ -1,0 +1,4 @@
+{
+    "commands": ["LockCommand", "UnlockCommand"],
+    "traits": ["lockable"]
+}

@@ -1,0 +1,4 @@
+{
+    "commands": ["OpenCommand", "CloseCommand"],
+    "traits": ["openable"]
+}

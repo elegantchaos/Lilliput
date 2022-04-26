@@ -51,30 +51,46 @@ public class Engine {
     
     public func registerStandardCommands() {
         register([
+            CloseCommand(),
+            DebugCommand(),
+            DrinkCommand(),
             DropCommand(),
+            ExamineCommand(),
+            ExamineFallbackCommand(),
+            FillCommand(),
+            GoCommand(),
+            GoFallbackCommand(),
+            InventoryCommand(),
             LeaveCommand(),
+            LeaveFallbackCommand(),
+            LoadCommand(),
+            LockCommand(),
+            OpenCommand(),
+            PlayCommand(),
+            PushCommand(),
+            RemoveCommand(),
+            ShootCommand(),
             SitCommand(),
+            StandCommand(),
+            SwearFallbackCommand(),
             TakeCommand(),
-            WearCommand()
+            TakeFallbackCommand(),
+            TalkCommand(),
+            TeleportCommand(),
+            UnlockCommand(),
+            UseCommand(),
+            WearCommand(),
         ])
     }
     
     public func registerStandardBehaviours() {
         register([
-            DrinkableBehaviour.self,
-            FillableBehaviour.self,
             LocationBehaviour.self,
             LockableBehaviour.self,
-            LoadableBehaviour.self,
             OpenableBehaviour.self,
             PersonBehaviour.self,
-            PlayableBehaviour.self,
             PlayerBehaviour.self,
-            PushableBehaviour.self,
             PortalBehaviour.self,
-            ShootableBehaviour.self,
-            UsableBehaviour.self,
-            WearableBehaviour.self
         ])
     }
     

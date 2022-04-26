@@ -1,0 +1,14 @@
+{
+    "commands": [
+        "DebugCommand",
+        "GoCommand",
+        "InventoryCommand",
+        "StandCommand",
+        "TeleportCommand",
+        "ExamineFallbackCommand",
+        "GoFallbackCommand",
+        "TakeFallbackCommand",
+        "SwearFallbackCommand",
+        "LeaveFallbackCommand"
+    ]
+}
