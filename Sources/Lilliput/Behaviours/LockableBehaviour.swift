@@ -8,12 +8,6 @@ import Foundation
 
 struct LockableBehaviour: Behaviour {
     static var id: String { "lockable" }
-    static var commands: [Command] {
-        [
-            LockCommand(),
-            UnlockCommand()
-        ]
-    }
 
     struct Storage {
         let requiredObject: Object?

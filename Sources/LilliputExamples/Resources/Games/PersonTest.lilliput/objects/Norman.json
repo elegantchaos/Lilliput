@@ -1,4 +1,5 @@
 {
+    "inherits": ["npc"],
   "dialogue" : {
     "replies" : [
       {
@@ -61,10 +62,7 @@
   ],
   "strings" : {
     "definite" : "Norman",
-    "detailed" : "Normal Player-Character Esquire.",
+    "detailed" : "Norman Player-Character Esquire.",
     "indefinite" : "Norman Player-Character"
   },
-  "traits" : [
-    "person"
-  ]
 }

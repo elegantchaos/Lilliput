@@ -109,7 +109,6 @@ public class Object {
         for id in definition.traits {
             if let behaviour = engine.behaviours[id] {
                 behaviourStorage[id] = behaviour.storage(for: self)
-                commands.append(contentsOf: behaviour.commands)
             } else {
                 engine.warning("Unknown trait \(id) for \(self.id).")
             }

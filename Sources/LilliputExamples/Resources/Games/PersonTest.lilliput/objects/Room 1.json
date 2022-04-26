@@ -1,12 +1,10 @@
 {
-  "exits" : {
-    "north" : "Room 2"
-  },
-  "strings" : {
-    "definite" : "room 1",
-    "location" : "You are in room 1."
-  },
-  "traits" : [
-    "location"
-  ]
+    "inherits": ["location"],
+    "exits" : {
+        "north" : "Room 2"
+    },
+    "strings" : {
+        "definite" : "room 1",
+        "location" : "You are in room 1."
+    },
 }

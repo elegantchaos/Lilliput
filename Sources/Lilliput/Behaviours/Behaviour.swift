@@ -9,7 +9,6 @@ protocol Behaviour: EventHandler {
     typealias ID = String
 
     static var id: ID { get }
-    static var commands: [Command] { get }
 
     var object: Object { get }
     var persistenceData: PersistenceData { get }
@@ -22,8 +21,6 @@ protocol Behaviour: EventHandler {
 }
 
 extension Behaviour {
-    static var commands: [Command] { [] }
-
     static func storage(for object: Object) -> Any {
         return ()
     }
@@ -34,7 +31,6 @@ extension Behaviour {
     }
 
     var id: ID { Self.id }
-    var commands: [Command] { Self.commands }
     
     var persistenceData: PersistenceData {
         [:]

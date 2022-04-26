@@ -14,7 +14,7 @@
     "detailed" : "A small wastebin.",
     "indefinite" : "a bin"
   },
-  "traits" : [
+  "inherits" : [
     "movable"
   ],
   "volume" : 1

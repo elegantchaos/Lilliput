@@ -10,7 +10,7 @@
     "detailed" : "A flat table.",
     "indefinite" : "a flat table"
   },
-  "traits" : [
+  "inherits" : [
     "movable"
   ],
   "volume" : 1

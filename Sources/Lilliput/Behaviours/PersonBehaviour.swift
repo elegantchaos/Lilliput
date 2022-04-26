@@ -12,11 +12,6 @@ extension String {
 
 struct PersonBehaviour: Behaviour {
     static var id: String { "person" }
-    static var commands: [Command] {
-        [
-            TalkCommand()
-        ]
-    }
 
     let object: Object
     

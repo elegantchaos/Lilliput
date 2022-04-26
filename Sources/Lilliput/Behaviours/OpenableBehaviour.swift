@@ -21,12 +21,6 @@ extension Event {
 
 struct OpenableBehaviour: Behaviour {
     static var id: String { "openable" }
-    static var commands: [Command] {
-        [
-            OpenCommand(),
-            CloseCommand()
-        ]
-    }
 
     let object: Object
     

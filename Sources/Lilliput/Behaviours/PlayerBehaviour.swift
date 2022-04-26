@@ -12,21 +12,6 @@ extension String {
 
 struct PlayerBehaviour: Behaviour {
     static var id: String { "player" }
-    static var commands: [Command] {
-        [
-            DebugCommand(),
-            GoCommand(),
-            InventoryCommand(),
-            StandCommand(),
-            TeleportCommand(),
-            
-            ExamineFallbackCommand(),
-            GoFallbackCommand(),
-            TakeFallbackCommand(),
-            SwearFallbackCommand(),
-            LeaveFallbackCommand(),
-        ]
-    }
 
     class PlayerStats {
         init(for object: Object) {

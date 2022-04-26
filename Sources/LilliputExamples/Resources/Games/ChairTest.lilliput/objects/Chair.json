@@ -1,5 +1,5 @@
 {
-    "inherits": ["movable", "sittable"],
+    "inherits": ["movable", "sittable", "location"],
     "location" : "Room 1",
     "names" : [
         "chair",
@@ -13,8 +13,5 @@
         "indefinite" : "a chair",
         "location" : "You are sitting on a sturdy looking chair. It's not very comfortable.",
         "outside" : " From the chair you can see "
-    },
-    "traits" : [
-        "location"
-    ]
+    }
 }

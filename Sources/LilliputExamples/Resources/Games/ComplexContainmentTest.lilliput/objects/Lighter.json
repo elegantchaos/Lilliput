@@ -11,7 +11,7 @@
     "detailed" : "A classic zippo lighter.",
     "indefinite" : "a lighter"
   },
-  "traits" : [
+  "inherits" : [
     "movable"
   ],
   "volume" : 1

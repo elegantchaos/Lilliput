@@ -10,5 +10,7 @@
         "TakeFallbackCommand",
         "SwearFallbackCommand",
         "LeaveFallbackCommand"
-    ]
+    ],
+    
+    "traits": ["player"]
 }

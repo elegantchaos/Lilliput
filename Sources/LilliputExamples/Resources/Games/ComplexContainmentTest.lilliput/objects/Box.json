@@ -18,7 +18,7 @@
     "open-changed-false" : "The box clicks closed.",
     "open-changed-true" : "You pop the latch and open the box."
   },
-  "traits" : [
+  "inherits" : [
     "movable",
     "openable"
   ],

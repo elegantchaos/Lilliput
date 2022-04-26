@@ -7,7 +7,7 @@
     "definite" : "room 1",
     "location" : "You are in a shabby looking room."
   },
-  "traits" : [
+  "inherits" : [
     "location"
   ]
 }

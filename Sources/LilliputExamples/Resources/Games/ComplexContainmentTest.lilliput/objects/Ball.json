@@ -12,7 +12,7 @@
     "detailed" : "A small ping-pong ball.",
     "indefinite" : "a ball"
   },
-  "traits" : [
+  "inherits" : [
     "movable"
   ],
   "volume" : 1
