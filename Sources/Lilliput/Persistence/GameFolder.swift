@@ -24,7 +24,7 @@ public struct GameFolder {
         let root = ThrowingManager.folder(for: url)
         
         if let url = Bundle.module.url(forResource: "Types", withExtension: "") {
-            try resolver.loadRecords(from: url, mode: .oneRecordPerFile)
+            try resolver.loadRecords(from: url, mode: .singleRecordPerFileSkipRootID)
         }
         
         try loadPackedObjects(from: root)
@@ -50,7 +50,7 @@ public struct GameFolder {
     mutating func loadObjects(from root: Folder) throws {
         let folder = root.folder("objects")
         if folder.exists {
-            try resolver.loadRecords(from: folder.url, mode: .oneRecordPerFile)
+            try resolver.loadRecords(from: folder.url, mode: .singleRecordPerFileSkipRootID)
         }
     }
 
