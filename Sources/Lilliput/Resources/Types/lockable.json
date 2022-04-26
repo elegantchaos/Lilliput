@@ -1,4 +1,3 @@
 {
-    "commands": ["LockCommand", "UnlockCommand"],
-    "traits": ["lockable"]
+    "commands": ["LockCommand", "UnlockCommand"]
 }

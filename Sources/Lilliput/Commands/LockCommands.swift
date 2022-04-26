@@ -10,6 +10,8 @@ extension String {
 }
 
 extension String {
+    static let requiredObjectKey = "requires"
+    
     var capitalizedFirst: String {
         var items = self.split(separator: " ")
         if items.count > 0 {
@@ -29,7 +31,7 @@ class LockUnlockCommand: ChangeFlagCommand {
     override func defaultReport(forKey key: String, in context: CommandContext) -> String {
         switch key {
             case "missing":
-                if let object = LockableBehaviour(context.target)?.required, let description = object.getText(for: .unlocks) {
+                if let object = context.target.getObject(withKey: .requiredObjectKey), let description = object.getText(for: .unlocks) {
                     return description
                 } else {
                     return "You need a key of some sort."
@@ -41,8 +43,8 @@ class LockUnlockCommand: ChangeFlagCommand {
     }
 
     override func requirementsAreSatisfied(in context: CommandContext) -> Bool {
-        guard let lockable = LockableBehaviour(context.target) else { return false }
-        return lockable.playerHasReqirements
+        guard let requiredObject = context.target.getObject(withKey: .requiredObjectKey) else { return true }
+        return requiredObject.isCarriedByPlayer
     }
 }
 
