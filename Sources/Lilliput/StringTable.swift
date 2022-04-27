@@ -9,7 +9,7 @@ public struct StringTable {
     public typealias Index = [String:StringAlternatives]
     public let table: Index
     
-    var keys: Index.Keys {
+    public var keys: Index.Keys {
         table.keys
     }
     
@@ -25,7 +25,7 @@ public struct StringTable {
         table = filtered
     }
     
-    func alternatives(for key: String) -> StringAlternatives? {
+    public func alternatives(for key: String) -> StringAlternatives? {
         return table[key]
     }
     
@@ -36,6 +36,8 @@ public struct StringTable {
 
 public struct StringAlternatives {
     public let strings: [String]
+    
+    public var count: Int { strings.count }
     
     init?(_ data: Any?) {
         if let string = data as? String {
