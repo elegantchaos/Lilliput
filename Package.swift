@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 //  Created by Sam Deane on 28/02/2021.
@@ -10,7 +10,7 @@ import PackageDescription
 let package = Package(
     name: "Lilliput",
     platforms: [
-        .macOS(.v12), .iOS(.v15), .tvOS(.v15), .watchOS(.v8)
+        .macOS(.v14), .iOS(.v15), .tvOS(.v15), .watchOS(.v8)
     ],
     products: [
         .executable(
@@ -29,11 +29,11 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.1.3"),
         .package(url: "https://github.com/elegantchaos/CollectionExtensions.git", from: "1.1.9"),
-        .package(url: "https://github.com/elegantchaos/DictionaryResolver.git", from: "1.2.2"),
+        .package(url: "https://github.com/elegantchaos/DictionaryResolver.git", from: "1.2.3"),
         .package(url: "https://github.com/elegantchaos/Expressions.git", from: "1.1.1"),
         .package(url: "https://github.com/elegantchaos/Files.git", from: "1.2.2"),
         .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.7.3"),
-        .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.2.0"),
+        .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.5.1"),
     ],
     targets: [
         .executableTarget(
